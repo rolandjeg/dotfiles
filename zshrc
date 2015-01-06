@@ -24,3 +24,5 @@ if [[ $TERM == "xterm" ]]; then
 fi
 
 setopt CLOBBER
+
+alias pacnew-finder='find /etc -regextype posix-extended -regex ".+\.pac(new|save|orig)" 2> /dev/null'
