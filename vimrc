@@ -23,13 +23,23 @@ NeoBundle 'bling/vim-airline'
 NeoBundle 'vim-scripts/Scratch.vim'
 NeoBundle 'szw/vim-maximizer'
 NeoBundle 'guns/xterm-color-table.vim'
-NeoBundle 'jcf/vim-latex'
+"NeoBundle 'git://git.code.sf.net/p/vim-latex/vim-latex'
 "NeoBundle 'edkolev/tmuxline.vim'
+NeoBundle 'gerw/vim-latex-suite'
 NeoBundle 'tpope/vim-unimpaired'
-NeoBundle 'morhetz/gruvbox'
 NeoBundle 'gisraptor/vim-lilypond-integrator'
-NeoBundle 'chriskempson/base16-vim'
 NeoBundle 'ardagnir/vimbed'
+NeoBundle 'vim-scripts/Gundo'
+NeoBundle 'jlanzarotta/bufexplorer'
+
+"Colorschemes
+NeoBundle 'chriskempson/base16-vim'
+NeoBundle 'w0ng/vim-hybrid'
+NeoBundle 'freeo/vim-kalisi'
+NeoBundle 'morhetz/gruvbox'
+NeoBundle 'tomasr/molokai'
+
+
 
 NeoBundle '~/.vim/rossyrg'
 
@@ -344,6 +354,17 @@ set wildmenu
 
 let g:Tex_DefaultTargetFormat='pdf'
 let g:Tex_ViewRule_pdf='zathura'
+let g:Tex_MultipleCompileFormats='dvi,pdf'
+let g:Tex_IgnoredWarnings = 
+    \'Underfull'."\n".
+    \'Overfull'."\n".
+    \'specifier changed to'."\n".
+    \'You have requested'."\n".
+    \'Missing number, treated as zero.'."\n".
+    \'There were undefined references'."\n".
+    \'Citation %.%# undefined'."\n".
+    \"Empty `thebibliography' environment"
+let g:Tex_IgnoreLevel=8
 
 let g:ycm_server_keep_logfiles = 1
 let g:ycm_server_log_level = 'debug'
@@ -416,8 +437,10 @@ function! SmallerFont()
 endfunction
 command! SmallerFont call SmallerFont()
 
-noremap + :LargerFont<ENTER>
-noremap - :SmallerFont<ENTER>
+if has("gui_gtk2") && has("gui_running")
+    noremap <M-S-Up> :LargerFont<ENTER>
+    noremap <M-S-Down> :SmallerFont<ENTER>
+endif
 
 set background=dark
 if has('gui_running')
@@ -445,3 +468,9 @@ command! SyntasticPython3 call SyntasticPython3()
 
 
 set guiheadroom=0
+
+"let g:hybrid_use_Xresources = 1
+colorscheme hybrid
+
+"Spellchecking
+au BufNewFile,BufRead,BufEnter  *.tex setlocal spell 
