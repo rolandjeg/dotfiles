@@ -46,6 +46,7 @@ path=(
   ~/bin
   /usr/local/{bin,sbin}
   $path
+  ~/.gem/ruby/2.2.0/bin
   ~/.gem/ruby/2.1.0/bin
   /opt/ruby1.9/bin
 )

@@ -10,9 +10,7 @@ call neobundle#begin(expand('~/.vim/neobundle'))
 NeoBundleFetch 'Shougo/neobundle.vim'
 
 NeoBundle 'majutsushi/tagbar'
-"NeoBundle 'Shougo/neocomplete.vim'
 NeoBundle 'https://github.com/Valloric/YouCompleteMe.git'
-"NeoBundle 'Shougo/unite.vim'
 NeoBundle 'kien/ctrlp.vim'
 NeoBundle 'vhdirk/vim-cmake'
 NeoBundle 'scrooloose/nerdtree'
@@ -24,13 +22,13 @@ NeoBundle 'vim-scripts/Scratch.vim'
 NeoBundle 'szw/vim-maximizer'
 NeoBundle 'guns/xterm-color-table.vim'
 "NeoBundle 'git://git.code.sf.net/p/vim-latex/vim-latex'
-"NeoBundle 'edkolev/tmuxline.vim'
 NeoBundle 'gerw/vim-latex-suite'
 NeoBundle 'tpope/vim-unimpaired'
 NeoBundle 'gisraptor/vim-lilypond-integrator'
 NeoBundle 'ardagnir/vimbed'
 NeoBundle 'vim-scripts/Gundo'
 NeoBundle 'jlanzarotta/bufexplorer'
+NeoBundle 'tpope/vim-speeddating'
 
 "Colorschemes
 NeoBundle 'chriskempson/base16-vim'
@@ -443,12 +441,12 @@ if has("gui_gtk2") && has("gui_running")
 endif
 
 set background=dark
-if has('gui_running')
-    colors gruvbox
-else
-   let base16colorspace=256  " Access colors present in 256 colorspace 
-    colors gruvbox
-endif
+"if has('gui_running')
+    "colors gruvbox
+"else
+   "let base16colorspace=256  " Access colors present in 256 colorspace 
+    "colors gruvbox
+"endif
 
 function! TransparentBackground()
     hi Normal ctermbg=none
@@ -467,10 +465,13 @@ command! SyntasticPython3 call SyntasticPython3()
 
 
 
-set guiheadroom=0
+set guiheadroom=1
 
 "let g:hybrid_use_Xresources = 1
 colorscheme hybrid
 
 "Spellchecking
 au BufNewFile,BufRead,BufEnter  *.tex setlocal spell 
+
+set autoread
+
