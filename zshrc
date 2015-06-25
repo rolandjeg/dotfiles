@@ -16,8 +16,10 @@ bindkey -v
 export EDITOR=vim
 export VISUAL=vim
 export MPD_HOST=/tmp/mpd.sock
+export SDL_SOUNDFONTS=/usr/share/soundfonts/SGM-V2.01.sf2
 alias ]=rifle
 alias t=task
+alias wine32="WINEPREFIX=~/.wine32 WINEARCH='win32' wine"
 
 if [[ $TERM == "xterm" ]]; then
     export TERM=xterm-256color

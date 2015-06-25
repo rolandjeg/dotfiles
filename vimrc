@@ -1,6 +1,10 @@
+" vim:fdm=marker
+ 
 set nocompatible
-filetype off
+filetype on
 
+""" Neobundle {{{
+filetype off
 if has('vim_starting')
   set runtimepath+=~/.vim/neobundle/neobundle.vim
 endif
@@ -29,8 +33,12 @@ NeoBundle 'ardagnir/vimbed'
 NeoBundle 'vim-scripts/Gundo'
 NeoBundle 'jlanzarotta/bufexplorer'
 NeoBundle 'tpope/vim-speeddating'
+NeoBundle 'edkolev/tmuxline.vim'
+NeoBundle 'klen/python-mode'
+NeoBundle 'davidhalter/jedi-vim'
 
 "Colorschemes
+NeoBundle 'junegunn/seoul256.vim'
 NeoBundle 'chriskempson/base16-vim'
 NeoBundle 'w0ng/vim-hybrid'
 NeoBundle 'freeo/vim-kalisi'
@@ -44,74 +52,9 @@ NeoBundle '~/.vim/rossyrg'
 call neobundle#end()
 
 filetype on
-
 NeoBundleCheck
-
-let g:solarized_termcolors=256
-
-""---Neocomplete
-"let g:neocomplete#enable_at_startup = 1
-"let g:neocomplete#enable_smart_case = 1
-"let g:neocomplete#sources#syntax#min_keyword_length = 3
-"" Plugin key-mappings.
-"inoremap <expr><C-g>     neocomplete#undo_completion()
-"inoremap <expr><C-l>     neocomplete#complete_common_string()
-"" Recommended key-mappings.
-"" <CR>: close popup and save indent.
-"inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-"function! s:my_cr_function()
-"  return neocomplete#close_popup() . "\<CR>"
-"  " For no inserting <CR> key.
-"  "return pumvisible() ? neocomplete#close_popup() : "\<CR>"
-"endfunction
-"" <TAB>: completion.
-"inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-"inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<S-TAB>"
-"" <C-h>, <BS>: close popup and delete backword char.
-"inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
-"inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-"inoremap <expr><C-y>  neocomplete#close_popup()
-"inoremap <expr><C-e>  neocomplete#cancel_popup()
-"
-"" Close popup by <Space>.
-""inoremap <expr><Space> pumvisible() ? neocomplete#close_popup() : "\<Space>"
-"
-"" For cursor moving in insert mode(Not recommended)
-""inoremap <expr><Left>  neocomplete#close_popup() . "\<Left>"
-""inoremap <expr><Right> neocomplete#close_popup() . "\<Right>"
-""inoremap <expr><Up>    neocomplete#close_popup() . "\<Up>"
-""inoremap <expr><Down>  neocomplete#close_popup() . "\<Down>"
-"" Or set this.
-""let g:neocomplete#enable_cursor_hold_i = 1
-"" Or set this.
-""let g:neocomplete#enable_insert_char_pre = 1
-"
-"" AutoComplPop like behavior.
-""let g:neocomplete#enable_auto_select = 1
-"
-"" Shell like behavior(not recommended).
-""set completeopt+=longest
-""let g:neocomplete#enable_auto_select = 1
-""let g:neocomplete#disable_auto_complete = 1
-""inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
-
-" Enable omni completion.
-"autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-"autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-"autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-"autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-"autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-
-" Enable heavy omni completion.
-"if !exists('g:neocomplete#sources#omni#input_patterns')
-  "let g:neocomplete#sources#omni#input_patterns = {}
-"endif
-"let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-"let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
-"let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
-
-"1
-"2
+""" }}}
+""" CMake Errorformat {{{
 set errorformat^=%-GScanning\ dependencies\ of\ target\ %f
 set errorformat^=%-G\[\ %l%%\]\ Building\ CXX\ object\ %f
 set errorformat^=%-G\[\ %l%%\]\ Built\ target\ %f
@@ -119,6 +62,7 @@ set errorformat^=%-G\[%l%%\]\ Building\ CXX\ object\ %f
 set errorformat^=%-G\[%l%%\]\ Built\ target\ %f
 set errorformat^=%-GLinking\ CXX\ static\ library\ %f
 set errorformat^=%-GLinking\ CXX\ executable\ %f
+""" }}}
 
 syntax on
 filetype plugin indent on
@@ -131,10 +75,8 @@ set tags+=~/.vim/tags/cpp
 set tags+=~/.vim/tags/cairomm
 set tags+=~/.vim/tags/gtkmm3
 
-set background=dark
 set colorcolumn=80
-
-
+set textwidth=0
 
 let OmniCpp_NamespaceSearch = 2
 let OmniCpp_GlobalScopeSearch = 1
@@ -160,8 +102,9 @@ set modelines=5
 set ai
 set cindent
 "set number
+set tabstop=8
 set expandtab
-set tabstop=4
+set softtabstop=4
 set shiftwidth=4
 set t_Co=256
 set cursorline
@@ -323,7 +266,7 @@ endif
 " VIM Airline Config
 let g:airline_theme = 'tomorrow'
 let g:airline#extensions#tabline#enabled = 1
-let g:airline_detect_whitespace=0
+let g:airline#extensions#whitespace#enabled = 0
 
 
 
@@ -350,8 +293,26 @@ let g:EclimTempFilesEnable = 0
 set wildmode=longest,list,full
 set wildmenu
 
+""" LaTeX {{{
+
 let g:Tex_DefaultTargetFormat='pdf'
 let g:Tex_ViewRule_pdf='zathura'
+let g:Tex_CompileRule_pdf = 'pdflatex -synctex=1 -interaction=nonstopmode $*'
+
+let theuniqueserv = expand("%:r")
+
+let g:Tex_ViewRuleComplete_pdf = 'zathura -x "vim --servername '.theuniqueserv.' --remote +\%{line} \%{input}" $*.pdf 2>/dev/null &'
+
+function! Zathura_SyncTexForward()
+  let source = expand("%:p")
+  let input = shellescape(line(".").":".col(".").":".source)
+  let output = Tex_GetMainFileName(":p:r").".pdf"
+  let execstr = "zathura --synctex-forward=".input." ".shellescape(output)
+  silent call system(execstr)
+endfunction
+
+nmap <Leader>f :call Zathura_SyncTexForward()<Enter>
+
 let g:Tex_MultipleCompileFormats='dvi,pdf'
 let g:Tex_IgnoredWarnings = 
     \'Underfull'."\n".
@@ -363,50 +324,17 @@ let g:Tex_IgnoredWarnings =
     \'Citation %.%# undefined'."\n".
     \"Empty `thebibliography' environment"
 let g:Tex_IgnoreLevel=8
+""" }}}
 
-let g:ycm_server_keep_logfiles = 1
-let g:ycm_server_log_level = 'debug'
-let g:ycm_show_diagnostics_ui = 0
-let g:ycm_min_num_of_chars_for_completion = 1
-let g:ycm_global_ycm_extra_conf="~/.ycm_extra_conf.py"
-let g:ycm_complete_in_comments_and_strings = 1
-let g:ycm_collect_identifiers_from_comments_and_strings = 1
-let g:ycm_seed_identifiers_with_syntax = 1
-let g:ycm_confirm_extra_conf = 0
+
 
 set showbreak=+++\  
 set laststatus=2
 
-let g:zenburn_high_Contrast=1
-
-if has('gui_running') "  let g:gruvbox_bold=1
-  let g:gruvbox_italic=1
-  let g:gruvbox_underline=1
-  let g:gruvbox_undercurl=1
-  let g:gruvbox_termcolors=256
-  let g:gruvbox_contrast='hard'
-  let g:gruvbox_hls_cursor='orange'
-  let g:gruvbox_sign_column='dark1'
-  let g:gruvbox_italicize_comments=1
-  let g:gruvbox_italicize_strings=0
-  let g:gruvbox_invert_selection=1
-  let g:gruvbox_invert_signs=0
-else
-  let g:gruvbox_bold=0
-  let g:gruvbox_italic=0
-  let g:gruvbox_underline=0
-  let g:gruvbox_undercurl=0
-  let g:gruvbox_termcolors=256
-  let g:gruvbox_contrast='hard'
-  let g:gruvbox_hls_cursor='orange'
-  let g:gruvbox_sign_column='dark1'
-  let g:gruvbox_italicize_comments=0
-  let g:gruvbox_italicize_strings=0
-  let g:gruvbox_invert_selection=1
-  let g:gruvbox_invert_signs=0
-endif
 
 let g:airline#extensions#tmuxline#enabled = 0
+
+""" Font size {{{
 
 let s:pattern = '^\(.* \)\([1-9][0-9]*\)$'
 let s:minfontsize = 6
@@ -440,18 +368,10 @@ if has("gui_gtk2") && has("gui_running")
     noremap <M-S-Down> :SmallerFont<ENTER>
 endif
 
-set background=dark
-"if has('gui_running')
-    "colors gruvbox
-"else
-   "let base16colorspace=256  " Access colors present in 256 colorspace 
-    "colors gruvbox
-"endif
+""" }}}
 
-function! TransparentBackground()
-    hi Normal ctermbg=none
-endfunction
-command! TransparentBackground call TransparentBackground()
+
+""" Syntastic {{{
 
 function! SyntasticPython2()
     let g:syntastic_python_python_exec = '/usr/bin/python2'
@@ -463,15 +383,91 @@ function! SyntasticPython3()
 endfunction
 command! SyntasticPython3 call SyntasticPython3()
 
+let g:syntastic_mode_map = {
+    \ "mode": "active",
+    \ "active_filetypes": [],
+    \ "passive_filetypes": ["python"] }
+
+""" }}}
 
 
 set guiheadroom=1
 
-"let g:hybrid_use_Xresources = 1
-colorscheme hybrid
+""" Colorschemes {{{
 
-"Spellchecking
-au BufNewFile,BufRead,BufEnter  *.tex setlocal spell 
+let g:zenburn_high_Contrast=1
+
+if has('gui_running') "  let g:gruvbox_bold=1
+  let g:gruvbox_italic=1
+  let g:gruvbox_underline=1
+  let g:gruvbox_undercurl=1
+  let g:gruvbox_termcolors=256
+  let g:gruvbox_contrast='hard'
+  let g:gruvbox_hls_cursor='orange'
+  let g:gruvbox_sign_column='dark1'
+  let g:gruvbox_italicize_comments=1
+  let g:gruvbox_italicize_strings=0
+  let g:gruvbox_invert_selection=1
+  let g:gruvbox_invert_signs=0
+else
+  let g:gruvbox_bold=0
+  let g:gruvbox_italic=0
+  let g:gruvbox_underline=0
+  let g:gruvbox_undercurl=0
+  let g:gruvbox_termcolors=256
+  let g:gruvbox_contrast='hard'
+  let g:gruvbox_hls_cursor='orange'
+  let g:gruvbox_sign_column='dark1'
+  let g:gruvbox_italicize_comments=0
+  let g:gruvbox_italicize_strings=0
+  let g:gruvbox_invert_selection=1
+  let g:gruvbox_invert_signs=0
+endif
+set background=light
+let g:hybrid_use_Xresources = 1
+if has("gui_running")
+    colorscheme kalisi
+else
+    colorscheme gruvbox
+endif
+
+autocmd VimEnter * SetColors kalisi gruvbox 
+
+""" }}}
+""" Spellchecking {{{
+
+au BufNewFile,BufRead,BufEnter  *.tex setlocal spell
+
+""" }}}
 
 set autoread
+
+""" Python Mode {{{
+
+let g:pymode_indent = 1
+let g:pymode_folding = 1
+let g:pymode_rope_completion = 0
+
+""" }}}
+""" Jedi (Python) {{{
+
+let g:jedi#force_py_version = 3
+
+""" }}}
+""" YouCompleteMe {{{
+
+let g:ycm_server_keep_logfiles = 1
+let g:ycm_server_log_level = 'debug'
+let g:ycm_show_diagnostics_ui = 0
+let g:ycm_min_num_of_chars_for_completion = 1
+let g:ycm_global_ycm_extra_conf="~/.ycm_extra_conf.py"
+let g:ycm_complete_in_comments_and_strings = 1
+let g:ycm_collect_identifiers_from_comments_and_strings = 1
+let g:ycm_seed_identifiers_with_syntax = 1
+let g:ycm_confirm_extra_conf = 0
+let g:ycm_filetype_blacklist = {
+\ 'python' : 1,
+      \}
+
+""" }}}
 
