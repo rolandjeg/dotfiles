@@ -25,7 +25,8 @@ Plug 'Shougo/vimproc.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/nerdcommenter'
 Plug 'tpope/vim-unimpaired'
-Plug 'junegunn/fzf', {'dir': '~/.fzf', 'do': './install -all'}
+"Plug 'junegunn/fzf', {'dir': '~/.fzf', 'do': './install -all'}
+Plug 'c0r73x/neotags.nvim'
 
 "" Srpache
 Plug 'ganwell/vim-hunspell-dicts'
@@ -125,6 +126,8 @@ set tags+=~/.vim/tags/cpp
 "set tags+=~/.vim/tags/cairo
 set tags+=~/.vim/tags/cairomm
 set tags+=~/.vim/tags/gtkmm3
+
+set hidden
 
 set colorcolumn=80
 set textwidth=0
@@ -273,7 +276,7 @@ vnoremap <C-W>o :MaximizerToggle<CR>gv
 vnoremap <C-W><C-O> :MaximizerToggle<CR>gv
 
 let g:maximizer_set_default_mapping = 0
-noremap <F3> :noh<CR>
+noremap <F4> :noh<CR>
 
 let g:org_export_init_script="~/.emacs_org_init"
 
@@ -461,7 +464,7 @@ let g:hybrid_reduced_contrast = 0
 "let g:seoul256_background = 234
 "let g:seoul256_light_background = 256
 
-set background=dark
+"set background=dark
 colorscheme lucius
 
 "autocmd VimEnter * SetColors  zenburn seoul256
@@ -590,7 +593,7 @@ let g:deoplete#sources#rust#racer_binary='/home/groell/.cargo/bin/racer'
 let g:deoplete#sources#rust#rust_source_path='/home/groell/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src/'
 " }}}
 """ Terminal {{{
-tnoremap <Esc> <C-\><C-n>
+tnoremap <A-\> <C-\><C-n>
 tnoremap <A-h> <C-\><C-n><C-w>h
 tnoremap <A-j> <C-\><C-n><C-w>j
 tnoremap <A-k> <C-\><C-n><C-w>k
