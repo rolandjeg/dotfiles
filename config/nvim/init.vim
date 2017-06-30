@@ -26,7 +26,7 @@ Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/nerdcommenter'
 Plug 'tpope/vim-unimpaired'
 "Plug 'junegunn/fzf', {'dir': '~/.fzf', 'do': './install -all'}
-Plug 'c0r73x/neotags.nvim'
+"Plug 'c0r73x/neotags.nvim'
 
 "" Srpache
 Plug 'ganwell/vim-hunspell-dicts'
@@ -96,6 +96,7 @@ Plug 'KabbAmine/yowish.vim'
 Plug 'lu-ren/SerialExperimentsLain'
 Plug 'KeitaNakamura/neodark.vim'
 Plug 'jonathanfilip/vim-lucius'
+Plug 'rakr/vim-one'
 
 
 "" Own stuff
@@ -161,7 +162,7 @@ set tabstop=4
 set expandtab
 set softtabstop=4
 set shiftwidth=4
-set t_Co=256
+"set t_Co=256
 set cursorline
 set backspace=2
 set hlsearch
@@ -256,8 +257,9 @@ if &term =~ '^screen' && exists('$TMUX')
 endif
 
 " VIM Airline Config
-let g:airline_theme = 'tomorrow'
+let g:airline_theme = 'lucius'
 let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tmuxline#enabled = 0
 let g:airline#extensions#whitespace#enabled = 0
 
 
@@ -301,14 +303,14 @@ let g:vimtex_latexmk_callback=1
 let g:vimtex_motion_matchparen=0
 let g:vimtex_latexmk_background=0
 let g:vimtex_quickfix_mode=2
-let g:vimtex_quickfix_ignored_warnings =[
-      \ 'Underfull',
-      \ 'Overfull',
-      \ 'specifier changed to',
-      \ 'Size substitutions',
-      \ 'Font shape',
-      \ 'Marginpar',
-      \]
+let g:vimtex_quickfix_latexlog ={
+      \ 'underfull' : 0,
+      \ 'overfull' : 0,
+      \ 'default' : 0,
+      \ 'packages' : {
+      \   'default' : 0,
+      \ },
+      \}
 let g:vimtex_imaps_snippet_engine='neosnippet'
 let g:vimtex_latexmk_nvim=1
 
@@ -356,11 +358,11 @@ let g:Tex_IgnoreLevel=9
 
 
 
-set showbreak=+++\
+let &showbreak='+++ '
+set breakindent
 set laststatus=2
 
 
-let g:airline#extensions#tmuxline#enabled = 0
 
 """ Font size {{{
 
@@ -425,38 +427,10 @@ let g:zenburn_high_Contrast=1
 let g:zenburn_old_Visual=0
 let g:zenburn_alternate_Visual=0
 
-if has('gui_running') "  let g:gruvbox_bold=1
-  let g:gruvbox_italic=1
-  let g:gruvbox_underline=1
-  let g:gruvbox_undercurl=1
-  let g:gruvbox_termcolors=256
-  let g:gruvbox_hls_cursor='orange'
-  let g:gruvbox_sign_column='dark1'
-  let g:gruvbox_italicize_comments=1
-  let g:gruvbox_italicize_strings=0
-  let g:gruvbox_invert_selection=1
-  let g:gruvbox_invert_signs=0
-  let g:gruvbox_guisp_fallback='fg'
-  let g:gruvbox_contrast_light='soft'
-  let g:gruvbox_contrast_dark='soft'
-else
-  let g:gruvbox_contrast_dark='soft'
-  let g:gruvbox_contrast_light='soft'
-  let g:gruvbox_bold=1
-  let g:gruvbox_italic=0
-  let g:gruvbox_underline=1
-  let g:gruvbox_undercurl=0
-  let g:gruvbox_termcolors=256
-  let g:gruvbox_hls_cursor='orange'
-  let g:gruvbox_sign_column='dark1'
-  let g:gruvbox_italicize_comments=0
-  let g:gruvbox_italicize_strings=0
-  let g:gruvbox_invert_selection=1
-  let g:gruvbox_invert_signs=0
-  let g:gruvbox_guisp_as_guifg=1
-  let g:gruvbox_guisp_fallback='fg'
-endif
+let base16colorspace=256
 
+let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+set termguicolors
 
 "let g:hybrid_use_Xresources = 1
 let g:hybrid_reduced_contrast = 0
@@ -464,7 +438,7 @@ let g:hybrid_reduced_contrast = 0
 "let g:seoul256_background = 234
 "let g:seoul256_light_background = 256
 
-"set background=dark
+set background=light
 colorscheme lucius
 
 "autocmd VimEnter * SetColors  zenburn seoul256
