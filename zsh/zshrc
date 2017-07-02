@@ -1,0 +1,23 @@
+#
+# User configuration sourced by interactive shells
+#
+alias t="task"
+alias pacman="pacman --color auto"
+alias ]="rifle"
+#alias wcal="remind -cu+2 -w`tput cols` -b1 -m ~/.reminders"
+alias scal="remind -n -m -b1 ~/.reminders | sort --reverse"
+alias ecal="nvim ~/Kalender/reminders.rem"
+alias rcal="remind ~/.reminders"
+alias tgreen="tmux source-file ~/.green.tmux"
+alias torange="tmux source-file ~/.orange.tmux"
+
+wcal() {
+  remind -cu+2 -w`tput cols` -b1 -m ~/.reminders
+}
+# Source zim
+if [[ -s ${ZDOTDIR:-${HOME}}/.zim/init.zsh ]]; then
+  source ${ZDOTDIR:-${HOME}}/.zim/init.zsh
+fi
+
+BASE16_SHELL=$HOME/.config/base16-shell/
+[ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
