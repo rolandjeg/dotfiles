@@ -27,6 +27,8 @@ Plug 'scrooloose/nerdcommenter'
 Plug 'tpope/vim-unimpaired'
 "Plug 'junegunn/fzf', {'dir': '~/.fzf', 'do': './install -all'}
 "Plug 'c0r73x/neotags.nvim'
+Plug 'junegunn/vim-easy-align'
+Plug 'godlygeek/tabular'
 
 "" Srpache
 Plug 'ganwell/vim-hunspell-dicts'
@@ -169,6 +171,8 @@ set hlsearch
 set smartcase
 set list
 let g:haskell_indent_guard = 2
+let g:haskell_indent_before_where = 2
+let g:haskell_indent_after_bare_where = 2
 autocmd FileType make setlocal noexpandtab
 " Folding
 set foldmethod=syntax
@@ -449,7 +453,7 @@ colorscheme lucius
 """ Spellchecking {{{
 
 au BufNewFile,BufRead,BufEnter  *.tex setlocal nospell
-set spelllang=hun-de-DE-frami
+set spelllang=hun-de-DE-frami,en_us
 
 """ }}}
 
@@ -607,3 +611,12 @@ autocmd FileType qf wincmd J
 "    map <leader>. <Plug>leaderguide-global
 "
 "" }}}
+
+"" EasyAlign {{{
+" Start interactive EasyAlign in visual mode (e.g. vip<Enter>)
+vmap <Enter> <Plug>(EasyAlign)
+
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
+"" }}}
+
