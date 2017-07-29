@@ -34,7 +34,7 @@ browser = firefox
 # special
 foreground      = #c5c8c6
 foreground_bold = #c5c8c6
-cursor          = #fa9300
+cursor          = #00cc00
 background      = #505050
 
 # black
