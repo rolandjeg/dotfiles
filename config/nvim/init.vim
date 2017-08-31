@@ -46,6 +46,7 @@ Plug 'tsukkee/unite-tag'
 "" Organizer
 Plug 'vimwiki/vimwiki' , { 'branch': 'dev'}
 Plug 'farseer90718/vim-taskwarrior'
+Plug 'tbabej/taskwiki'
 
 "" Tags
 Plug 'majutsushi/tagbar'
@@ -399,6 +400,11 @@ let g:hybrid_reduced_contrast = 0
 
 set background=light
 let base16colorspace=256
+
+let g:gruvbox_italic=1
+let g:gruvbox_bold=1
+let g:gruvbox_underline=1
+
 colorscheme lucius
 
 "autocmd VimEnter * SetColors  zenburn seoul256
@@ -470,9 +476,11 @@ let g:vimwiki_use_calendar=1
 let g:vimwiki_folding = 'expr'
 let g:vimwiki_table_mappings = 0
 let g:vimwiki_table_auto_fmt = 0
+let g:vimwiki_global_ext = 0
 autocmd FileType vimwiki inoremap <expr><TAB> pumvisible() ? "\<C-N>" : vimwiki#tbl#kbd_tab()
 autocmd FileType vimwiki inoremap <expr><S-TAB> pumvisible() ? "\<C-P>" : vimwiki#tbl#kbd_shift_tab()
 autocmd FileType vimwiki set commentstring="> %s"
+autocmd FileType vimwiki set syntax=pandoc
 """ }}}
 
 let g:table_mode_corner_corner='+'
@@ -482,6 +490,23 @@ let g:table_mode_map_prefix='<leader>t'
 """ Pandoc {{{
 let g:pandoc#spell#enabled = 0
 let g:pandoc#syntax#conceal#blacklist = ["block"]
+let g:pandoc#toc#position="left"
+"let g:pandoc#filetypes#handled=["markdown", "vimwiki", "pandoc", "rst", "textile"]
+
+let g:tagbar_type_vimwiki = {
+    \ 'ctagstype': 'vimwiki',
+    \ 'ctagsbin' : '~/.config/nvim/markdown2ctags.py',
+    \ 'ctagsargs' : '-f - --sort=yes',
+    \ 'kinds' : [
+        \ 's:sections',
+        \ 'i:images'
+    \ ],
+    \ 'sro' : '|',
+    \ 'kind2scope' : {
+        \ 's' : 'section',
+    \ },
+    \ 'sort': 0,
+    \ }
 """ }}}
 
 let g:deoplete#enable_at_startup = 1
