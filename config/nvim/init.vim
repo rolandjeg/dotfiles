@@ -36,6 +36,9 @@ Plug 'ganwell/vim-hunspell-dicts'
 "" Pandoc
 Plug 'vim-pandoc/vim-pandoc'
 Plug 'vim-pandoc/vim-pandoc-syntax'
+Plug 'vim-pandoc/vim-pandoc-after'
+
+Plug 'dhruvasagar/vim-table-mode'
 
 "" Unite
 Plug 'tsukkee/unite-tag'
@@ -43,6 +46,7 @@ Plug 'tsukkee/unite-tag'
 "" Organizer
 Plug 'vimwiki/vimwiki' , { 'branch': 'dev'}
 Plug 'farseer90718/vim-taskwarrior'
+Plug 'tbabej/taskwiki'
 
 "" Tags
 Plug 'majutsushi/tagbar'
@@ -151,8 +155,6 @@ au InsertLeave * if pumvisible() == 0|silent! pclose|endif
 "au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
 set completeopt=menuone,menu,longest,preview
 
-inoremap <silent> <buffer> <C-,> <ESC>:call Toggle_task_status()<CR>i
-noremap <silent> <buffer> <C-,> :call Toggle_task_status()<CR>
 let maplocalleader = "\<Space>"
 let mapleader = "\<Space>"
 set modeline
@@ -189,7 +191,6 @@ set undoreload=10000 "maximum number lines to save for undo on a buffer reload"
 source ~/.config/nvim/config/shortcuts.vim
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
 
-map <leader>r :!ctags -R; find -L . -name "*.c" -o -name "*.cc" -o -name "*.hpp" -o -name "*.hh" -o -name "*.h" -o -name "*.cpp" -o -name "*.java" -o -name "*.rb" <BAR> cscope -Rb -i-<CR>:cs reset<CR>
 
 
 " tmuxstuff
@@ -209,8 +210,6 @@ autocmd FileType ruby,eruby let g:rubycomplete_classes_in_global = 1
 let g:localvimrc_sandbox = 0
 
 
-" Allow sudo saving
-cmap w!! w !sudo tee > /dev/null %
 
 let g:nerdtree_open_cmd='rifle'
 
@@ -273,16 +272,8 @@ let g:ctrlp_show_hidden = 1
 
 set guifont=DejaVu\ Sans\ Mono\ for\ Powerline\ 13
 
-nnoremap <leader>a :TableModeRealign<CR>
-nnoremap <C-W>O :MaximizerToggle<CR>
-nnoremap <C-W>o :MaximizerToggle<CR>
-nnoremap <C-W><C-O> :MaximizerToggle<CR>
-vnoremap <C-W>O :MaximizerToggle<CR>gv
-vnoremap <C-W>o :MaximizerToggle<CR>gv
-vnoremap <C-W><C-O> :MaximizerToggle<CR>gv
 
 let g:maximizer_set_default_mapping = 0
-noremap <F4> :noh<CR>
 
 let g:org_export_init_script="~/.emacs_org_init"
 
@@ -368,41 +359,6 @@ set laststatus=2
 
 
 
-""" Font size {{{
-
-let s:pattern = '^\(.* \)\([1-9][0-9]*\)$'
-let s:minfontsize = 6
-let s:maxfontsize = 16
-function! AdjustFontSize(amount)
-  if has("gui_gtk2") && has("gui_running")
-    let fontname = substitute(&guifont, s:pattern, '\1', '')
-    let cursize = substitute(&guifont, s:pattern, '\2', '')
-    let newsize = cursize + a:amount
-    if (newsize >= s:minfontsize) && (newsize <= s:maxfontsize)
-      let newfont = fontname . newsize
-      let &guifont = newfont
-    endif
-  else
-    echoerr "You need to run the GTK2 version of Vim to use this function."
-endif
-endfunction
-
-function! LargerFont()
-  call AdjustFontSize(1)
-endfunction
-command! LargerFont call LargerFont()
-
-function! SmallerFont()
-  call AdjustFontSize(-1)
-endfunction
-command! SmallerFont call SmallerFont()
-
-if has("gui_gtk2") && has("gui_running")
-    noremap <M-S-Up> :LargerFont<ENTER>
-    noremap <M-S-Down> :SmallerFont<ENTER>
-endif
-
-""" }}}
 
 
 """ Syntastic {{{
@@ -443,13 +399,16 @@ let g:hybrid_reduced_contrast = 0
 "let g:seoul256_light_background = 256
 
 set background=light
+let base16colorspace=256
+
+let g:gruvbox_italic=1
+let g:gruvbox_bold=1
+let g:gruvbox_underline=1
+
 colorscheme lucius
 
 "autocmd VimEnter * SetColors  zenburn seoul256
 
-"nnoremap cob :NextColor<CR>
-
-""" }}}
 """ Spellchecking {{{
 
 au BufNewFile,BufRead,BufEnter  *.tex setlocal nospell
@@ -510,21 +469,44 @@ set rtp+=~/.fzf
 
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 
-imap <C-j>     <Plug>(neosnippet_expand_or_jump)
-smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-xmap <C-k>     <Plug>(neosnippet_expand_target)
 
 """ Vimwiki {{{
-let g:vimwiki_list = [{'path': '~/vimwiki', 'syntax': 'markdown', 'path_html': '~/vimwiki_html/', 'auto_tags': 1, 'auto_export': 1, 'template_path': '~/vimwiki_html', 'ext': '.md', 'custom_wiki2html': 'wiki2html.sh', 'template_default': 'def_template', 'template_ext': '.html'}]
+let g:vimwiki_list = [{'path': '~/vimwiki', 'syntax': 'markdown', 'path_html': '~/vimwiki_html/', 'auto_tags': 1, 'auto_export': 1, 'template_path': '~/vimwiki_html', 'ext': '.md', 'custom_wiki2html': 'wiki2html.sh', 'custom_wiki2html_args' : '', 'template_default': 'def_template', 'template_ext': '.html'}]
 let g:vimwiki_use_calendar=1
 let g:vimwiki_folding = 'expr'
 let g:vimwiki_table_mappings = 0
+let g:vimwiki_table_auto_fmt = 0
+let g:vimwiki_global_ext = 0
 autocmd FileType vimwiki inoremap <expr><TAB> pumvisible() ? "\<C-N>" : vimwiki#tbl#kbd_tab()
 autocmd FileType vimwiki inoremap <expr><S-TAB> pumvisible() ? "\<C-P>" : vimwiki#tbl#kbd_shift_tab()
+autocmd FileType vimwiki set commentstring="> %s"
+autocmd FileType vimwiki set syntax=pandoc
 """ }}}
+
+let g:table_mode_corner_corner='+'
+let g:table_mode_header_fillchar='='
+let g:table_mode_map_prefix='<leader>t'
 
 """ Pandoc {{{
 let g:pandoc#spell#enabled = 0
+let g:pandoc#syntax#conceal#blacklist = ["block"]
+let g:pandoc#toc#position="left"
+"let g:pandoc#filetypes#handled=["markdown", "vimwiki", "pandoc", "rst", "textile"]
+
+let g:tagbar_type_vimwiki = {
+    \ 'ctagstype': 'vimwiki',
+    \ 'ctagsbin' : '~/.config/nvim/markdown2ctags.py',
+    \ 'ctagsargs' : '-f - --sort=yes',
+    \ 'kinds' : [
+        \ 's:sections',
+        \ 'i:images'
+    \ ],
+    \ 'sro' : '|',
+    \ 'kind2scope' : {
+        \ 's' : 'section',
+    \ },
+    \ 'sort': 0,
+    \ }
 """ }}}
 
 let g:deoplete#enable_at_startup = 1
@@ -570,17 +552,6 @@ let g:tagbar_type_haskell = {
 let g:deoplete#sources#rust#racer_binary='/home/groell/.cargo/bin/racer'
 let g:deoplete#sources#rust#rust_source_path='/home/groell/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src/'
 " }}}
-""" Terminal {{{
-tnoremap <A-\> <C-\><C-n>
-tnoremap <A-h> <C-\><C-n><C-w>h
-tnoremap <A-j> <C-\><C-n><C-w>j
-tnoremap <A-k> <C-\><C-n><C-w>k
-tnoremap <A-l> <C-\><C-n><C-w>l
-nnoremap <A-h> <C-w>h
-nnoremap <A-j> <C-w>j
-nnoremap <A-k> <C-w>k
-nnoremap <A-l> <C-w>l
-""" }}}
 
 "autocmd! BufWritePost * Neomake
 autocmd FileType qf wincmd J
@@ -612,11 +583,4 @@ autocmd FileType qf wincmd J
 "
 "" }}}
 
-"" EasyAlign {{{
-" Start interactive EasyAlign in visual mode (e.g. vip<Enter>)
-vmap <Enter> <Plug>(EasyAlign)
-
-" Start interactive EasyAlign for a motion/text object (e.g. gaip)
-nmap ga <Plug>(EasyAlign)
-"" }}}
 
