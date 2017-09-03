@@ -188,7 +188,7 @@ set undofile
 set undolevels=1000 "maximum number of changes that can be undone
 set undoreload=10000 "maximum number lines to save for undo on a buffer reload"
 
-source ~/.config/nvim/config/shortcuts.vim
+source ~/.config/nvim/rossyrg/config/shortcuts.vim
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
 
 
