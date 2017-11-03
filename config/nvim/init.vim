@@ -29,6 +29,7 @@ Plug 'tpope/vim-unimpaired'
 "Plug 'c0r73x/neotags.nvim'
 Plug 'junegunn/vim-easy-align'
 Plug 'godlygeek/tabular'
+Plug 'skywind3000/asyncrun.vim'
 
 "" Srpache
 Plug 'ganwell/vim-hunspell-dicts'
@@ -133,6 +134,7 @@ set tags+=~/.vim/tags/cpp
 "set tags+=~/.vim/tags/cairo
 set tags+=~/.vim/tags/cairomm
 set tags+=~/.vim/tags/gtkmm3
+set encoding=utf-8
 
 set hidden
 
@@ -491,7 +493,9 @@ let g:table_mode_map_prefix='<leader>t'
 let g:pandoc#spell#enabled = 0
 let g:pandoc#syntax#conceal#blacklist = ["block"]
 let g:pandoc#toc#position="left"
+let g:pandoc#modules#disabled=["indent"]
 "let g:pandoc#filetypes#handled=["markdown", "vimwiki", "pandoc", "rst", "textile"]
+" }}}
 
 let g:tagbar_type_vimwiki = {
     \ 'ctagstype': 'vimwiki',
@@ -583,4 +587,7 @@ autocmd FileType qf wincmd J
 "
 "" }}}
 
-
+" Denite {{{
+call denite#custom#map('insert', '<C-n>', '<denite:move_to_next_line>','noremap')
+call denite#custom#map('insert', '<C-p>', '<denite:move_to_previous_line>','noremap')
+" }}}
