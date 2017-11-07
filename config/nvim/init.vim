@@ -51,7 +51,6 @@ Plug 'tbabej/taskwiki'
 
 "" Tags
 Plug 'majutsushi/tagbar'
-Plug 'lvht/tagbar-markdown'
 
 "" Ruby
 Plug 'vim-ruby/vim-ruby'
@@ -498,21 +497,21 @@ let g:pandoc#modules#disabled=["indent"]
 "let g:pandoc#filetypes#handled=["markdown", "vimwiki", "pandoc", "rst", "textile"]
 " }}}
 
-"let g:tagbar_type_vimwiki = {
-"    \ 'ctagstype': 'vimwiki',
-"    \ 'ctagsbin' : '~/.config/nvim/markdown2ctags.py',
-"    \ 'ctagsargs' : '-f - --sort=yes',
-"    \ 'kinds' : [
-"        \ 's:sections',
-"        \ 'i:images'
-"    \ ],
-"    \ 'sro' : '|',
-"    \ 'kind2scope' : {
-"        \ 's' : 'section',
-"    \ },
-"    \ 'sort': 0,
-"    \ }
-"""" }}}
+let g:tagbar_type_vimwiki = {
+    \ 'ctagstype': 'vimwiki',
+    \ 'ctagsbin' : '~/.config/nvim/markdown2ctags.py',
+    \ 'ctagsargs' : '-f - --sort=yes',
+    \ 'kinds' : [
+        \ 's:sections',
+        \ 'i:images'
+    \ ],
+    \ 'sro' : '|',
+    \ 'kind2scope' : {
+        \ 's' : 'section',
+    \ },
+    \ 'sort': 0,
+    \ }
+""" }}}
 
 let g:deoplete#enable_at_startup = 1
 
