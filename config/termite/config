@@ -18,7 +18,7 @@ search_wrap = true
 cursor_blink = off
 
 # "block", "underline" or "ibeam"
-cursor_shape = block
+cursor_shape = underline
 
 # $BROWSER is used by default
 browser = firefox
@@ -34,7 +34,7 @@ browser = firefox
 # special
 foreground      = #c5c8c6
 foreground_bold = #c5c8c6
-cursor          = #00cc00
+#cursor          = #777777
 background      = #505050
 
 # black

@@ -30,6 +30,7 @@ Plug 'tpope/vim-unimpaired'
 Plug 'junegunn/vim-easy-align'
 Plug 'godlygeek/tabular'
 Plug 'skywind3000/asyncrun.vim'
+Plug 'christoomey/vim-tmux-navigator'
 
 "" Srpache
 Plug 'ganwell/vim-hunspell-dicts'
@@ -590,4 +591,6 @@ autocmd FileType qf wincmd J
 " Denite {{{
 call denite#custom#map('insert', '<C-n>', '<denite:move_to_next_line>','noremap')
 call denite#custom#map('insert', '<C-p>', '<denite:move_to_previous_line>','noremap')
+call denite#custom#map('insert', '<ESC>', '<denite:enter_mode:normal>','noremap')
+call denite#custom#map('normal', '<ESC>', '<denite:enter_mode:normal>','noremap')
 " }}}
