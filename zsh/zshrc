@@ -11,6 +11,8 @@ alias rcal="remind ~/.reminders"
 alias tgreen="tmux source-file ~/.tmux/green.tmux"
 alias torange="tmux source-file ~/.tmux/orange.tmux"
 
+bindkey -s '^P' 'nvim $(fzf)\n'
+
 wcal() {
   remind -cu+2 -w`tput cols` -b1 -m ~/.reminders
 }

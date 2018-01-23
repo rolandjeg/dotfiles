@@ -68,6 +68,7 @@ color14 = #99d3cb
 # white
 color7  = #b4b4b4
 color15 = #c5c8c6
+
 [hints]
 #font = Monospace 12
 #foreground = #dcdccc

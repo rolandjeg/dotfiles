@@ -23,9 +23,11 @@ Plug 'Shougo/denite.nvim'
 Plug 'Shougo/neomru.vim'
 Plug 'Shougo/vimproc.vim'
 Plug 'scrooloose/nerdtree'
+Plug 'Shougo/vimfiler.vim'
 Plug 'scrooloose/nerdcommenter'
 Plug 'tpope/vim-unimpaired'
-"Plug 'junegunn/fzf', {'dir': '~/.fzf', 'do': './install -all'}
+"Plug 'junegunn/fzf', {'dir': '~/.fzf'}
+Plug 'junegunn/fzf.vim'
 "Plug 'c0r73x/neotags.nvim'
 Plug 'junegunn/vim-easy-align'
 Plug 'godlygeek/tabular'
@@ -43,12 +45,12 @@ Plug 'vim-pandoc/vim-pandoc-after'
 Plug 'dhruvasagar/vim-table-mode'
 
 "" Unite
-Plug 'tsukkee/unite-tag'
+"Plug 'tsukkee/unite-tag'
 
 "" Organizer
 Plug 'vimwiki/vimwiki' , { 'branch': 'dev'}
 Plug 'farseer90718/vim-taskwarrior'
-Plug 'tbabej/taskwiki'
+"Plug 'tbabej/taskwiki'
 
 "" Tags
 Plug 'majutsushi/tagbar'
@@ -59,7 +61,6 @@ Plug 'vim-ruby/vim-ruby'
 Plug 'm2mdas/unite-file-vcs'
 Plug 'vhdirk/vim-cmake'
 Plug 'benekastah/neomake'
-Plug 'vim-airline/vim-airline-themes'
 Plug 'vim-scripts/Scratch.vim'
 Plug 'szw/vim-maximizer'
 
@@ -71,7 +72,7 @@ Plug 'tpope/vim-fugitive'
 
 "" Cosmetics
 Plug 'bling/vim-airline'
-Plug 'edkolev/tmuxline.vim'
+Plug 'vim-airline/vim-airline-themes'
 
 "" Python
 Plug 'klen/python-mode'
@@ -105,7 +106,12 @@ Plug 'lu-ren/SerialExperimentsLain'
 Plug 'KeitaNakamura/neodark.vim'
 Plug 'jonathanfilip/vim-lucius'
 Plug 'rakr/vim-one'
+Plug 'roosta/vim-srcery'
+Plug 'xero/sourcerer.vim'
+Plug 'joshdick/onedark.vim'
+Plug 'arcticicestudio/nord-vim'
 
+Plug 'severin-lemaignan/vim-minimap'
 
 "" Own stuff
 Plug '~/.config/nvim/rossyrg'
@@ -360,6 +366,8 @@ let &showbreak='+++ '
 set breakindent
 set laststatus=2
 
+set inccommand=nosplit
+
 
 
 
@@ -401,13 +409,15 @@ let g:hybrid_reduced_contrast = 0
 "let g:seoul256_background = 234
 "let g:seoul256_light_background = 256
 
-set background=light
+set background=dark
 let base16colorspace=256
 
 let g:gruvbox_italic=1
 let g:gruvbox_bold=1
 let g:gruvbox_underline=1
 
+let g:nord_italic_comments = 1
+let g:nord_comment_brightness = 20
 colorscheme lucius
 
 "autocmd VimEnter * SetColors  zenburn seoul256
@@ -495,6 +505,7 @@ let g:pandoc#spell#enabled = 0
 let g:pandoc#syntax#conceal#blacklist = ["block"]
 let g:pandoc#toc#position="left"
 let g:pandoc#modules#disabled=["indent"]
+let g:pandoc#folding#fdc = 2
 "let g:pandoc#filetypes#handled=["markdown", "vimwiki", "pandoc", "rst", "textile"]
 " }}}
 
@@ -593,4 +604,13 @@ call denite#custom#map('insert', '<C-n>', '<denite:move_to_next_line>','noremap'
 call denite#custom#map('insert', '<C-p>', '<denite:move_to_previous_line>','noremap')
 call denite#custom#map('insert', '<ESC>', '<denite:enter_mode:normal>','noremap')
 call denite#custom#map('normal', '<ESC>', '<denite:enter_mode:normal>','noremap')
+
+call denite#custom#option('default', 'highlight_mode_insert', 'PreProc')
+
+" }}}
+
+" FZF {{{
+"map <Leader>f :Find<space>
+
+command! -bang -nargs=* Find call fzf#vim#grep( 'rg --column --line-number --no-heading --fixed-strings --ignore-case --hidden --follow --color "always" '.shellescape(<q-args>), 1, <bang>0)
 " }}}
