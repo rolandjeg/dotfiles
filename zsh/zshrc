@@ -2,6 +2,7 @@
 # User configuration sourced by interactive shells
 #
 alias t="task"
+alias k="khal"
 alias pacman="pacman --color auto"
 alias ]="rifle"
 #alias wcal="remind -cu+2 -w`tput cols` -b1 -m ~/.reminders"
@@ -58,3 +59,6 @@ zle-line-init () {
 #  #print 'did select' >/dev/pts/16
 #}
 #zle -N zle-keymap-select
+#
+khal
+task

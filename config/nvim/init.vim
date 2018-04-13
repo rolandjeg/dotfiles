@@ -21,7 +21,7 @@ Plug 'nhooyr/neoman.vim'
 Plug 'Shougo/unite.vim'
 Plug 'Shougo/denite.nvim'
 Plug 'Shougo/neomru.vim'
-Plug 'Shougo/vimproc.vim'
+Plug 'Shougo/vimproc.vim', {'do' : 'make'}
 Plug 'scrooloose/nerdtree'
 Plug 'Shougo/vimfiler.vim'
 Plug 'scrooloose/nerdcommenter'
@@ -418,6 +418,7 @@ let g:gruvbox_underline=1
 
 let g:nord_italic_comments = 1
 let g:nord_comment_brightness = 20
+let g:lucius_use_underline = 0
 colorscheme lucius
 
 "autocmd VimEnter * SetColors  zenburn seoul256
