@@ -5,3 +5,5 @@ nnoremap <buffer> <F1> :GhcModType<CR>
 nnoremap <buffer> <F2> :GhcModTypeClear<CR>
 nnoremap <buffer> <F3> :GhcModInfo<CR>
 au! BufWritePost * GhcModCheckAndLintAsync
+au! BufWritePost * AsyncRun hasktags -c -x --ignore-close-implementation .
+

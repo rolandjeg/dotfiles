@@ -11,5 +11,5 @@ autocmd! BufWritePost * Neomake
 
 autocmd FileType tex :NoMatchParen
 
-nnoremap <localleader>lft :<C-u>Denite -mode=normal vimtex_toc<cr> 
-nnoremap <localleader>lfy :<C-u>Denite -mode=normal vimtex_labels<cr>
+nnoremap <localleader>flt :<C-u>Denite -mode=normal vimtex_toc<cr> 
+nnoremap <localleader>fll :<C-u>Denite -mode=normal vimtex_labels<cr>

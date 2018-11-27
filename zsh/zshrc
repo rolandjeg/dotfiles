@@ -24,6 +24,8 @@ fi
 
 BASE16_SHELL=$HOME/.config/base16-shell/
 [ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
+alias tlight="tmux source-file ~/.tmux/green.tmux && base16_lucius-light && rm ~/.config/nvim/rossyrg/config/background && ln -s ~/.config/nvim/rossyrg/config/lightbackground ~/.config/nvim/rossyrg/config/background"
+alias tdark="tmux source-file ~/.tmux/orange.tmux && base16_lucius-dark && rm ~/.config/nvim/rossyrg/config/background && ln -s ~/.config/nvim/rossyrg/config/darkbackground ~/.config/nvim/rossyrg/config/background"
 
 # Modal cursor color for vi's insert/normal modes.
 # http://stackoverflow.com/questions/30985436/
@@ -62,3 +64,10 @@ zle-line-init () {
 #
 khal
 task
+source /usr/share/nvm/init-nvm.sh
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"
+
+source ~/.fzf/shell/completion.zsh
+source ~/.fzf/shell/key-bindings.zsh

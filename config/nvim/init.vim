@@ -7,12 +7,20 @@ filetype on
 """ Plugins {{{
 call plug#begin()
 
-"Plug 'ctjhoa/spacevim'
 "" Autocompletion
 Plug 'Shougo/deoplete.nvim'
 "Plug 'ervandew/supertab'
 Plug 'Shougo/neosnippet' "?
 Plug 'Shougo/neosnippet-snippets' "?
+Plug 'ctrlpvim/ctrlp.vim'
+
+"" Languages
+"" Kotlin
+Plug 'udalov/kotlin-vim'
+"" Typescript
+Plug 'HerringtonDarkholme/yats.vim'
+"" Ruby
+Plug 'vim-ruby/vim-ruby'
 
 "" Utility
 "Plug 'hecal3/vim-leader-guide'
@@ -29,10 +37,14 @@ Plug 'tpope/vim-unimpaired'
 "Plug 'junegunn/fzf', {'dir': '~/.fzf'}
 Plug 'junegunn/fzf.vim'
 "Plug 'c0r73x/neotags.nvim'
+Plug 'mpevnev/guten-tag'
+Plug 'liuchengxu/vim-which-key'
+
 Plug 'junegunn/vim-easy-align'
 Plug 'godlygeek/tabular'
 Plug 'skywind3000/asyncrun.vim'
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'ludovicchabant/vim-gutentags'
 
 "" Srpache
 Plug 'ganwell/vim-hunspell-dicts'
@@ -55,8 +67,6 @@ Plug 'farseer90718/vim-taskwarrior'
 "" Tags
 Plug 'majutsushi/tagbar'
 
-"" Ruby
-Plug 'vim-ruby/vim-ruby'
 
 Plug 'm2mdas/unite-file-vcs'
 Plug 'vhdirk/vim-cmake'
@@ -110,6 +120,7 @@ Plug 'roosta/vim-srcery'
 Plug 'xero/sourcerer.vim'
 Plug 'joshdick/onedark.vim'
 Plug 'arcticicestudio/nord-vim'
+Plug 'ayu-theme/ayu-vim'
 
 Plug 'severin-lemaignan/vim-minimap'
 
@@ -135,13 +146,15 @@ filetype plugin indent on
 set ofu=syntaxcomplete#Complete
 let g:rubycomplete_buffer_loading = 1
 set iskeyword=a-z,A-Z,_,.,39
-set tags+=./tags
+set tags+=tags
+set tags+=tagshaskdogs
 set tags+=~/.vim/tags/cpp
 "set tags+=~/.vim/tags/gtk2
 "set tags+=~/.vim/tags/cairo
 set tags+=~/.vim/tags/cairomm
 set tags+=~/.vim/tags/gtkmm3
 set encoding=utf-8
+set mouse=a
 
 set hidden
 
@@ -166,6 +179,8 @@ set completeopt=menuone,menu,longest,preview
 
 let maplocalleader = "\<Space>"
 let mapleader = "\<Space>"
+nnoremap <silent> <leader>      :<c-u>WhichKey '<Space>'<CR>
+nnoremap <silent> <localleader> :<c-u>WhichKey  ','<CR><Paste>
 set modeline
 set modelines=5
 set ai
@@ -406,10 +421,12 @@ set termguicolors
 "let g:hybrid_use_Xresources = 1
 let g:hybrid_reduced_contrast = 0
 
-"let g:seoul256_background = 234
-"let g:seoul256_light_background = 256
+let g:seoul256_background = 235
+let g:seoul256_light_background = 254
 
-set background=dark
+let ayucolor="mirage"
+
+source ~/.config/nvim/rossyrg/config/background
 let base16colorspace=256
 
 let g:gruvbox_italic=1
@@ -419,6 +436,7 @@ let g:gruvbox_underline=1
 let g:nord_italic_comments = 1
 let g:nord_comment_brightness = 20
 let g:lucius_use_underline = 0
+let g:lucius_contrast = 'normal'
 colorscheme lucius
 
 "autocmd VimEnter * SetColors  zenburn seoul256
@@ -607,6 +625,7 @@ call denite#custom#map('insert', '<ESC>', '<denite:enter_mode:normal>','noremap'
 call denite#custom#map('normal', '<ESC>', '<denite:enter_mode:normal>','noremap')
 
 call denite#custom#option('default', 'highlight_mode_insert', 'PreProc')
+call denite#custom#option('default', 'mode', 'normal')
 
 " }}}
 
@@ -615,3 +634,21 @@ call denite#custom#option('default', 'highlight_mode_insert', 'PreProc')
 
 command! -bang -nargs=* Find call fzf#vim#grep( 'rg --column --line-number --no-heading --fixed-strings --ignore-case --hidden --follow --color "always" '.shellescape(<q-args>), 1, <bang>0)
 " }}}
+"
+"
+
+let g:gutentags_project_root=['.root']
+
+" NEOSNIPPETS {{{
+imap <C-k> <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
+" }}}
+"
+
+""" FZF
+let g:fzf_action = {
+            \ 'ctrl-q': 'wall | bdelete',
+            \ 'ctrl-t': 'tab split',
+            \ 'ctrl-x': 'split',
+            \ 'ctrl-v': 'vsplit' }
