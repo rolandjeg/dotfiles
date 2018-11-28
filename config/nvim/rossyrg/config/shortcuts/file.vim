@@ -1,0 +1,7 @@
+call shortcut#map('<Space> f F', 'File -> Open', 'Unite -no-split file file/new')
+call shortcut#map('<Space> f f', 'File -> Open (relative)', 'UniteWithBufferDir -no-split file file/new')
+call shortcut#map('<Space> f z', 'File -> Open (FZF)', 'FZF')
+"call shortcut#map('<Space> e D', 'File -> Browse', 'VimFilerCurrentDir -quit')
+"call shortcut#map('<Space> e d', 'File -> Browse (relative)', 'VimFilerBufferDir -quit')
+"call shortcut#map("<Space> ' F", 'File -> Jump to...', 'Unite -no-split file/vcs file_rec/async')
+"call shortcut#map("<Space> ' f", 'File -> Jump to... (relative)', 'UniteWithBufferDir -no-split file/vcs file_rec/async')

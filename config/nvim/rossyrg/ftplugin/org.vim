@@ -1,1 +1,1 @@
-set textwidth=0
+/home/groell/dotfiles/config/nvim/rossyrg/ftplugin/org.vim

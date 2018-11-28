@@ -1,0 +1,8 @@
+call shortcut#map('<Space> # b', 'Diff -> Buffer', 'diffthis')
+call shortcut#map('<Space> # <C-Left>', 'Diff -> Get -> Left', 'diffget //2', 'diffupdate')
+call shortcut#map('<Space> # <C-Right>', 'Diff -> Get -> Right', 'diffget //3', 'diffupdate')
+call shortcut#map('<Space> # B', 'Diff -> Original', 'DiffOrig')
+call shortcut#map('<Space> # <Left>', 'Diff -> Put -> Left', 'diffput //2', 'diffupdate')
+call shortcut#map('<Space> # <Right>', 'Diff -> Put -> Right', 'diffput //3', 'diffupdate')
+call shortcut#map('<Space> # q', 'Diff -> Quit', 'diffoff')
+call shortcut#map('<Space> # r', 'Diff -> Redraw', 'diffupdate')

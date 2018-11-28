@@ -1,0 +1,46 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+-	shortcuts/search.vim	/^noremap - ;$/;"	m
+<A-Down>	shortcuts/fold.vim	/^nnoremap <A-Down> zo$/;"	m
+<A-Left>	shortcuts/fold.vim	/^nnoremap <A-Left> zm$/;"	m
+<A-Right>	shortcuts/fold.vim	/^nnoremap <A-Right> zr$/;"	m
+<A-S-Down>	shortcuts/fold.vim	/^nnoremap <A-S-Down> zO$/;"	m
+<A-S-Left>	shortcuts/fold.vim	/^nnoremap <A-S-Left> zM$/;"	m
+<A-S-Right>	shortcuts/fold.vim	/^nnoremap <A-S-Right> zR$/;"	m
+<A-S-Up>	shortcuts/fold.vim	/^nnoremap <A-S-Up> zC$/;"	m
+<A-Up>	shortcuts/fold.vim	/^nnoremap <A-Up> zc$/;"	m
+<C-Down>	shortcuts/fold.vim	/^nnoremap <C-Down> zj$/;"	m
+<C-S-Down>	shortcuts/fold.vim	/^nnoremap <C-S-Down> ]]$/;"	m
+<C-S-Up>	shortcuts/fold.vim	/^nnoremap <C-S-Up> [[$/;"	m
+<C-Up>	shortcuts/fold.vim	/^nnoremap <C-Up> zk$/;"	m
+DetectIndentationStyle	shortcuts/format.vim	/^function! s:DetectIndentationStyle()$/;"	f
+Shortcut_buffer_close	shortcuts/buffer.vim	/^function! Shortcut_buffer_close() abort$/;"	f
+Shortcut_buffer_strip_trailing_whitespace	shortcuts/buffer.vim	/^function! Shortcut_buffer_strip_trailing_whitespace() abort$/;"	f
+Shortcut_comment_ascii_art_figlet	shortcuts/comment.vim	/^function! Shortcut_comment_ascii_art_figlet() abort$/;"	f
+Shortcut_format_convert_double_to_single_quotes	shortcuts/format.vim	/^function! Shortcut_format_convert_double_to_single_quotes() abort$/;"	f
+Shortcut_format_convert_function_call_to_pipeline	shortcuts/format.vim	/^function! Shortcut_format_convert_function_call_to_pipeline() abort$/;"	f
+Shortcut_format_convert_pipeline_to_function_call	shortcuts/format.vim	/^function! Shortcut_format_convert_pipeline_to_function_call() abort$/;"	f
+Shortcut_format_convert_ruby_symbol_to_single_quotes	shortcuts/format.vim	/^function! Shortcut_format_convert_ruby_symbol_to_single_quotes() abort$/;"	f
+Shortcut_format_convert_single_quotes_to_ruby_symbol	shortcuts/format.vim	/^function! Shortcut_format_convert_single_quotes_to_ruby_symbol() abort$/;"	f
+Shortcut_format_convert_single_to_double_quotes	shortcuts/format.vim	/^function! Shortcut_format_convert_single_to_double_quotes() abort$/;"	f
+Shortcut_format_indent_spaces	shortcuts/format.vim	/^function! Shortcut_format_indent_spaces() abort$/;"	f
+Shortcut_format_indent_tabs	shortcuts/format.vim	/^function! Shortcut_format_indent_tabs() abort$/;"	f
+Shortcut_format_markdown_fenced_code_block	shortcuts/format.vim	/^function! Shortcut_format_markdown_fenced_code_block() abort$/;"	f
+Shortcut_format_markdown_section	shortcuts/format.vim	/^function! Shortcut_format_markdown_section() abort$/;"	f
+Shortcut_format_markdown_table_header	shortcuts/format.vim	/^function! Shortcut_format_markdown_table_header() abort$/;"	f
+Shortcut_format_markdown_title	shortcuts/format.vim	/^function! Shortcut_format_markdown_title() abort$/;"	f
+Shortcut_format_parentheses_add	shortcuts/format.vim	/^function! Shortcut_format_parentheses_add() abort$/;"	f
+Shortcut_format_parentheses_remove	shortcuts/format.vim	/^function! Shortcut_format_parentheses_remove() abort$/;"	f
+Shortcut_format_separator_repeat_to_eol	shortcuts/format.vim	/^function! Shortcut_format_separator_repeat_to_eol() abort$/;"	f
+Shortcut_format_separator_using_equal_sign	shortcuts/format.vim	/^function! Shortcut_format_separator_using_equal_sign() abort$/;"	f
+Shortcut_format_separator_using_minus_sign	shortcuts/format.vim	/^function! Shortcut_format_separator_using_minus_sign() abort$/;"	f
+Shortcut_search_replace_interactive	shortcuts/search.vim	/^function! Shortcut_search_replace_interactive() abort$/;"	f
+Shortcut_tmux_send_line_or_selection	shortcuts/tmux.vim	/^function! Shortcut_tmux_send_line_or_selection() abort$/;"	f
+_	shortcuts/search.vim	/^noremap _ ,$/;"	m
+gN	shortcuts/visual.vim	/^  nnoremap gN ??e<Return>v??<Return>$/;"	m
+gV	shortcuts/visual.vim	/^nnoremap gV `[v`]$/;"	m
+gn	shortcuts/visual.vim	/^  nnoremap gn \/\/e<Return>v??<Return>$/;"	m

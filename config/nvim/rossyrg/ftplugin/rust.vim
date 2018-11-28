@@ -1,1 +1,1 @@
-au! BufWritePost * Neomake rustc
+/home/groell/dotfiles/config/nvim/rossyrg/ftplugin/rust.vim

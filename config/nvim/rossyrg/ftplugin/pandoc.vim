@@ -1,1 +1,1 @@
-nnoremap <buffer> <F1> :TOC<CR>
+/home/groell/dotfiles/config/nvim/rossyrg/ftplugin/pandoc.vim
