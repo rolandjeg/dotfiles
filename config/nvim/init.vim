@@ -98,6 +98,8 @@ Plug 'eagletmt/ghcmod-vim'
 Plug 'eagletmt/neco-ghc'
 
 "Colorschemes
+Plug 'sjl/badwolf'
+Plug 'sonph/onehalf', {'rtp': 'vim/'}
 Plug 'junegunn/seoul256.vim'
 Plug 'jnurmine/Zenburn'
 Plug 'thomd/vim-wasabi-colorscheme'
@@ -441,7 +443,7 @@ let g:nord_italic_comments = 1
 let g:nord_comment_brightness = 20
 let g:lucius_use_underline = 0
 let g:lucius_contrast = 'normal'
-colorscheme lucius
+colorscheme gruvbox
 
 "autocmd VimEnter * SetColors  zenburn seoul256
 
@@ -507,7 +509,33 @@ let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 
 
 """ Vimwiki {{{
-let g:vimwiki_list = [{'path': '~/vimwiki', 'syntax': 'markdown', 'path_html': '~/vimwiki_html/', 'auto_tags': 1, 'auto_export': 1, 'template_path': '~/vimwiki_html', 'ext': '.md', 'custom_wiki2html': 'wiki2html.sh', 'custom_wiki2html_args' : '', 'template_default': 'def_template', 'template_ext': '.html'}]
+let g:vimwiki_list = [
+            \ {
+            \ 'path': '~/vimwiki',
+            \ 'syntax': 'markdown',
+            \ 'path_html': '~/vimwiki_html/',
+            \ 'auto_tags': 1,
+            \ 'auto_export': 1,
+            \ 'template_path': '~/vimwiki_html',
+            \ 'ext': '.md',
+            \ 'custom_wiki2html': 'wiki2html.sh',
+            \ 'custom_wiki2html_args' : '',
+            \ 'template_default': 'def_template',
+            \ 'template_ext': '.html'
+            \ },
+            \ {
+            \ 'path': '~/vimwiki_privat', 
+            \ 'syntax': 'markdown',
+            \ 'path_html': '~/vimwiki_privat_html/',
+            \ 'auto_tags': 1,
+            \ 'auto_export': 0,
+            \ 'template_path': '~/vimwiki_html',
+            \ 'ext': '.md',
+            \ 'custom_wiki2html': 'wiki2html.sh',
+            \ 'custom_wiki2html_args' : '',
+            \ 'template_default': 'def_template',
+            \ 'template_ext': '.html'
+            \ }]
 let g:vimwiki_use_calendar=1
 let g:vimwiki_folding = 'expr'
 let g:vimwiki_table_mappings = 0
