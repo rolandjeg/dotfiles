@@ -34,7 +34,7 @@ Plug 'scrooloose/nerdtree'
 Plug 'Shougo/vimfiler.vim'
 Plug 'scrooloose/nerdcommenter'
 Plug 'tpope/vim-unimpaired'
-Plug 'junegunn/fzf', {'dir': '~/.fzf'}
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 "Plug 'c0r73x/neotags.nvim'
 Plug 'mpevnev/guten-tag'
@@ -286,7 +286,7 @@ if &term =~ '^screen' && exists('$TMUX')
 endif
 
 " VIM Airline Config
-let g:airline_theme = 'lucius'
+let g:airline_theme = 'gruvbox'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tmuxline#enabled = 0
 let g:airline#extensions#whitespace#enabled = 0
@@ -515,7 +515,7 @@ let g:vimwiki_list = [
             \ 'syntax': 'markdown',
             \ 'path_html': '~/vimwiki_html/',
             \ 'auto_tags': 1,
-            \ 'auto_export': 1,
+            \ 'auto_export': 0,
             \ 'template_path': '~/vimwiki_html',
             \ 'ext': '.md',
             \ 'custom_wiki2html': 'wiki2html.sh',
@@ -679,6 +679,13 @@ xmap <C-k>     <Plug>(neosnippet_expand_target)
 "
 
 """ FZF
+let g:fzf_action = {
+            \ 'ctrl-q': 'wall | bdelete',
+            \ 'ctrl-t': 'tab split',
+            \ 'ctrl-x': 'split',
+            \ 'ctrl-v': 'vsplit' }
+
+set background=dark
 command! -bang -nargs=* Rg
             \ call fzf#vim#grep(
             \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
