@@ -35,6 +35,7 @@ Plug 'Shougo/vimfiler.vim'
 Plug 'scrooloose/nerdcommenter'
 Plug 'tpope/vim-unimpaired'
 "Plug 'junegunn/fzf', {'dir': '~/.fzf'}
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 "Plug 'c0r73x/neotags.nvim'
 Plug 'mpevnev/guten-tag'
@@ -284,7 +285,7 @@ if &term =~ '^screen' && exists('$TMUX')
 endif
 
 " VIM Airline Config
-let g:airline_theme = 'lucius'
+let g:airline_theme = 'gruvbox'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tmuxline#enabled = 0
 let g:airline#extensions#whitespace#enabled = 0
@@ -437,7 +438,7 @@ let g:nord_italic_comments = 1
 let g:nord_comment_brightness = 20
 let g:lucius_use_underline = 0
 let g:lucius_contrast = 'normal'
-colorscheme lucius
+colorscheme gruvbox
 
 "autocmd VimEnter * SetColors  zenburn seoul256
 
@@ -503,7 +504,7 @@ let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 
 
 """ Vimwiki {{{
-let g:vimwiki_list = [{'path': '~/vimwiki', 'syntax': 'markdown', 'path_html': '~/vimwiki_html/', 'auto_tags': 1, 'auto_export': 1, 'template_path': '~/vimwiki_html', 'ext': '.md', 'custom_wiki2html': 'wiki2html.sh', 'custom_wiki2html_args' : '', 'template_default': 'def_template', 'template_ext': '.html'}]
+let g:vimwiki_list = [{'path': '~/vimwiki', 'syntax': 'markdown', 'path_html': '~/vimwiki_html/', 'auto_tags': 1, 'auto_export': 0, 'template_path': '~/vimwiki_html', 'ext': '.md', 'custom_wiki2html': 'wiki2html.sh', 'custom_wiki2html_args' : '', 'template_default': 'def_template', 'template_ext': '.html'}]
 let g:vimwiki_use_calendar=1
 let g:vimwiki_folding = 'expr'
 let g:vimwiki_table_mappings = 0
@@ -652,3 +653,5 @@ let g:fzf_action = {
             \ 'ctrl-t': 'tab split',
             \ 'ctrl-x': 'split',
             \ 'ctrl-v': 'vsplit' }
+
+set background=dark
