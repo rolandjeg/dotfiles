@@ -34,7 +34,6 @@ Plug 'scrooloose/nerdtree'
 Plug 'Shougo/vimfiler.vim'
 Plug 'scrooloose/nerdcommenter'
 Plug 'tpope/vim-unimpaired'
-"Plug 'junegunn/fzf', {'dir': '~/.fzf'}
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 "Plug 'c0r73x/neotags.nvim'
@@ -333,6 +332,10 @@ let g:vimtex_quickfix_latexlog ={
       \}
 let g:vimtex_imaps_snippet_engine='neosnippet'
 let g:vimtex_latexmk_nvim=1
+let g:vimtex_toc_config ={
+            \ 'mode' : 2,
+            \ 'split_pos' : 'full',
+            \}
 
 let g:tex_flavor = "latex"
 
@@ -655,3 +658,9 @@ let g:fzf_action = {
             \ 'ctrl-v': 'vsplit' }
 
 set background=dark
+command! -bang -nargs=* Rg
+            \ call fzf#vim#grep(
+            \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
+            \   <bang>0 ? fzf#vim#with_preview('up:60%')
+            \           : fzf#vim#with_preview('right:50%:hidden', '?'),
+            \   <bang>0)
