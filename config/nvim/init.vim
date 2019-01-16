@@ -82,10 +82,11 @@ Plug 'tpope/vim-fugitive'
 
 "" Cosmetics
 Plug 'bling/vim-airline'
+Plug 'edkolev/tmuxline.vim'
 Plug 'vim-airline/vim-airline-themes'
 
 "" Python
-Plug 'klen/python-mode'
+Plug 'python-mode/python-mode', { 'branch': 'develop' }
 
 """ Rust
 Plug 'rust-lang/rust.vim'
@@ -458,10 +459,10 @@ set autoread
 
 """ Python Mode {{{
 
-let g:pymode_python = 'python3'
-let g:pymode_indent = 1
-let g:pymode_folding = 1
-let g:pymode_rope_completion = 0
+let g:pymode_python = 'python'
+"let g:pymode_indent = 1
+"let g:pymode_folding = 1
+"let g:pymode_rope_completion = 0
 
 """ }}}
 """ Jedi (Python) {{{
@@ -516,7 +517,7 @@ let g:vimwiki_list = [
             \ 'path_html': '~/vimwiki_html/',
             \ 'auto_tags': 1,
             \ 'auto_export': 0,
-            \ 'template_path': '~/vimwiki_html',
+            \ 'template_path': '~/vimwiki_templates',
             \ 'ext': '.md',
             \ 'custom_wiki2html': 'wiki2html.sh',
             \ 'custom_wiki2html_args' : '',
