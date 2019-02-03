@@ -2,7 +2,7 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-  export ZSH="/home/ross/.oh-my-zsh"
+  export ZSH="/home/groell/.oh-my-zsh"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -63,6 +63,7 @@ ZSH_THEME="robbyrussell"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
+  shrink-path
   git
   vi-mode
   taskwarrior
@@ -105,11 +106,12 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+alias ]="rifle "
 
 BASE16_SHELL=$HOME/.config/base16-shell/
 [ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
-alias tlight="tmux source-file ~/.tmux/green.tmux && base16_lucius-light && rm ~/.config/nvim/rossyrg/config/background && ln -s ~/.config/nvim/rossyrg/config/lightbackground ~/.config/nvim/rossyrg/config/background"
-alias tdark="tmux source-file ~/.tmux/orange.tmux && base16_lucius-dark && rm ~/.config/nvim/rossyrg/config/background && ln -s ~/.config/nvim/rossyrg/config/darkbackground ~/.config/nvim/rossyrg/config/background"
+alias tlight="tmux source-file ~/.tmux/green.tmux && base16_gruvbox-light-hard && rm ~/.config/nvim/rossyrg/config/background && ln -s ~/.config/nvim/rossyrg/config/lightbackground ~/.config/nvim/rossyrg/config/background"
+alias tdark="tmux source-file ~/.tmux/orange.tmux && base16_gruvbox-dark-hard && rm ~/.config/nvim/rossyrg/config/background && ln -s ~/.config/nvim/rossyrg/config/darkbackground ~/.config/nvim/rossyrg/config/background"
 
 source ~/.fzf/shell/completion.zsh
 source ~/.fzf/shell/key-bindings.zsh

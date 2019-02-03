@@ -31,8 +31,8 @@ endfunction
 """ }}}
 nnoremap <leader>nc :call ConcealToggle()<CR>
 nnoremap <leader>nf :call FoldcolumnToggle()<CR>
-nnoremap <leader>ne :VimFilerExplorer<CR>
-nnoremap <leader>nt :VimFiler<CR>
+nnoremap <leader>nt :VimFilerExplorer<CR>
+nnoremap <leader>ne :VimFiler<CR>
 nnoremap <leader>ng :TableModeToggle<CR>
 """ }}}
 

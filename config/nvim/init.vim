@@ -84,12 +84,11 @@ Plug 'airblade/vim-gitgutter'
 
 "" Cosmetics
 Plug 'bling/vim-airline'
+Plug 'edkolev/tmuxline.vim'
 Plug 'vim-airline/vim-airline-themes'
 
 "" Python
-"Plug 'klen/python-mode'
 Plug 'python-mode/python-mode', { 'branch': 'develop' }
-"Plug 'davidhalter/jedi-vim'
 
 """ Rust
 Plug 'rust-lang/rust.vim'
@@ -102,6 +101,8 @@ Plug 'eagletmt/ghcmod-vim'
 Plug 'eagletmt/neco-ghc'
 
 "Colorschemes
+Plug 'sjl/badwolf'
+Plug 'sonph/onehalf', {'rtp': 'vim/'}
 Plug 'junegunn/seoul256.vim'
 Plug 'jnurmine/Zenburn'
 Plug 'thomd/vim-wasabi-colorscheme'
@@ -460,7 +461,7 @@ set autoread
 
 """ Python Mode {{{
 
-"let g:pymode_python = 'python'
+let g:pymode_python = 'python'
 "let g:pymode_indent = 1
 "let g:pymode_folding = 1
 "let g:pymode_rope_completion = 0
@@ -511,7 +512,33 @@ let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 
 
 """ Vimwiki {{{
-let g:vimwiki_list = [{'path': '~/vimwiki', 'syntax': 'markdown', 'path_html': '~/vimwiki_html/', 'auto_tags': 1, 'auto_export': 0, 'template_path': '~/vimwiki_html', 'ext': '.md', 'custom_wiki2html': 'wiki2html.sh', 'custom_wiki2html_args' : '', 'template_default': 'def_template', 'template_ext': '.html'}]
+let g:vimwiki_list = [
+            \ {
+            \ 'path': '~/vimwiki',
+            \ 'syntax': 'markdown',
+            \ 'path_html': '~/vimwiki_html/',
+            \ 'auto_tags': 1,
+            \ 'auto_export': 0,
+            \ 'template_path': '~/vimwiki_templates',
+            \ 'ext': '.md',
+            \ 'custom_wiki2html': 'wiki2html.sh',
+            \ 'custom_wiki2html_args' : '',
+            \ 'template_default': 'def_template',
+            \ 'template_ext': '.html'
+            \ },
+            \ {
+            \ 'path': '~/vimwiki_privat', 
+            \ 'syntax': 'markdown',
+            \ 'path_html': '~/vimwiki_privat_html/',
+            \ 'auto_tags': 1,
+            \ 'auto_export': 0,
+            \ 'template_path': '~/vimwiki_html',
+            \ 'ext': '.md',
+            \ 'custom_wiki2html': 'wiki2html.sh',
+            \ 'custom_wiki2html_args' : '',
+            \ 'template_default': 'def_template',
+            \ 'template_ext': '.html'
+            \ }]
 let g:vimwiki_use_calendar=1
 let g:vimwiki_folding = 'expr'
 let g:vimwiki_table_mappings = 0
