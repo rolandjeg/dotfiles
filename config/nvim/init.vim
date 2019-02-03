@@ -65,7 +65,7 @@ Plug 'farseer90718/vim-taskwarrior'
 "Plug 'tbabej/taskwiki'
 
 "" Tags
-Plug 'majutsushi/tagbar'
+Plug 'rgroell/tagbar'
 
 
 Plug 'm2mdas/unite-file-vcs'
@@ -79,13 +79,17 @@ Plug 'lervag/vimtex'
 
 "" Git
 Plug 'tpope/vim-fugitive'
+Plug 'jreybert/vimagit'
+Plug 'airblade/vim-gitgutter'
 
 "" Cosmetics
 Plug 'bling/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
 "" Python
-Plug 'klen/python-mode'
+"Plug 'klen/python-mode'
+Plug 'python-mode/python-mode', { 'branch': 'develop' }
+"Plug 'davidhalter/jedi-vim'
 
 """ Rust
 Plug 'rust-lang/rust.vim'
@@ -393,21 +397,21 @@ set inccommand=nosplit
 
 """ Syntastic {{{
 
-function! SyntasticPython2()
-    let g:syntastic_python_python_exec = '/usr/bin/python2'
-endfunction
-command! SyntasticPython2 call SyntasticPython2()
-
-function! SyntasticPython3()
-    let g:syntastic_python_python_exec = '/usr/bin/python3'
-endfunction
-command! SyntasticPython3 call SyntasticPython3()
-
-let g:syntastic_mode_map = {
-    \ "mode": "active",
-    \ "active_filetypes": [],
-    \ "passive_filetypes": ["python"] }
-
+"function! SyntasticPython2()
+"    let g:syntastic_python_python_exec = '/usr/bin/python2'
+"endfunction
+"command! SyntasticPython2 call SyntasticPython2()
+"
+"function! SyntasticPython3()
+"    let g:syntastic_python_python_exec = '/usr/bin/python3'
+"endfunction
+"command! SyntasticPython3 call SyntasticPython3()
+"
+"let g:syntastic_mode_map = {
+"    \ "mode": "active",
+"    \ "active_filetypes": [],
+"    \ "passive_filetypes": ["python"] }
+"
 """ }}}
 
 
@@ -456,10 +460,10 @@ set autoread
 
 """ Python Mode {{{
 
-let g:pymode_python = 'python3'
-let g:pymode_indent = 1
-let g:pymode_folding = 1
-let g:pymode_rope_completion = 0
+"let g:pymode_python = 'python'
+"let g:pymode_indent = 1
+"let g:pymode_folding = 1
+"let g:pymode_rope_completion = 0
 
 """ }}}
 """ Jedi (Python) {{{
@@ -664,3 +668,4 @@ command! -bang -nargs=* Rg
             \   <bang>0 ? fzf#vim#with_preview('up:60%')
             \           : fzf#vim#with_preview('right:50%:hidden', '?'),
             \   <bang>0)
+
