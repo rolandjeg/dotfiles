@@ -67,7 +67,7 @@ Plug 'farseer90718/vim-taskwarrior'
 "Plug 'tbabej/taskwiki'
 
 "" Tags
-Plug 'majutsushi/tagbar'
+Plug 'rgroell/tagbar'
 
 
 Plug 'm2mdas/unite-file-vcs'
@@ -81,6 +81,7 @@ Plug 'lervag/vimtex'
 
 "" Git
 Plug 'tpope/vim-fugitive'
+Plug 'jreybert/vimagit'
 Plug 'airblade/vim-gitgutter'
 
 "" Cosmetics
@@ -400,21 +401,21 @@ set inccommand=nosplit
 
 """ Syntastic {{{
 
-function! SyntasticPython2()
-    let g:syntastic_python_python_exec = '/usr/bin/python2'
-endfunction
-command! SyntasticPython2 call SyntasticPython2()
-
-function! SyntasticPython3()
-    let g:syntastic_python_python_exec = '/usr/bin/python3'
-endfunction
-command! SyntasticPython3 call SyntasticPython3()
-
-let g:syntastic_mode_map = {
-    \ "mode": "active",
-    \ "active_filetypes": [],
-    \ "passive_filetypes": ["python"] }
-
+"function! SyntasticPython2()
+"    let g:syntastic_python_python_exec = '/usr/bin/python2'
+"endfunction
+"command! SyntasticPython2 call SyntasticPython2()
+"
+"function! SyntasticPython3()
+"    let g:syntastic_python_python_exec = '/usr/bin/python3'
+"endfunction
+"command! SyntasticPython3 call SyntasticPython3()
+"
+"let g:syntastic_mode_map = {
+"    \ "mode": "active",
+"    \ "active_filetypes": [],
+"    \ "passive_filetypes": ["python"] }
+"
 """ }}}
 
 
