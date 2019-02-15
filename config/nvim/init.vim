@@ -14,6 +14,9 @@ Plug 'Shougo/neosnippet' "?
 Plug 'Shougo/neosnippet-snippets' "?
 Plug 'ctrlpvim/ctrlp.vim'
 
+"Plug 'luochen1990/rainbow'
+Plug 'junegunn/rainbow_parentheses.vim'
+
 "" Languages
 "" Kotlin
 Plug 'udalov/kotlin-vim'
@@ -38,7 +41,6 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 "Plug 'c0r73x/neotags.nvim'
 Plug 'mpevnev/guten-tag'
-Plug 'liuchengxu/vim-which-key'
 
 Plug 'junegunn/vim-easy-align'
 Plug 'godlygeek/tabular'
@@ -79,6 +81,7 @@ Plug 'lervag/vimtex'
 
 "" Git
 Plug 'tpope/vim-fugitive'
+Plug 'airblade/vim-gitgutter'
 
 "" Cosmetics
 Plug 'bling/vim-airline'
@@ -126,6 +129,9 @@ Plug 'arcticicestudio/nord-vim'
 Plug 'ayu-theme/ayu-vim'
 
 Plug 'severin-lemaignan/vim-minimap'
+
+""" Solidity
+Plug 'tomlion/vim-solidity'
 
 "" Own stuff
 Plug '~/.config/nvim/rossyrg'
@@ -182,8 +188,6 @@ set completeopt=menuone,menu,longest,preview
 
 let maplocalleader = "\<Space>"
 let mapleader = "\<Space>"
-nnoremap <silent> <leader>      :<c-u>WhichKey '<Space>'<CR>
-nnoremap <silent> <localleader> :<c-u>WhichKey  ','<CR><Paste>
 set modeline
 set modelines=5
 set ai
@@ -686,10 +690,25 @@ let g:fzf_action = {
             \ 'ctrl-x': 'split',
             \ 'ctrl-v': 'vsplit' }
 
-set background=dark
+"set background=dark
 command! -bang -nargs=* Rg
             \ call fzf#vim#grep(
             \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
             \   <bang>0 ? fzf#vim#with_preview('up:60%')
             \           : fzf#vim#with_preview('right:50%:hidden', '?'),
             \   <bang>0)
+
+"let g:rainbow_active=1
+
+""" Solidity {{{
+let g:tagbar_type_solidity = {                                                  
+    \ 'ctagstype': 'solidity',                                                  
+    \ 'kinds' : [                                                               
+        \ 'c:contracts',                                                        
+        \ 'e:events',                                                           
+        \ 'f:functions',                                                        
+        \ 'm:mappings',                                                         
+        \ 'v:varialbes',                                                        
+    \ ]                                                                         
+    \ }
+""" }}}
