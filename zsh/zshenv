@@ -1,4 +1,4 @@
-export PATH=~/.local/bin:$PATH:~/bin:~/.cabal/bin:~/.cargo/bin
+export PATH=~/.local/bin:$PATH:~/bin:~/.cabal/bin:~/.cargo/bin:~/.gem/ruby/2.6.0/bin
 export EDITOR="nvim"
 export LANG=en_US.UTF-8
 export FZF_DEFAULT_COMMAND='rg --files --hidden --follow'

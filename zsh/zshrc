@@ -111,7 +111,7 @@ alias ]="rifle "
 BASE16_SHELL=$HOME/.config/base16-shell/
 [ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
 alias tlight="tmux source-file ~/.tmux/green.tmux && base16_gruvbox-light-hard && rm ~/.config/nvim/rossyrg/config/background && ln -s ~/.config/nvim/rossyrg/config/lightbackground ~/.config/nvim/rossyrg/config/background"
-alias tdark="tmux source-file ~/.tmux/orange.tmux && base16_gruvbox-dark-hard && rm ~/.config/nvim/rossyrg/config/background && ln -s ~/.config/nvim/rossyrg/config/darkbackground ~/.config/nvim/rossyrg/config/background"
+alias tdark="tmux source-file ~/.tmux/orange.tmux && base16_gruvbox-dark-soft && rm ~/.config/nvim/rossyrg/config/background && ln -s ~/.config/nvim/rossyrg/config/darkbackground ~/.config/nvim/rossyrg/config/background"
 
 source ~/.fzf/shell/completion.zsh
 source ~/.fzf/shell/key-bindings.zsh
