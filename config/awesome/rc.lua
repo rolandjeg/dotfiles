@@ -13,7 +13,7 @@ local menubar = require("menubar")
 local hotkeys_popup = require("awful.hotkeys_popup").widget
 
 -- Rossy stuff
-beautiful.wallpaper = "/home/groell/wallpaper/PIA21445-1920x1200.jpg"
+beautiful.wallpaper = "~/wallpaper/skaven_council.jpg"
 --{{ Net Widget }} --
 netwidget = wibox.widget.textbox()
 vicious.register(netwidget, vicious.widgets.net, function(widget, args)
@@ -45,7 +45,9 @@ baticon = wibox.widget.imagebox()
 baticon:set_image(beautiful.baticon)
 
 batwidget = wibox.widget.textbox()
-vicious.register( batwidget, vicious.widgets.bat, 'Bat:$1$2% ', 30, "BAT0" )
+vicious.register( batwidget, vicious.widgets.bat, 'BAT0:$1$2% ', 30, "BAT0" )
+batwidget1 = wibox.widget.textbox()
+vicious.register( batwidget1, vicious.widgets.bat, 'BAT1:$1$2% ', 31, "BAT1" )
 --{{---| File Size widget |-----
 fswidget = wibox.widget.textbox()
 
@@ -272,7 +274,7 @@ local function set_wallpaper(s)
         if type(wallpaper) == "function" then
             wallpaper = wallpaper(s)
         end
-        gears.wallpaper.maximized(wallpaper, s, true)
+        gears.wallpaper.centered(wallpaper, s)
     end
 end
 
@@ -329,6 +331,7 @@ awful.screen.connect_for_each_screen(function(s)
             volume,
             baticon,
             batwidget,
+            batwidget1,
             neticon,
             netwidget,
             mytextclock,
@@ -350,7 +353,7 @@ root.buttons(awful.util.table.join(
 globalkeys = awful.util.table.join(
     awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,
               {description="show help", group="awesome"}),
-    awful.key({ modkey, "Shift"   }, "l", function() awful.util.spawn("xscreensaver-command -lock") end ,
+    awful.key({ modkey, "Control"   }, "l", function() awful.util.spawn("xscreensaver-command -lock") end ,
               {description="lock screen", group="awesome"}),
     awful.key({ modkey,           }, "Left",   awful.tag.viewprev,
               {description = "view previous", group = "tag"}),
@@ -455,8 +458,10 @@ globalkeys = awful.util.table.join(
               end,
               {description = "lua execute prompt", group = "awesome"}),
     -- Menubar
-    awful.key({ modkey }, "p", function() menubar.show() end,
-              {description = "show the menubar", group = "launcher"})
+    --awful.key({ modkey }, "p", function() menubar.show() end,
+             -- {description = "show the menubar", group = "launcher"})
+    awful.key({ modkey }, "p", function() awful.util.spawn_with_shell("scrot -u -e 'mv $f ~/screenshots'") end,
+              {description = "Take Screenshot of window", group = "launcher"})
 )
 
 clientkeys = awful.util.table.join(

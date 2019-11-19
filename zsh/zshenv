@@ -1,6 +1,7 @@
-export PATH=~/.local/bin:$PATH:~/bin:~/.cabal/bin:~/.cargo/bin:~/.gem/ruby/2.6.0/bin
+export PATH=~/.local/bin:$PATH:~/bin:~/.cabal/bin:~/.cargo/bin:~/.gem/ruby/2.6.0/bin:~/go/bin
 export EDITOR="nvim"
 export LANG=en_US.UTF-8
 export FZF_DEFAULT_COMMAND='rg --files --hidden --follow'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export KEYTIMEOUT=1
+export RIPGREP_CONFIG_PATH=$HOME/.config/rg/ripgreprc

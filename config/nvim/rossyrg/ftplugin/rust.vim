@@ -1,1 +1,1 @@
-/home/groell/dotfiles/config/nvim/rossyrg/ftplugin/rust.vim
+let b:coc_root_patterns = ['Cargo.toml', '.git']
