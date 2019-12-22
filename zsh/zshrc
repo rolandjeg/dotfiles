@@ -188,5 +188,6 @@ function ranger-cd {
     rm -f -- "$tempfile"
 }
 
+export GOPATH=$HOME/go
 
 #alias nav=ranger-cd
