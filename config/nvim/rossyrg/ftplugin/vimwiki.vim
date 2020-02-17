@@ -1,1 +1,3 @@
-/home/groell/dotfiles/config/nvim/rossyrg/ftplugin/vimwiki.vim
+nnoremap <leader>ft :BTags<CR>
+
+nnoremap <leader>n] :TagbarToggle<CR>

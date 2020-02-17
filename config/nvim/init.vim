@@ -73,6 +73,7 @@ Plug 'linuxcaffe/taskwiki-two'
 
 "" Tags
 Plug 'rgroell/tagbar'
+Plug 'liuchengxu/vista.vim'
 
 
 Plug 'm2mdas/unite-file-vcs'
@@ -89,13 +90,8 @@ Plug 'tpope/vim-fugitive'
 Plug 'jreybert/vimagit'
 Plug 'airblade/vim-gitgutter'
 
-"" Cosmetics
-Plug 'bling/vim-airline'
-Plug 'edkolev/tmuxline.vim'
-Plug 'vim-airline/vim-airline-themes'
-
 "" Python
-Plug 'python-mode/python-mode', { 'branch': 'develop' }
+"Plug 'python-mode/python-mode', { 'branch': 'develop' }
 
 """ Rust
 "Plug 'rust-lang/rust.vim'
@@ -175,6 +171,7 @@ set hidden
 set colorcolumn=80
 set textwidth=0
 
+set termguicolors
 
 let OmniCpp_NamespaceSearch = 2
 let OmniCpp_GlobalScopeSearch = 1
@@ -264,9 +261,6 @@ function! LoadCscope()
 endfunction
 au BufEnter /* call LoadCscope()
 
-
-let g:airline_powerline_fonts = 1
-
 if &term =~ '^screen' && exists('$TMUX')
   set mouse+=a
   " tmux knows the extended mouse mode
@@ -296,19 +290,8 @@ if &term =~ '^screen' && exists('$TMUX')
   execute "set <F12>=\e[24;*~"
 endif
 
-" VIM Airline Config
-let g:airline_theme = 'gruvbox'
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tmuxline#enabled = 0
-let g:airline#extensions#whitespace#enabled = 0
-
-
-
 let g:ctrlp_cmd = 'CtrlPMixed'
 let g:ctrlp_show_hidden = 1
-
-set guifont=DejaVu\ Sans\ Mono\ for\ Powerline\ 13
-
 
 let g:maximizer_set_default_mapping = 0
 
@@ -400,64 +383,12 @@ set laststatus=2
 
 set inccommand=nosplit
 
-
-
-
-
-""" Syntastic {{{
-
-"function! SyntasticPython2()
-"    let g:syntastic_python_python_exec = '/usr/bin/python2'
-"endfunction
-"command! SyntasticPython2 call SyntasticPython2()
-"
-"function! SyntasticPython3()
-"    let g:syntastic_python_python_exec = '/usr/bin/python3'
-"endfunction
-"command! SyntasticPython3 call SyntasticPython3()
-"
-"let g:syntastic_mode_map = {
-"    \ "mode": "active",
-"    \ "active_filetypes": [],
-"    \ "passive_filetypes": ["python"] }
-"
-""" }}}
-
-
 """ Colorschemes {{{
-
-let g:zenburn_high_Contrast=1
-let g:zenburn_old_Visual=0
-let g:zenburn_alternate_Visual=0
-
-let base16colorspace=256
-
-let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-set termguicolors
-
-"let g:hybrid_use_Xresources = 1
-let g:hybrid_reduced_contrast = 0
-
-let g:seoul256_background = 235
-let g:seoul256_light_background = 254
-
-let ayucolor="mirage"
-
-source ~/.config/nvim/rossyrg/config/background
-let base16colorspace=256
-
 let g:gruvbox_italic=1
 let g:gruvbox_bold=1
 let g:gruvbox_underline=1
 let g:gruvbox_contrast_dark='soft'
-
-let g:nord_italic_comments = 1
-let g:nord_comment_brightness = 20
-let g:lucius_use_underline = 0
-let g:lucius_contrast = 'normal'
 colorscheme gruvbox
-
-"autocmd VimEnter * SetColors  zenburn seoul256
 
 """ Spellchecking {{{
 
@@ -519,7 +450,6 @@ inoremap <expr><S-TAB> pumvisible() ? "\<C-P>" : "\<S-TAB>"
 set rtp+=~/.fzf
 
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-
 
 """ Vimwiki {{{
 let g:vimwiki_list = [
@@ -625,7 +555,7 @@ let g:tagbar_type_vimwiki = {
 "endif
 let g:tagbar_type_haskell = {
     \ 'ctagsbin'  : 'hasktags',
-    \ 'ctagsargs' : '-x -c --ignore-close-implementation -o-',
+    \ 'ctagsargs' : '-x -c -o-',
     \ 'kinds'     : [
         \  'm:modules:0:1',
         \  'd:data: 0:1',
@@ -653,7 +583,7 @@ let g:tagbar_type_haskell = {
         \ 'data'   : 'd',
         \ 'type'   : 't'
     \ }
-  \ }
+\ }
 """ }}}
 
 " Rust {{{
@@ -868,7 +798,6 @@ command! -nargs=? Fold :call     CocAction('fold', <f-args>)
 command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
 
 " Add status line support, for integration with other plugin, checkout `:h coc-status`
-set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
 " Using CocList
 " Show all diagnostics
@@ -891,4 +820,41 @@ nnoremap <silent> <leader>fo  :<C-u>CocList outline<cr>
 " disable vim-go :GoDef short cut (gd)
 " this is handled by LanguageClient [LC]
 let g:go_def_mapping_enabled = 0
+"}}}
 
+
+"{{{ Vista
+let g:vista#renderer#enable_icon = 0
+
+let g:vista_executive_for = {
+  \ 'haskell': 'coc',
+  \ }
+
+function! NearestMethodOrFunction() abort
+  return get(b:, 'vista_nearest_method_or_function', '')
+endfunction
+""}}}
+
+set statusline=
+set statusline+=%#DiffAdd#%{(mode()=='n')?'\ \ NORMAL\ ':''}
+set statusline+=%#DiffChange#%{(mode()=='i')?'\ \ INSERT\ ':''}
+set statusline+=%#DiffDelete#%{(mode()=='r')?'\ \ RPLACE\ ':''}
+set statusline+=%#Cursor#%{(mode()=='v')?'\ \ VISUAL\ ':''}
+set statusline+=\ %n\           " buffer number
+set statusline+=%#Visual#       " colour
+set statusline+=%{&paste?'\ PASTE\ ':''}
+set statusline+=%{&spell?'\ SPELL\ ':''}
+set statusline+=%#CursorIM#     " colour
+set statusline+=%R                        " readonly flag
+set statusline+=%M                        " modified [+] flag
+set statusline+=%#Cursor#               " colour
+set statusline+=%#CursorLine#     " colour
+set statusline+=\ %t\                   " short file name
+set statusline+=%=                          " right align
+set statusline+=%{coc#status()}
+set statusline+=%#CursorLine#   " colour
+set statusline+=\ %Y\                   " file type
+set statusline+=%#CursorIM#     " colour
+set statusline+=\ %3l:%-2c\         " line + column
+set statusline+=%#Cursor#       " colour
+set statusline+=\ %3p%%\                " percentage

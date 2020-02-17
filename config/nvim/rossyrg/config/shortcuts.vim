@@ -5,12 +5,11 @@
 " Unite {{{
 nnoremap <leader>ff :Files<CR>
 nnoremap <leader>fb :Buffers<CR>
-nnoremap <leader>fr :Tags<CR>
-nnoremap <leader>ft :BTags<CR>
+nnoremap <leader>ft :Vista finder<CR>
 " }}}
 
 " Toggles {{{
-nnoremap <leader>n] :TagbarToggle<CR>
+nnoremap <leader>n] :Vista!!<CR>
 """ Concealhelper {{{
 function! ConcealToggle()
     if (&conceallevel == 0)
