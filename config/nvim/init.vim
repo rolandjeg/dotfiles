@@ -14,6 +14,7 @@ call plug#begin()
 "Plug 'Shougo/neosnippet-snippets' "?
 Plug 'ctrlpvim/ctrlp.vim'
 
+Plug 'jalvesaq/zotcite'
 "Plug 'luochen1990/rainbow'
 Plug 'junegunn/rainbow_parentheses.vim'
 
@@ -30,7 +31,7 @@ Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 
 "" Utility
 "Plug 'hecal3/vim-leader-guide'
-Plug 'nhooyr/neoman.vim'
+"Plug 'nhooyr/neoman.vim' Repository weg
 "Plug 'itchyny/calendar.vim'
 Plug 'Shougo/unite.vim'
 Plug 'Shougo/denite.nvim'
@@ -53,7 +54,7 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'ludovicchabant/vim-gutentags'
 
 "" Srpache
-Plug 'ganwell/vim-hunspell-dicts'
+"Plug 'ganwell/vim-hunspell-dicts' Repository gibt es nichtmehr
 
 "" Pandoc
 Plug 'vim-pandoc/vim-pandoc'
@@ -69,7 +70,6 @@ Plug 'dhruvasagar/vim-table-mode'
 Plug 'vimwiki/vimwiki' , { 'branch': 'dev'}
 Plug 'farseer90718/vim-taskwarrior'
 Plug 'tbabej/taskwiki'
-Plug 'linuxcaffe/taskwiki-two'
 
 "" Tags
 Plug 'rgroell/tagbar'
@@ -110,8 +110,8 @@ Plug 'eagletmt/neco-ghc'
 "Colorschemes
 Plug 'sjl/badwolf'
 Plug 'sonph/onehalf', {'rtp': 'vim/'}
-Plug 'junegunn/seoul256.vim'
-Plug 'jnurmine/Zenburn'
+"Plug 'junegunn/seoul256.vim'
+"Plug 'jnurmine/Zenburn'
 Plug 'thomd/vim-wasabi-colorscheme'
 Plug 'romainl/Apprentice'
 Plug 'romainl/Disciple'
@@ -131,7 +131,7 @@ Plug 'rakr/vim-one'
 Plug 'roosta/vim-srcery'
 Plug 'xero/sourcerer.vim'
 Plug 'joshdick/onedark.vim'
-Plug 'arcticicestudio/nord-vim'
+"Plug 'arcticicestudio/nord-vim'
 Plug 'ayu-theme/ayu-vim'
 
 Plug 'severin-lemaignan/vim-minimap'
@@ -426,9 +426,9 @@ set inccommand=nosplit
 
 """ Colorschemes {{{
 
-let g:zenburn_high_Contrast=1
-let g:zenburn_old_Visual=0
-let g:zenburn_alternate_Visual=0
+"let g:zenburn_high_Contrast=1
+"let g:zenburn_old_Visual=0
+"let g:zenburn_alternate_Visual=0
 
 let base16colorspace=256
 
@@ -557,7 +557,7 @@ let g:vimwiki_global_ext = 0
 autocmd FileType vimwiki inoremap <expr><TAB> pumvisible() ? "\<C-N>" : vimwiki#tbl#kbd_tab()
 autocmd FileType vimwiki inoremap <expr><S-TAB> pumvisible() ? "\<C-P>" : vimwiki#tbl#kbd_shift_tab()
 autocmd FileType vimwiki set commentstring="> %s"
-autocmd FileType vimwiki set syntax=pandoc
+autocmd FileType vimwiki set syntax=vimwiki.pandoc
 """ }}}
 
 let g:table_mode_corner_corner='+'
@@ -566,10 +566,12 @@ let g:table_mode_map_prefix='<leader>t'
 
 """ Pandoc {{{
 let g:pandoc#spell#enabled = 0
+let g:pandoc#filetypes#handled = ["pandoc", "markdown"]
 let g:pandoc#syntax#conceal#blacklist = ["block"]
 let g:pandoc#toc#position="left"
 let g:pandoc#modules#disabled=["indent"]
 let g:pandoc#folding#fdc = 2
+let g:pandoc#biblio#bibs=["/home/groell/vimwiki/My_Library.bib"]
 "let g:pandoc#filetypes#handled=["markdown", "vimwiki", "pandoc", "rst", "textile"]
 " }}}
 
@@ -892,3 +894,16 @@ nnoremap <silent> <leader>fo  :<C-u>CocList outline<cr>
 " this is handled by LanguageClient [LC]
 let g:go_def_mapping_enabled = 0
 
+
+let zotcite_hl = 0
+
+function! ZoteroCite()
+  " pick a format based on the filetype (customize at will)
+  let format = &filetype =~ '.*tex' ? 'citep' : 'json'
+  let api_call = 'http://127.0.0.1:23119/better-bibtex/cayw?format='.format.'&brackets=1'
+  let ref = system('curl -s '.shellescape(api_call))
+  return ref
+endfunction
+
+noremap <leader>z "=ZoteroCite()<CR>p
+inoremap <C-z> <C-r>=ZoteroCite()<CR>
