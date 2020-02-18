@@ -661,7 +661,7 @@ let g:fzf_action = {
             \ 'ctrl-x': 'split',
             \ 'ctrl-v': 'vsplit' }
 
-"set background=dark
+set background=light
 command! -bang -nargs=* Rg
             \ call fzf#vim#grep(
             \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
@@ -876,4 +876,3 @@ endfunction
 
 noremap <leader>z "=ZoteroCite()<CR>p
 inoremap <C-z> <C-r>=ZoteroCite()<CR>
->>>>>>> 187f426a846a724424707aec93233ca7e0815ef6
