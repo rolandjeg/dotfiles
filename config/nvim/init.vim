@@ -876,4 +876,3 @@ endfunction
 
 noremap <leader>z "=ZoteroCite()<CR>p
 inoremap <C-z> <C-r>=ZoteroCite()<CR>
->>>>>>> 187f426a846a724424707aec93233ca7e0815ef6
