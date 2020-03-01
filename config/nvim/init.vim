@@ -4,14 +4,14 @@
 set nocompatible
 filetype on
 
-""" Plugins {{{
+" Plugins {{{
 call plug#begin()
 
 "" Autocompletion
 "Plug 'Shougo/deoplete.nvim'
 "Plug 'ervandew/supertab'
-"Plug 'Shougo/neosnippet' "?
-"Plug 'Shougo/neosnippet-snippets' "?
+Plug 'Shougo/neosnippet' "?
+Plug 'Shougo/neosnippet-snippets' "?
 Plug 'ctrlpvim/ctrlp.vim'
 
 Plug 'jalvesaq/zotcite'
@@ -37,7 +37,6 @@ Plug 'Shougo/unite.vim'
 Plug 'Shougo/denite.nvim'
 Plug 'Shougo/neomru.vim'
 Plug 'Shougo/vimproc.vim', {'do' : 'make'}
-Plug 'scrooloose/nerdtree'
 Plug 'Shougo/vimfiler.vim'
 Plug 'scrooloose/nerdcommenter'
 Plug 'tpope/vim-unimpaired'
@@ -72,7 +71,6 @@ Plug 'farseer90718/vim-taskwarrior'
 Plug 'tbabej/taskwiki'
 
 "" Tags
-Plug 'rgroell/tagbar'
 Plug 'liuchengxu/vista.vim'
 
 
@@ -142,7 +140,8 @@ call plug#end()
 
 filetype on
 """ }}}
-""" CMake Errorformat {{{
+
+" CMake Errorformat {{{
 set errorformat^=%-GScanning\ dependencies\ of\ target\ %f
 set errorformat^=%-G\[\ %l%%\]\ Building\ CXX\ object\ %f
 set errorformat^=%-G\[\ %l%%\]\ Built\ target\ %f
@@ -150,8 +149,9 @@ set errorformat^=%-G\[%l%%\]\ Building\ CXX\ object\ %f
 set errorformat^=%-G\[%l%%\]\ Built\ target\ %f
 set errorformat^=%-GLinking\ CXX\ static\ library\ %f
 set errorformat^=%-GLinking\ CXX\ executable\ %f
-""" }}}
+" }}}
 
+" Allgemeines {{{
 syntax on
 filetype plugin indent on
 "let g:rubycomplete_buffer_loading = 1
@@ -165,28 +165,20 @@ set tags+=~/.vim/tags/cairomm
 set tags+=~/.vim/tags/gtkmm3
 set encoding=utf-8
 set mouse=a
+set autoread
 
 set hidden
 
 set colorcolumn=80
 set textwidth=0
 
-set termguicolors
+let &showbreak='+++ '
+set breakindent
+set laststatus=2
 
-let OmniCpp_NamespaceSearch = 2
-let OmniCpp_GlobalScopeSearch = 1
-let OmniCpp_ShowAccess = 1
-let OmniCpp_ShowPrototypeInAbbr = 0 " show function parameters
-let OmniCpp_MayCompleteDot = 0 " autocomplete after .
-let OmniCpp_MayCompleteArrow = 0 " autocomplete after ->
-let OmniCpp_MayCompleteScope = 0 " autocomplete after ::
-let OmniCpp_DefaultNamespaces = ["std", "_GLIBCXX_STD"]
-let OmniCpp_LocalSearchDecl = 0 " use local search function, bracket on 1st column
-let OmniCpp_DisplayMode = 0
-" automatically open and close the popup menu / preview window
-au InsertLeave * if pumvisible() == 0|silent! pclose|endif
-"au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
-set completeopt=menuone,menu,longest,preview
+set inccommand=nosplit
+
+let g:localvimrc_sandbox = 0
 
 let maplocalleader = "\\"
 let mapleader = "\<Space>"
@@ -225,31 +217,38 @@ set undoreload=10000 "maximum number lines to save for undo on a buffer reload"
 source ~/.config/nvim/rossyrg/config/shortcuts.vim
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
 
+""" }}}
 
-
-" tmuxstuff
-if &term =~ '^screen'
-  execute "set <xUp>=\e[1;*A"
-  execute "set <xDown>=\e[1;*B"
-  execute "set <xRight>=\e[1;*C"
-  execute "set <xLeft>=\e[1;*D"
-endif
-
+" Omnicomplete TODO kann weg? {{{
+let OmniCpp_NamespaceSearch = 2
+let OmniCpp_GlobalScopeSearch = 1
+let OmniCpp_ShowAccess = 1
+let OmniCpp_ShowPrototypeInAbbr = 0 " show function parameters
+let OmniCpp_MayCompleteDot = 0 " autocomplete after .
+let OmniCpp_MayCompleteArrow = 0 " autocomplete after ->
+let OmniCpp_MayCompleteScope = 0 " autocomplete after ::
+let OmniCpp_DefaultNamespaces = ["std", "_GLIBCXX_STD"]
+let OmniCpp_LocalSearchDecl = 0 " use local search function, bracket on 1st column
+let OmniCpp_DisplayMode = 0
+" automatically open and close the popup menu / preview window
+au InsertLeave * if pumvisible() == 0|silent! pclose|endif
+"au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
+set completeopt=menuone,menu,longest,preview
 au BufNewFile,BufRead,BufEnter *.cpp,*.hpp set omnifunc=omni#cpp#complete#Main
+" }}}
+
+" Ruby {{{
 autocmd FileType ruby,eruby set omnifunc=rubycomplete#Complete
 autocmd FileType ruby,eruby let g:rubycomplete_buffer_loading = 1
 autocmd FileType ruby,eruby let g:rubycomplete_rails = 1
 autocmd FileType ruby,eruby let g:rubycomplete_classes_in_global = 1
+" }}}
 
-let g:localvimrc_sandbox = 0
-
-
-
-let g:nerdtree_open_cmd='rifle'
-
-"nerdcomment
+" nerdcomment {{{
 let NERDCommentWholeLinesInVMode=0
+" }}}
 
+" CScope TODO Kann weg? {{{
 function! LoadCscope()
   let db = findfile("cscope.out", ".;")
   if (!empty(db))
@@ -260,7 +259,9 @@ function! LoadCscope()
   endif
 endfunction
 au BufEnter /* call LoadCscope()
+" }}}
 
+" Interoperability with tmux {{{
 if &term =~ '^screen' && exists('$TMUX')
   set mouse+=a
   " tmux knows the extended mouse mode
@@ -289,25 +290,22 @@ if &term =~ '^screen' && exists('$TMUX')
   execute "set <F11>=\e[23;*~"
   execute "set <F12>=\e[24;*~"
 endif
+" }}}
 
+" CtrlP {{{
 let g:ctrlp_cmd = 'CtrlPMixed'
 let g:ctrlp_show_hidden = 1
+" }}}
 
+" Window Maximizer {{{
 let g:maximizer_set_default_mapping = 0
+" }}}
 
-let g:org_export_init_script="~/.emacs_org_init"
-
-let g:EclimCompletionMethod = 'omnifunc'
-let g:EclimTempFilesEnable = 0
-
-set wildmode=longest,list,full
-set wildmenu
-
-""" LaTeX {{{
+" LaTeX {{{
 
 let theuniqueserv = expand("%:r")
 
-let g:tex_conceal=0
+let g:tex_conceal="abdmgs"
 let g:vimtex_fold_enabled=1
 "let g:vimtex_fold_manual=1
 let g:vimtex_latexmk_continuous=1
@@ -375,15 +373,7 @@ let g:Tex_IgnoredWarnings =
 let g:Tex_IgnoreLevel=9
 """ }}}
 
-
-
-let &showbreak='+++ '
-set breakindent
-set laststatus=2
-
-set inccommand=nosplit
-
-""" Colorschemes {{{
+" Colorschemes {{{
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 set termguicolors
 
@@ -392,50 +382,14 @@ let g:gruvbox_bold=1
 let g:gruvbox_underline=1
 let g:gruvbox_contrast_dark='soft'
 colorscheme gruvbox
+" }}}
 
-""" Spellchecking {{{
+" Spellchecking {{{
 
 au BufNewFile,BufRead,BufEnter  *.tex setlocal nospell
 set spelllang=hun-de-DE-frami,en_us
 
 """ }}}
-
-set autoread
-
-""" Python Mode {{{
-
-let g:pymode_python = 'python'
-let g:pymode_lint_ignore = ["W"]
-"let g:pymode_indent = 1
-"let g:pymode_folding = 1
-"let g:pymode_rope_completion = 0
-
-""" }}}
-""" Jedi (Python) {{{
-
-"let g:jedi#force_py_version = 2
-
-""" }}}
-""" YouCompleteMe {{{
-
-"let g:ycm_server_keep_logfiles = 1
-"let g:ycm_server_log_level = 'debug'
-"let g:ycm_show_diagnostics_ui = 0
-"let g:ycm_min_num_of_chars_for_completion = 1
-"let g:ycm_global_ycm_extra_conf="~/.ycm_extra_conf.py"
-"let g:ycm_complete_in_comments_and_strings = 1
-"let g:ycm_collect_identifiers_from_comments_and_strings = 1
-"let g:ycm_seed_identifiers_with_syntax = 1
-"let g:ycm_confirm_extra_conf = 0
-""let g:ycm_filetype_blacklist = {
-"    "\ 'python' : 1,
-"    "\}
-"
-"nnoremap <leader>g :YcmCompleter GoToDefinitionElseDeclaration<CR>
-
-
-""" }}}
-
 
 " TAB {{{
 "inoremap <silent><expr> <TAB>
@@ -450,11 +404,8 @@ endfunction "}}}
 inoremap <expr><S-TAB> pumvisible() ? "\<C-P>" : "\<S-TAB>"
 """ }}}
 
-set rtp+=~/.fzf
-
-let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-
-""" Vimwiki {{{
+" Vimwiki {{{
+let g:vimwiki_filetypes = ['markdown', 'pandoc']
 let g:vimwiki_list = [
             \ {
             \ 'path': '~/vimwiki',
@@ -483,7 +434,7 @@ let g:vimwiki_list = [
             \ 'template_ext': '.html'
             \ }]
 let g:vimwiki_use_calendar=1
-let g:vimwiki_folding = 'expr'
+let g:vimwiki_folding = 'custom'
 let g:vimwiki_table_mappings = 0
 let g:vimwiki_table_auto_fmt = 0
 let g:vimwiki_global_ext = 0
@@ -493,11 +444,13 @@ autocmd FileType vimwiki set commentstring="> %s"
 autocmd FileType vimwiki set syntax=vimwiki.pandoc
 """ }}}
 
+" Table Mode {{{
 let g:table_mode_corner_corner='+'
 let g:table_mode_header_fillchar='='
 let g:table_mode_map_prefix='<leader>t'
+"}}} 
 
-""" Pandoc {{{
+" Pandoc {{{
 let g:pandoc#spell#enabled = 0
 let g:pandoc#filetypes#handled = ["pandoc", "markdown"]
 let g:pandoc#syntax#conceal#blacklist = ["block"]
@@ -508,123 +461,9 @@ let g:pandoc#biblio#bibs=["/home/groell/vimwiki/My_Library.bib"]
 "let g:pandoc#filetypes#handled=["markdown", "vimwiki", "pandoc", "rst", "textile"]
 " }}}
 
-let g:tagbar_type_go = {
-    \ 'ctagstype' : 'go',
-    \ 'kinds'     : [
-        \ 'p:package',
-        \ 'i:imports:1',
-        \ 'c:constants',
-        \ 'v:variables',
-        \ 't:types',
-        \ 'n:interfaces',
-        \ 'w:fields',
-        \ 'e:embedded',
-        \ 'm:methods',
-        \ 'r:constructor',
-        \ 'f:functions'
-    \ ],
-    \ 'sro' : '.',
-    \ 'kind2scope' : {
-        \ 't' : 'ctype',
-        \ 'n' : 'ntype'
-    \ },
-    \ 'scope2kind' : {
-        \ 'ctype' : 't',
-        \ 'ntype' : 'n'
-    \ },
-    \ 'ctagsbin'  : 'gotags',
-    \ 'ctagsargs' : '-sort -silent'
-\ }
-
-let g:tagbar_type_vimwiki = {
-    \ 'ctagstype': 'vimwiki',
-    \ 'ctagsbin' : '~/.config/nvim/markdown2ctags.py',
-    \ 'ctagsargs' : '-f - --sort=yes',
-    \ 'kinds' : [
-        \ 's:sections',
-        \ 'i:images'
-    \ ],
-    \ 'sro' : '|',
-    \ 'kind2scope' : {
-        \ 's' : 'section',
-    \ },
-    \ 'sort': 0,
-    \ }
-""" }}}
-
-"let g:deoplete#enable_at_startup = 1
-
-""" Haskell {{{
-"if has('nvim') " This way you can also put it in your vim config file
-    "call rpcrequest(rpcstart(expand('$HOME/bin/nvim-hs-devel.sh')), "PingNvimhs")
-"endif
-let g:tagbar_type_haskell = {
-    \ 'ctagsbin'  : 'hasktags',
-    \ 'ctagsargs' : '-x -c -o-',
-    \ 'kinds'     : [
-        \  'm:modules:0:1',
-        \  'd:data: 0:1',
-        \  'd_gadt: data gadt:0:1',
-        \  't:type names:0:1',
-        \  'nt:new types:0:1',
-        \  'c:classes:0:1',
-        \  'cons:constructors:1:1',
-        \  'c_gadt:constructor gadt:1:1',
-        \  'c_a:constructor accessors:1:1',
-        \  'ft:function types:1:1',
-        \  'fi:function implementations:0:1',
-        \  'o:others:0:1'
-    \ ],
-    \ 'sro'        : '.',
-    \ 'kind2scope' : {
-        \ 'm' : 'module',
-        \ 'c' : 'class',
-        \ 'd' : 'data',
-        \ 't' : 'type'
-    \ },
-    \ 'scope2kind' : {
-        \ 'module' : 'm',
-        \ 'class'  : 'c',
-        \ 'data'   : 'd',
-        \ 'type'   : 't'
-    \ }
-\ }
-""" }}}
-
-" Rust {{{
-"let g:deoplete#sources#rust#racer_binary='/home/groell/.cargo/bin/racer'
-"let g:deoplete#sources#rust#rust_source_path='/home/groell/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src/'
-" }}}
-
-"autocmd! BufWritePost * Neomake
+" TODO what? {{{
 autocmd FileType qf wincmd J
-
-
-"" LeaderGuide {{{
-"    " Define prefix dictionary
-"    let g:lmap =  {}
-"
-"    " Second level dictionaries:
-"    let g:lmap.f = { 'name' : 'Find stuff' }
-"
-"    let g:llmap = {}
-"
-"    let g:topdict = {}
-"    let g:topdict[' '] = g:lmap
-"    let g:topdict[' ']['name'] = '<leader>'
-"    let g:topdict[','] = g:llmap
-"    let g:topdict[',']['name'] = '<localleader>'
-"
-"    call leaderGuide#register_prefix_descriptions("", "g:topdict")
-"    " 'name' is a special field. It will define the name of the group.
-"    " leader-f is the "File Menu" group.
-"    " Unnamed groups will show an empty string
-"    
-"    nnoremap <leader> :<C-U>LeaderGuide ' '<CR>
-"    vnoremap <leader> :<C-U>LeaderGuideVisual ' '<CR>
-"    map <leader>. <Plug>leaderguide-global
-"
-"" }}}
+"}}}
 
 " Denite {{{
 call denite#custom#map('insert', '<C-n>', '<denite:move_to_next_line>','noremap')
@@ -634,65 +473,49 @@ call denite#custom#map('normal', '<ESC>', '<denite:enter_mode:normal>','noremap'
 
 call denite#custom#option('default', 'highlight_mode_insert', 'PreProc')
 call denite#custom#option('default', 'mode', 'normal')
-
 " }}}
 
-" FZF {{{
-"map <Leader>f :Find<space>
-
-command! -bang -nargs=* Find call fzf#vim#grep( 'rg --column --line-number --no-heading --fixed-strings --ignore-case --hidden --follow --color "always" '.shellescape(<q-args>), 1, <bang>0)
-" }}}
-"
-"
-
+" Gutentags {{{
 let g:gutentags_project_root=['.root']
+""" }}}
 
 " NEOSNIPPETS {{{
 imap <C-k> <Plug>(neosnippet_expand_or_jump)
 smap <C-k>     <Plug>(neosnippet_expand_or_jump)
 xmap <C-k>     <Plug>(neosnippet_expand_target)
 " }}}
-"
 
-""" FZF
+" FZF {{{
+set rtp+=~/.fzf
 let g:fzf_action = {
             \ 'ctrl-q': 'wall | bdelete',
             \ 'ctrl-t': 'tab split',
             \ 'ctrl-x': 'split',
             \ 'ctrl-v': 'vsplit' }
 
-"set background=dark
+set background=light
+command! -bang -nargs=* Find call fzf#vim#grep( 'rg --column --line-number --no-heading --fixed-strings --ignore-case --hidden --follow --color "always" '.shellescape(<q-args>), 1, <bang>0)
 command! -bang -nargs=* Rg
             \ call fzf#vim#grep(
             \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
             \   <bang>0 ? fzf#vim#with_preview('up:60%')
             \           : fzf#vim#with_preview('right:50%:hidden', '?'),
             \   <bang>0)
-
-"let g:rainbow_active=1
-
-""" Solidity {{{
-let g:tagbar_type_solidity = {                                                  
-    \ 'ctagstype': 'solidity',                                                  
-    \ 'kinds' : [                                                               
-        \ 'c:contracts',                                                        
-        \ 'e:events',                                                           
-        \ 'f:functions',                                                        
-        \ 'm:mappings',                                                         
-        \ 'v:varialbes',                                                        
-    \ ]                                                                         
-    \ }
 """ }}}
 
-""" Taskwiki {{{
+" Taskwiki {{{
 let g:taskwiki_markup_syntax = "markdown"
 let g:taskwiki_maplocalleader="\\t"
 """ }}}
 
-""" COC {{{
+" COC {{{
 "" -------------------------------------------------------------------------------------------------
 " coc.nvim default settings
 " -------------------------------------------------------------------------------------------------
+
+" TODO können die beiden folgenden Zeilen weg?
+set wildmode=longest,list,full
+set wildmenu 
 
 " if hidden is not set, TextEdit might fail.
 set hidden
@@ -827,7 +650,6 @@ nnoremap <silent> <leader>fo  :<C-u>CocList outline<cr>
 let g:go_def_mapping_enabled = 0
 "}}}
 
-
 "{{{ Vista
 let g:vista#renderer#enable_icon = 0
 
@@ -838,8 +660,11 @@ let g:vista_executive_for = {
 function! NearestMethodOrFunction() abort
   return get(b:, 'vista_nearest_method_or_function', '')
 endfunction
+
+autocmd VimEnter * call vista#RunForNearestMethodOrFunction()
 ""}}}
 
+" Statusline {{{
 set statusline=
 set statusline+=%#DiffAdd#%{(mode()=='n')?'\ \ NORMAL\ ':''}
 set statusline+=%#DiffChange#%{(mode()=='i')?'\ \ INSERT\ ':''}
@@ -855,6 +680,7 @@ set statusline+=%M                        " modified [+] flag
 set statusline+=%#Cursor#               " colour
 set statusline+=%#CursorLine#     " colour
 set statusline+=\ %t\                   " short file name
+set statusline+=%{NearestMethodOrFunction()}
 set statusline+=%=                          " right align
 set statusline+=%{coc#status()}
 set statusline+=%#CursorLine#   " colour
@@ -863,12 +689,14 @@ set statusline+=%#CursorIM#     " colour
 set statusline+=\ %3l:%-2c\         " line + column
 set statusline+=%#Cursor#       " colour
 set statusline+=\ %3p%%\                " percentage
+""" }}}
 
+" Zotero {{{
 let zotcite_hl = 0
 
 function! ZoteroCite()
   " pick a format based on the filetype (customize at will)
-  let format = &filetype =~ '.*tex' ? 'citep' : 'json'
+  let format = &filetype =~ '.*tex' ? 'citep' : 'pandoc'
   let api_call = 'http://127.0.0.1:23119/better-bibtex/cayw?format='.format.'&brackets=1'
   let ref = system('curl -s '.shellescape(api_call))
   return ref
@@ -876,3 +704,4 @@ endfunction
 
 noremap <leader>z "=ZoteroCite()<CR>p
 inoremap <C-z> <C-r>=ZoteroCite()<CR>
+""" }}}
