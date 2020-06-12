@@ -682,6 +682,7 @@ set statusline+=%#CursorLine#     " colour
 set statusline+=\ %t\                   " short file name
 set statusline+=%{NearestMethodOrFunction()}
 set statusline+=%=                          " right align
+set statusline+=%{FugitiveStatusline()}
 set statusline+=%{coc#status()}
 set statusline+=%#CursorLine#   " colour
 set statusline+=\ %Y\                   " file type
