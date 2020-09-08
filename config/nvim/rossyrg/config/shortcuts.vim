@@ -8,6 +8,10 @@ nnoremap <leader>fb :Buffers<CR>
 nnoremap <leader>ft :Vista finder<CR>
 " }}}
 
+" Vimwiki {{{
+nnoremap <leader>lt :VimtexTocToggle<CR>
+" }}}
+
 " Toggles {{{
 nnoremap <leader>n] :Vista!!<CR>
 """ Concealhelper {{{

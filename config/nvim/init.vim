@@ -324,6 +324,12 @@ let g:vimtex_quickfix_latexlog ={
       \   'default' : 0,
       \ },
       \}
+let g:vimtex_quickfix_ignore_filters = [
+            \ 'Missing "journal"',
+            \ 'The length marginparwidth is less than',
+            \ 'Underfull',
+            \ 'Overfull',
+            \]
 let g:vimtex_imaps_snippet_engine='neosnippet'
 let g:vimtex_latexmk_nvim=1
 let g:vimtex_toc_config ={
@@ -380,7 +386,8 @@ set termguicolors
 let g:gruvbox_italic=1
 let g:gruvbox_bold=1
 let g:gruvbox_underline=1
-let g:gruvbox_contrast_dark='soft'
+let g:gruvbox_contrast_dark='medium'
+let g:gruvbox_contrast_light='soft'
 colorscheme gruvbox
 " }}}
 
@@ -446,7 +453,8 @@ autocmd FileType vimwiki set syntax=vimwiki.pandoc
 
 " Table Mode {{{
 let g:table_mode_corner_corner='+'
-let g:table_mode_header_fillchar='='
+let g:table_mode_corner='+'
+let g:table_mode_header_fillchar='-'
 let g:table_mode_map_prefix='<leader>t'
 "}}} 
 
