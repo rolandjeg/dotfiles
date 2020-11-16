@@ -7,133 +7,114 @@ filetype on
 " Plugins {{{
 call plug#begin()
 
-"" Autocompletion
-"Plug 'Shougo/deoplete.nvim'
-"Plug 'ervandew/supertab'
-Plug 'Shougo/neosnippet' "?
-Plug 'Shougo/neosnippet-snippets' "?
-Plug 'ctrlpvim/ctrlp.vim'
+" Programmieren
 
-Plug 'jalvesaq/zotcite'
-"Plug 'luochen1990/rainbow'
-Plug 'junegunn/rainbow_parentheses.vim'
+"" Autocompletion
+Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
+
+Plug 'Shougo/neosnippet' "? Kann weg?
+Plug 'Shougo/neosnippet-snippets' "? Kann weg?
+"" Tagmanagement (falls kein LSP)
+"Plug 'c0r73x/neotags.nvim' " Welches Tagmanagement ist gut? TODO
+Plug 'mpevnev/guten-tag' " Welches Tagmanagement ist gut? TODO
+Plug 'ludovicchabant/vim-gutentags'
 
 "" Languages
-Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
-"" Kotlin
+""" Kotlin
 Plug 'udalov/kotlin-vim'
-"" Typescript
+""" Typescript
 Plug 'HerringtonDarkholme/yats.vim'
-"" Ruby
+""" Ruby
 Plug 'vim-ruby/vim-ruby'
-"" Golang
+""" Golang
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+""" Haskell
+Plug 'neovimhaskell/haskell-vim'
+Plug 'eagletmt/ghcmod-vim'
+Plug 'eagletmt/neco-ghc'
+""" Solidity
+Plug 'tomlion/vim-solidity'
+""" Python
+"Plug 'python-mode/python-mode', { 'branch': 'develop' }
+""" Rust
+"Plug 'rust-lang/rust.vim'
+"Plug 'sebastianmarkow/deoplete-rust'
 
-"" Utility
-"Plug 'hecal3/vim-leader-guide'
-"Plug 'nhooyr/neoman.vim' Repository weg
-"Plug 'itchyny/calendar.vim'
-Plug 'Shougo/unite.vim'
-Plug 'Shougo/denite.nvim'
-Plug 'Shougo/neomru.vim'
-Plug 'Shougo/vimproc.vim', {'do' : 'make'}
-Plug 'Shougo/vimfiler.vim'
-Plug 'scrooloose/nerdcommenter'
-Plug 'tpope/vim-unimpaired'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
-"Plug 'c0r73x/neotags.nvim'
-Plug 'mpevnev/guten-tag'
-Plug 'embear/vim-localvimrc'
+" Utility
+"Plug 'hecal3/vim-leader-guide' " Das ist vielleicht cool, aber überzeugte noch nicht ganz
+"Plug 'itchyny/calendar.vim' " Kann Weg?
+Plug 'Shougo/neomru.vim' " Kann weg?
+Plug 'Shougo/vimproc.vim', {'do' : 'make'} " Wofür brauch ich das?
+Plug 'scrooloose/nerdcommenter' "Einfaches auskommentieren in allen Sprachen
+Plug 'tpope/vim-unimpaired' " Nützliche scripts, yob, yon, etc.
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " Bisher der beste fuzzy finder wohl. Terminalpart
+Plug 'junegunn/fzf.vim' " VIM-Part
+Plug 'embear/vim-localvimrc' " lokale, projektbezogene vimrcs
+Plug 'jalvesaq/zotcite' " Zotero sachen
+"Plug 'luochen1990/rainbow' " TODO 
+Plug 'junegunn/rainbow_parentheses.vim' " TODO Regenbogenklammern klappen noch nicht
+Plug 'dhruvasagar/vim-table-mode' " Tablemode ist praktisch für Tabellen in Markdown
+Plug 'szw/vim-maximizer' " Ctrl-W O zum maximizen
 
 Plug 'junegunn/vim-easy-align'
 Plug 'godlygeek/tabular'
 Plug 'skywind3000/asyncrun.vim'
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'ludovicchabant/vim-gutentags'
 
-"" Srpache
-"Plug 'ganwell/vim-hunspell-dicts' Repository gibt es nichtmehr
-
-"" Pandoc
+" Pandoc
 Plug 'vim-pandoc/vim-pandoc'
 Plug 'vim-pandoc/vim-pandoc-syntax'
 Plug 'vim-pandoc/vim-pandoc-after'
 
-Plug 'dhruvasagar/vim-table-mode'
-
-"" Unite
-"Plug 'tsukkee/unite-tag'
-
-"" Organizer
+" Organizer
 Plug 'vimwiki/vimwiki' , { 'branch': 'dev'}
 Plug 'farseer90718/vim-taskwarrior'
 Plug 'tbabej/taskwiki'
 
-"" Tags
+" Tags
 Plug 'liuchengxu/vista.vim'
 
-
-Plug 'm2mdas/unite-file-vcs'
 Plug 'vhdirk/vim-cmake'
 Plug 'benekastah/neomake'
 Plug 'vim-scripts/Scratch.vim'
-Plug 'szw/vim-maximizer'
 
-"" Latex
+" Latex
 Plug 'lervag/vimtex'
 
-"" Git
+" Git
 Plug 'tpope/vim-fugitive'
 Plug 'jreybert/vimagit'
 Plug 'airblade/vim-gitgutter'
 
-"" Python
-"Plug 'python-mode/python-mode', { 'branch': 'develop' }
-
-""" Rust
-"Plug 'rust-lang/rust.vim'
-"Plug 'sebastianmarkow/deoplete-rust'
-
-""" Haskell
-"Plug 'bitc/vim-hdevtools'
-Plug 'neovimhaskell/haskell-vim'
-Plug 'eagletmt/ghcmod-vim'
-Plug 'eagletmt/neco-ghc'
-
-"Colorschemes
-Plug 'sjl/badwolf'
-Plug 'sonph/onehalf', {'rtp': 'vim/'}
+" Colorschemes
+Plug 'morhetz/gruvbox'
+"Plug 'sjl/badwolf'
+"Plug 'sonph/onehalf', {'rtp': 'vim/'}
 "Plug 'junegunn/seoul256.vim'
 "Plug 'jnurmine/Zenburn'
-Plug 'thomd/vim-wasabi-colorscheme'
-Plug 'romainl/Apprentice'
-Plug 'romainl/Disciple'
-Plug 'chriskempson/base16-vim'
-Plug 'w0ng/vim-hybrid'
-Plug 'kristijanhusak/vim-hybrid-material'
-Plug 'freeo/vim-kalisi'
-Plug 'morhetz/gruvbox'
-Plug 'tomasr/molokai'
-Plug 'gergap/wombat256'
-Plug 'rainux/vim-desert-warm-256'
-Plug 'KabbAmine/yowish.vim'
-Plug 'lu-ren/SerialExperimentsLain'
-Plug 'KeitaNakamura/neodark.vim'
-Plug 'jonathanfilip/vim-lucius'
-Plug 'rakr/vim-one'
-Plug 'roosta/vim-srcery'
-Plug 'xero/sourcerer.vim'
-Plug 'joshdick/onedark.vim'
+"Plug 'thomd/vim-wasabi-colorscheme'
+"Plug 'romainl/Apprentice'
+"Plug 'romainl/Disciple'
+"Plug 'chriskempson/base16-vim'
+"Plug 'w0ng/vim-hybrid'
+"Plug 'kristijanhusak/vim-hybrid-material'
+"Plug 'freeo/vim-kalisi'
+"Plug 'tomasr/molokai'
+"Plug 'gergap/wombat256'
+"Plug 'rainux/vim-desert-warm-256'
+"Plug 'KabbAmine/yowish.vim'
+"Plug 'lu-ren/SerialExperimentsLain'
+"Plug 'KeitaNakamura/neodark.vim'
+"Plug 'jonathanfilip/vim-lucius'
+"Plug 'rakr/vim-one'
+"Plug 'roosta/vim-srcery'
+"Plug 'xero/sourcerer.vim'
+"Plug 'joshdick/onedark.vim'
 "Plug 'arcticicestudio/nord-vim'
-Plug 'ayu-theme/ayu-vim'
+"Plug 'ayu-theme/ayu-vim'
 
-Plug 'severin-lemaignan/vim-minimap'
 
-""" Solidity
-Plug 'tomlion/vim-solidity'
-
-"" Own stuff
+" Own stuff
 Plug '~/.config/nvim/rossyrg'
 
 call plug#end()
@@ -215,8 +196,6 @@ set undolevels=1000 "maximum number of changes that can be undone
 set undoreload=10000 "maximum number lines to save for undo on a buffer reload"
 
 source ~/.config/nvim/rossyrg/config/shortcuts.vim
-call unite#filters#matcher_default#use(['matcher_fuzzy'])
-
 """ }}}
 
 " Omnicomplete TODO kann weg? {{{
@@ -290,11 +269,6 @@ if &term =~ '^screen' && exists('$TMUX')
   execute "set <F11>=\e[23;*~"
   execute "set <F12>=\e[24;*~"
 endif
-" }}}
-
-" CtrlP {{{
-let g:ctrlp_cmd = 'CtrlPMixed'
-let g:ctrlp_show_hidden = 1
 " }}}
 
 " Window Maximizer {{{
@@ -387,7 +361,7 @@ let g:gruvbox_italic=1
 let g:gruvbox_bold=1
 let g:gruvbox_underline=1
 let g:gruvbox_contrast_dark='medium'
-let g:gruvbox_contrast_light='soft'
+let g:gruvbox_contrast_light='medium'
 colorscheme gruvbox
 " }}}
 
@@ -412,7 +386,7 @@ inoremap <expr><S-TAB> pumvisible() ? "\<C-P>" : "\<S-TAB>"
 """ }}}
 
 " Vimwiki {{{
-let g:vimwiki_filetypes = ['markdown', 'pandoc']
+"let g:vimwiki_filetypes = ['markdown', 'pandoc']
 let g:vimwiki_list = [
             \ {
             \ 'path': '~/vimwiki',
@@ -473,16 +447,6 @@ let g:pandoc#biblio#bibs=["/home/groell/vimwiki/My_Library.bib"]
 autocmd FileType qf wincmd J
 "}}}
 
-" Denite {{{
-call denite#custom#map('insert', '<C-n>', '<denite:move_to_next_line>','noremap')
-call denite#custom#map('insert', '<C-p>', '<denite:move_to_previous_line>','noremap')
-call denite#custom#map('insert', '<ESC>', '<denite:enter_mode:normal>','noremap')
-call denite#custom#map('normal', '<ESC>', '<denite:enter_mode:normal>','noremap')
-
-call denite#custom#option('default', 'highlight_mode_insert', 'PreProc')
-call denite#custom#option('default', 'mode', 'normal')
-" }}}
-
 " Gutentags {{{
 let g:gutentags_project_root=['.root']
 """ }}}
@@ -501,7 +465,7 @@ let g:fzf_action = {
             \ 'ctrl-x': 'split',
             \ 'ctrl-v': 'vsplit' }
 
-set background=light
+set background=dark
 command! -bang -nargs=* Find call fzf#vim#grep( 'rg --column --line-number --no-heading --fixed-strings --ignore-case --hidden --follow --color "always" '.shellescape(<q-args>), 1, <bang>0)
 command! -bang -nargs=* Rg
             \ call fzf#vim#grep(
