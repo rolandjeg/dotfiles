@@ -28,5 +28,10 @@ data.location=~/.task
 #include /usr/share/doc/task/rc/solarized-dark-256.theme
 #include /usr/share/doc/task/rc/solarized-light-256.theme
 #include /usr/share/doc/task/rc/no-color.theme
-include /home/groell/dark-256.theme
+include ~/.task/dark-256.theme
 
+taskd.certificate=~\/.task\/rossyrg.cert.pem
+taskd.key=~\/.task\/rossyrg.key.pem
+taskd.ca=~\/.task\/ca.cert.pem
+taskd.server=cordelia.uberspace.de:40580
+taskd.credentials=Public\/rossyrg\/9e2a7f70-04d5-427e-a03b-d4c0ec2a08c1

@@ -47,8 +47,9 @@ Plug 'tpope/vim-unimpaired' " Nützliche scripts, yob, yon, etc.
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " Bisher der beste fuzzy finder wohl. Terminalpart
 Plug 'junegunn/fzf.vim' " VIM-Part
 Plug 'embear/vim-localvimrc' " lokale, projektbezogene vimrcs
-Plug 'jalvesaq/zotcite' " Zotero sachen
 Plug 'luochen1990/rainbow' " TODO 
+"Plug 'luochen1990/rainbow' " TODO 
+"Plug 'junegunn/rainbow_parentheses.vim' " TODO Regenbogenklammern klappen noch nicht
 Plug 'dhruvasagar/vim-table-mode' " Tablemode ist praktisch für Tabellen in Markdown
 Plug 'szw/vim-maximizer' " Ctrl-W O zum maximizen
 Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins'}
@@ -66,7 +67,6 @@ Plug 'vim-pandoc/vim-pandoc-after'
 " Organizer
 Plug 'vimwiki/vimwiki' , { 'branch': 'dev'}
 Plug 'farseer90718/vim-taskwarrior'
-Plug 'tbabej/taskwiki'
 
 " Tags
 Plug 'liuchengxu/vista.vim'
@@ -663,21 +663,6 @@ set statusline+=%#CursorIM#     " colour
 set statusline+=\ %3l:%-2c\         " line + column
 set statusline+=%#Cursor#       " colour
 set statusline+=\ %3p%%\                " percentage
-""" }}}
-
-" Zotero {{{
-let zotcite_hl = 0
-
-function! ZoteroCite()
-  " pick a format based on the filetype (customize at will)
-  let format = &filetype =~ '.*tex' ? 'citep' : 'pandoc'
-  let api_call = 'http://127.0.0.1:23119/better-bibtex/cayw?format='.format.'&brackets=1'
-  let ref = system('curl -s '.shellescape(api_call))
-  return ref
-endfunction
-
-noremap <leader>z "=ZoteroCite()<CR>p
-inoremap <C-z> <C-r>=ZoteroCite()<CR>
 """ }}}
 
 " Defx {{{
