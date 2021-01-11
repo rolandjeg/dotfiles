@@ -34,7 +34,6 @@ endfunction
 """ }}}
 nnoremap <leader>nc :call ConcealToggle()<CR>
 nnoremap <leader>nf :call FoldcolumnToggle()<CR>
-nnoremap <leader>nt :VimFilerExplorer<CR>
 nnoremap <leader>fe :Defx<CR>
 nnoremap <leader>ng :TableModeToggle<CR>
 """ }}}
@@ -64,12 +63,6 @@ cmap w!! w !sudo tee > /dev/null %
 
 " Utility {{{
 noremap <F4> :.!fmt<CR>
-" }}}
-
-" Neosnippet {{{
-imap <C-j>     <Plug>(neosnippet_expand_or_jump)
-smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-xmap <C-k>     <Plug>(neosnippet_expand_target)
 " }}}
 
 " Terminal {{{

@@ -12,12 +12,12 @@ call plug#begin()
 "" Autocompletion
 Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
 
-Plug 'Shougo/neosnippet' "? Kann weg?
-Plug 'Shougo/neosnippet-snippets' "? Kann weg?
+"Plug 'Shougo/neosnippet' "TODO Kann weg?
+"Plug 'Shougo/neosnippet-snippets' "TODO Kann weg?
 "" Tagmanagement (falls kein LSP)
 "Plug 'c0r73x/neotags.nvim' " Welches Tagmanagement ist gut? TODO
-Plug 'mpevnev/guten-tag' " Welches Tagmanagement ist gut? TODO
-Plug 'ludovicchabant/vim-gutentags'
+"Plug 'mpevnev/guten-tag' " Welches Tagmanagement ist gut? TODO
+"Plug 'ludovicchabant/vim-gutentags'
 
 "" Languages
 """ Kotlin
@@ -41,7 +41,6 @@ Plug 'tomlion/vim-solidity'
 " Utility
 "Plug 'hecal3/vim-leader-guide' " Das ist vielleicht cool, aber überzeugte noch nicht ganz
 "Plug 'itchyny/calendar.vim' " Kann Weg?
-Plug 'Shougo/neomru.vim' " Kann weg?
 Plug 'Shougo/vimproc.vim', {'do' : 'make'} " Wofür brauch ich das?
 Plug 'scrooloose/nerdcommenter' "Einfaches auskommentieren in allen Sprachen
 Plug 'tpope/vim-unimpaired' " Nützliche scripts, yob, yon, etc.
@@ -49,16 +48,15 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " Bisher der b
 Plug 'junegunn/fzf.vim' " VIM-Part
 Plug 'embear/vim-localvimrc' " lokale, projektbezogene vimrcs
 Plug 'jalvesaq/zotcite' " Zotero sachen
-"Plug 'luochen1990/rainbow' " TODO 
-Plug 'junegunn/rainbow_parentheses.vim' " TODO Regenbogenklammern klappen noch nicht
+Plug 'luochen1990/rainbow' " TODO 
 Plug 'dhruvasagar/vim-table-mode' " Tablemode ist praktisch für Tabellen in Markdown
 Plug 'szw/vim-maximizer' " Ctrl-W O zum maximizen
 Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins'}
 
-Plug 'junegunn/vim-easy-align'
-Plug 'godlygeek/tabular'
-Plug 'skywind3000/asyncrun.vim'
-Plug 'christoomey/vim-tmux-navigator'
+Plug 'junegunn/vim-easy-align' "Redundant? TODO
+Plug 'godlygeek/tabular' " Redundant? TODO
+Plug 'skywind3000/asyncrun.vim' " Redundant? TODO
+Plug 'christoomey/vim-tmux-navigator' "Gut!
 
 " Pandoc
 Plug 'vim-pandoc/vim-pandoc'
@@ -87,7 +85,8 @@ Plug 'airblade/vim-gitgutter'
 
 " Colorschemes
 Plug 'morhetz/gruvbox'
-"Plug 'sjl/badwolf'
+Plug 'mlopes/vim-farin'
+Plug 'sjl/badwolf'
 "Plug 'sonph/onehalf', {'rtp': 'vim/'}
 "Plug 'junegunn/seoul256.vim'
 "Plug 'jnurmine/Zenburn'
@@ -97,18 +96,18 @@ Plug 'morhetz/gruvbox'
 "Plug 'chriskempson/base16-vim'
 "Plug 'w0ng/vim-hybrid'
 "Plug 'kristijanhusak/vim-hybrid-material'
-"Plug 'freeo/vim-kalisi'
+Plug 'freeo/vim-kalisi'
 "Plug 'tomasr/molokai'
-"Plug 'gergap/wombat256'
+Plug 'gergap/wombat256'
 "Plug 'rainux/vim-desert-warm-256'
 "Plug 'KabbAmine/yowish.vim'
 "Plug 'lu-ren/SerialExperimentsLain'
-"Plug 'KeitaNakamura/neodark.vim'
-"Plug 'jonathanfilip/vim-lucius'
+Plug 'KeitaNakamura/neodark.vim'
+Plug 'jonathanfilip/vim-lucius'
 "Plug 'rakr/vim-one'
 "Plug 'roosta/vim-srcery'
 "Plug 'xero/sourcerer.vim'
-"Plug 'joshdick/onedark.vim'
+Plug 'joshdick/onedark.vim'
 "Plug 'arcticicestudio/nord-vim'
 "Plug 'ayu-theme/ayu-vim'
 
@@ -619,6 +618,9 @@ nnoremap <silent> <leader>fo  :<C-u>CocList outline<cr>
 " disable vim-go :GoDef short cut (gd)
 " this is handled by LanguageClient [LC]
 let g:go_def_mapping_enabled = 0
+
+nnoremap F :call CocAction('format')<CR>
+nmap <leader>qf <Plug>(coc-fix-current)
 "}}}
 
 "{{{ Vista
