@@ -192,3 +192,4 @@ function ranger-cd {
 export GOPATH=$HOME/go
 
 #alias nav=ranger-cd
+eval "$(starship init zsh)"

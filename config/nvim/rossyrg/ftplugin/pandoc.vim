@@ -1,1 +1,1 @@
-/home/groell/dotfiles/config/nvim/rossyrg/ftplugin/pandoc.vim
+set filetype=markdown
