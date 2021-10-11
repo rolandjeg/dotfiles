@@ -209,24 +209,6 @@ source ~/.config/nvim/rossyrg/config/shortcuts.vim
 let g:vimsyn_embed= 'lPr'
 """ }}}
 
-" Omnicomplete TODO kann weg? {{{
-"let OmniCpp_NamespaceSearch = 2
-"let OmniCpp_GlobalScopeSearch = 1
-"let OmniCpp_ShowAccess = 1
-"let OmniCpp_ShowPrototypeInAbbr = 0 " show function parameters
-"let OmniCpp_MayCompleteDot = 0 " autocomplete after .
-"let OmniCpp_MayCompleteArrow = 0 " autocomplete after ->
-"let OmniCpp_MayCompleteScope = 0 " autocomplete after ::
-"let OmniCpp_DefaultNamespaces = ["std", "_GLIBCXX_STD"]
-"let OmniCpp_LocalSearchDecl = 0 " use local search function, bracket on 1st column
-"let OmniCpp_DisplayMode = 0
-"" automatically open and close the popup menu / preview window
-"au InsertLeave * if pumvisible() == 0|silent! pclose|endif
-""au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
-"set completeopt=menuone,menu,longest,preview
-"au BufNewFile,BufRead,BufEnter *.cpp,*.hpp set omnifunc=omni#cpp#complete#Main
-" }}}
-
 " Ruby {{{
 autocmd FileType ruby,eruby set omnifunc=rubycomplete#Complete
 autocmd FileType ruby,eruby let g:rubycomplete_buffer_loading = 1
@@ -384,59 +366,11 @@ set spelllang=hun-de-DE-frami,en_us
 """ }}}
 
 " TAB {{{
-"inoremap <silent><expr> <TAB>
-"      \ pumvisible() ? "\<C-n>" :
-"      \ <SID>check_back_space() ? "\<TAB>" :
-"      \ deoplete#mappings#manual_complete()
-"function! s:check_back_space() abort "{{{
-  "let col = col('.') - 1
-  "return !col || getline('.')[col -1] =~ '\s'
-"endfunction "}}}
 inoremap <expr><TAB> pumvisible() ? "\<C-N>" : "\<TAB>"
 inoremap <expr><S-TAB> pumvisible() ? "\<C-P>" : "\<S-TAB>"
 set completeopt=menuone,noinsert,noselect
 
 set shortmess+=c
-""" }}}
-
-" Vimwiki {{{
-""let g:vimwiki_filetypes = ['markdown', 'pandoc']
-"let g:vimwiki_list = [
-"            \ {
-"            \ 'path': '~/vimwiki',
-"            \ 'syntax': 'markdown',
-"            \ 'path_html': '~/vimwiki_html/',
-"            \ 'auto_tags': 1,
-"            \ 'auto_export': 0,
-"            \ 'template_path': '~/vimwiki_templates',
-"            \ 'ext': '.md',
-"            \ 'custom_wiki2html': 'wiki2html.sh',
-"            \ 'custom_wiki2html_args' : '',
-"            \ 'template_default': 'def_template',
-"            \ 'template_ext': '.html'
-"            \ },
-"            \ {
-"            \ 'path': '~/vimwiki_privat', 
-"            \ 'syntax': 'markdown',
-"            \ 'path_html': '~/vimwiki_privat_html/',
-"            \ 'auto_tags': 1,
-"            \ 'auto_export': 0,
-"            \ 'template_path': '~/vimwiki_html',
-"            \ 'ext': '.md',
-"            \ 'custom_wiki2html': 'wiki2html.sh',
-"            \ 'custom_wiki2html_args' : '',
-"            \ 'template_default': 'def_template',
-"            \ 'template_ext': '.html'
-"            \ }]
-"let g:vimwiki_use_calendar=1
-"let g:vimwiki_folding = 'custom'
-"let g:vimwiki_table_mappings = 0
-"let g:vimwiki_table_auto_fmt = 0
-"let g:vimwiki_global_ext = 0
-"autocmd FileType vimwiki inoremap <expr><TAB> pumvisible() ? "\<C-N>" : vimwiki#tbl#kbd_tab()
-"autocmd FileType vimwiki inoremap <expr><S-TAB> pumvisible() ? "\<C-P>" : vimwiki#tbl#kbd_shift_tab()
-"autocmd FileType vimwiki set commentstring="> %s"
-"autocmd FileType vimwiki set syntax=vimwiki.pandoc
 """ }}}
 
 " Table Mode {{{
@@ -489,11 +423,6 @@ command! -bang -nargs=* Rg
             \   <bang>0 ? fzf#vim#with_preview('up:60%')
             \           : fzf#vim#with_preview('right:50%:hidden', '?'),
             \   <bang>0)
-""" }}}
-
-" Taskwiki {{{
-let g:taskwiki_markup_syntax = "markdown"
-let g:taskwiki_maplocalleader="\\t"
 """ }}}
 
 " COC {{{
