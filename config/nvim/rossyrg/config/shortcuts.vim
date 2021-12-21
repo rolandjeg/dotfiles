@@ -34,7 +34,6 @@ endfunction
 """ }}}
 nnoremap <leader>nc :call ConcealToggle()<CR>
 nnoremap <leader>nf :call FoldcolumnToggle()<CR>
-nnoremap <leader>fe :Defx<CR>
 nnoremap <leader>ng :TableModeToggle<CR>
 """ }}}
 
