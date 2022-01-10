@@ -17,6 +17,7 @@ Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-cmdline'
 Plug 'hrsh7th/nvim-cmp'
+Plug 'simnalamburt/vim-mundo'
 
 " For vsnip users.
 Plug 'hrsh7th/cmp-vsnip'
@@ -58,7 +59,8 @@ Plug 'simrat39/rust-tools.nvim'
 Plug 'Shougo/vimproc.vim', {'do' : 'make'} " Wofür brauch ich das?
 Plug 'scrooloose/nerdcommenter' "Einfaches auskommentieren in allen Sprachen
 Plug 'tpope/vim-unimpaired' " Nützliche scripts, yob, yon, etc.
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " Bisher der beste fuzzy finder wohl. Terminalpart
+"Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " Bisher der beste fuzzy finder wohl. Terminalpart
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim' " VIM-Part
 Plug 'embear/vim-localvimrc' " lokale, projektbezogene vimrcs
 Plug 'luochen1990/rainbow' " TODO 
@@ -98,6 +100,8 @@ Plug 'jreybert/vimagit'
 Plug 'airblade/vim-gitgutter'
 
 " Colorschemes
+Plug 'EdenEast/nightfox.nvim'
+Plug 'savq/melange'
 Plug 'morhetz/gruvbox'
 Plug 'joshdick/onedark.vim'
 "Plug 'arcticicestudio/nord-vim'
@@ -365,7 +369,7 @@ let g:gruvbox_bold=1
 let g:gruvbox_underline=1
 let g:gruvbox_contrast_dark='hard'
 let g:gruvbox_contrast_light='medium'
-colorscheme gruvbox
+colorscheme duskfox
 " }}}
 
 " Spellchecking {{{
@@ -723,7 +727,7 @@ end
 
 -- Use a loop to conveniently call 'setup' on multiple servers and
 -- map buffer local keybindings when the language server attaches
-local servers = { 'pyright', 'rust_analyzer', 'tsserver', 'clangd' }
+local servers = { 'pyright', 'rust_analyzer', 'tsserver', 'clangd', 'hls' }
   -- Setup lspconfig.
 local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 for _, lsp in ipairs(servers) do
@@ -736,6 +740,17 @@ for _, lsp in ipairs(servers) do
   }
 end
 --require'lspconfig'.rust_analyzer.setup{on_attach=require'completion'.on_attach}
+
+-- Haskell
+--nvim_lsp.hls.setup({
+    --on_attach = on_attach,
+    --settings = {
+        --haskell = {
+            --hlintOn = true,
+            --formattingProvider = "fourmolu"
+        --}
+    --}
+--})
 EOF
 " }}}
 
@@ -745,6 +760,7 @@ set completeopt=menu,menuone,noselect
 lua <<EOF
 -- Setup nvim-cmp.
 local cmp = require'cmp'
+
 
 local has_words_before = function()
   local line, col = unpack(vim.api.nvim_win_get_cursor(0))
@@ -756,6 +772,7 @@ local feedkey = function(key, mode)
 end
 
 cmp.setup({
+    experimental = { native_menu = true},
     snippet = {
         -- REQUIRED - you must specify a snippet engine
         expand = function(args)
