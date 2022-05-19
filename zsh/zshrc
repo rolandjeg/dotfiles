@@ -109,10 +109,12 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias ]="rifle "
 
-BASE16_SHELL=$HOME/.config/base16-shell/
-[ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
-alias tlight="tmux source-file ~/.tmux/green.tmux && base16_gruvbox-light-medium"
-alias tdark="tmux source-file ~/.tmux/orange.tmux && base16_gruvbox-dark-hard-rossy"
+#BASE16_SHELL=$HOME/.config/base16-shell/
+#[ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
+alias tlight="tmux source-file ~/.tmux/green.tmux && kitty @ --to unix:/tmp/mykitty set_colors ~/.config/kitty/gruvbox_light_soft.conf"
+alias tdark="tmux source-file ~/.tmux/orange.tmux && kitty @ --to unix:/tmp/mykitty set_colors ~/.config/kitty/gruvbox_dark_hard.conf"
+alias tnightfox="tmux source-file ~/.tmux/purple.tmux && kitty @ --to unix:/tmp/mykitty set_colors ~/.config/kitty/nightfox.conf"
+alias tduskfox="tmux source-file ~/.tmux/purple.tmux && kitty @ --to unix:/tmp/mykitty set_colors ~/.config/kitty/duskfox.conf"
 
 source ~/.fzf/shell/completion.zsh
 source ~/.fzf/shell/key-bindings.zsh

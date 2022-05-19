@@ -1,4 +1,4 @@
- " vim:foldlevel=0
+" vim:foldlevel=0
 " vim:foldmethod=marker
 
 set nocompatible
@@ -52,6 +52,7 @@ Plug 'tomlion/vim-solidity'
 "Plug 'python-mode/python-mode', { 'branch': 'develop' }
 """ Rust
 Plug 'simrat39/rust-tools.nvim'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 " Utility
 "Plug 'hecal3/vim-leader-guide' " Das ist vielleicht cool, aber überzeugte noch nicht ganz
@@ -59,7 +60,6 @@ Plug 'simrat39/rust-tools.nvim'
 Plug 'Shougo/vimproc.vim', {'do' : 'make'} " Wofür brauch ich das?
 Plug 'scrooloose/nerdcommenter' "Einfaches auskommentieren in allen Sprachen
 Plug 'tpope/vim-unimpaired' " Nützliche scripts, yob, yon, etc.
-"Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " Bisher der beste fuzzy finder wohl. Terminalpart
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim' " VIM-Part
 Plug 'embear/vim-localvimrc' " lokale, projektbezogene vimrcs
@@ -67,7 +67,6 @@ Plug 'luochen1990/rainbow' " TODO
 "Plug 'junegunn/rainbow_parentheses.vim' " TODO Regenbogenklammern klappen noch nicht
 Plug 'dhruvasagar/vim-table-mode' " Tablemode ist praktisch für Tabellen in Markdown
 Plug 'szw/vim-maximizer' " Ctrl-W O zum maximizen
-Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins'}
 
 Plug 'junegunn/vim-easy-align' "Redundant? TODO
 Plug 'godlygeek/tabular' " Redundant? TODO
@@ -102,7 +101,7 @@ Plug 'airblade/vim-gitgutter'
 " Colorschemes
 Plug 'EdenEast/nightfox.nvim'
 Plug 'savq/melange'
-Plug 'morhetz/gruvbox'
+Plug 'gruvbox-community/gruvbox'
 Plug 'joshdick/onedark.vim'
 "Plug 'arcticicestudio/nord-vim'
 Plug 'mhartington/oceanic-next'
@@ -142,7 +141,7 @@ call plug#end()
 filetype on
 """ }}}
 
-" CMake Errorformat {{{
+" CMake Errorformat TODO Brauch man das mit lsp noch? {{{
 set errorformat^=%-GScanning\ dependencies\ of\ target\ %f
 set errorformat^=%-G\[\ %l%%\]\ Building\ CXX\ object\ %f
 set errorformat^=%-G\[\ %l%%\]\ Built\ target\ %f
@@ -223,28 +222,8 @@ let g:vimsyn_embed= 'lPr'
 "autocmd BufNewFile,BufRead *.md,*.MD set filetype=pandoc
 """ }}}
 
-" Ruby {{{
-autocmd FileType ruby,eruby set omnifunc=rubycomplete#Complete
-autocmd FileType ruby,eruby let g:rubycomplete_buffer_loading = 1
-autocmd FileType ruby,eruby let g:rubycomplete_rails = 1
-autocmd FileType ruby,eruby let g:rubycomplete_classes_in_global = 1
-" }}}
-
 " nerdcomment {{{
 let NERDCommentWholeLinesInVMode=0
-" }}}
-
-" CScope TODO Kann weg? {{{
-function! LoadCscope()
-  let db = findfile("cscope.out", ".;")
-  if (!empty(db))
-    let path = strpart(db, 0, match(db, "/cscope.out$"))
-    set nocscopeverbose " suppress 'duplicate connection' error
-    exe "cs add " . db . " " . path
-    set cscopeverbose
-  endif
-endfunction
-au BufEnter /* call LoadCscope()
 " }}}
 
 " Interoperability with tmux {{{
@@ -360,7 +339,7 @@ let g:Tex_IgnoredWarnings =
 let g:Tex_IgnoreLevel=9
 """ }}}
 
-" Colorschemes {{{
+" Colorscheme {{{
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 set termguicolors
 
@@ -369,7 +348,7 @@ let g:gruvbox_bold=1
 let g:gruvbox_underline=1
 let g:gruvbox_contrast_dark='hard'
 let g:gruvbox_contrast_light='medium'
-colorscheme duskfox
+colorscheme gruvbox
 " }}}
 
 " Spellchecking {{{
@@ -431,151 +410,6 @@ command! -bang -nargs=* Rg
             \   <bang>0)
 """ }}}
 
-" COC {{{
-"" -------------------------------------------------------------------------------------------------
-" coc.nvim default settings
-" -------------------------------------------------------------------------------------------------
-
-" TODO können die beiden folgenden Zeilen weg?
-"set wildmode=longest,list,full
-"set wildmenu 
-"
-"" if hidden is not set, TextEdit might fail.
-"set hidden
-"
-"" Some servers have issues with backup files, see #649
-"set nobackup
-"set nowritebackup
-"
-"" Better display for messages
-"set cmdheight=2
-"
-"" You will have bad experience for diagnostic messages when it's default 4000.
-"set updatetime=300
-"
-"" don't give |ins-completion-menu| messages.
-"set shortmess+=c
-"
-"" always show signcolumns
-"set signcolumn=yes
-"
-"" Use tab for trigger completion with characters ahead and navigate.
-"" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
-"inoremap <silent><expr> <TAB>
-"      \ pumvisible() ? "\<C-n>" :
-"      \ <SID>check_back_space() ? "\<TAB>" :
-"      \ coc#refresh()
-"inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-"
-"function! s:check_back_space() abort
-"  let col = col('.') - 1
-"  return !col || getline('.')[col - 1]  =~# '\s'
-"endfunction
-"
-"" Use <c-space> to trigger completion.
-"inoremap <silent><expr> <c-space> coc#refresh()
-"
-"" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
-"" Coc only does snippet and additional edit on confirm.
-"inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-"" Or use `complete_info` if your vim support it, like:
-"" inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
-"
-"" Use `[g` and `]g` to navigate diagnostics
-"nmap <silent> [g <Plug>(coc-diagnostic-prev)
-"nmap <silent> ]g <Plug>(coc-diagnostic-next)
-"
-"" Remap keys for gotos
-"nmap <silent> gd <Plug>(coc-definition)
-"nmap <silent> gy <Plug>(coc-type-definition)
-"nmap <silent> gi <Plug>(coc-implementation)
-"nmap <silent> gr <Plug>(coc-references)
-"
-"" Use K to show documentation in preview window
-"nnoremap <silent> K :call <SID>show_documentation()<CR>
-"
-"function! s:show_documentation()
-"  if (index(['vim','help'], &filetype) >= 0)
-"    execute 'h '.expand('<cword>')
-"  else
-"    call CocAction('doHover')
-"  endif
-"endfunction
-"
-"" Highlight symbol under cursor on CursorHold
-"autocmd CursorHold * silent call CocActionAsync('highlight')
-"
-"" Remap for rename current word
-"nmap <leader>rn <Plug>(coc-rename)
-"
-"" Remap for format selected region
-"" xmap <leader>f  <Plug>(coc-format-selected)
-"" nmap <leader>f  <Plug>(coc-format-selected)
-"
-"augroup mygroup
-"  autocmd!
-"  " Setup formatexpr specified filetype(s).
-"  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-"  " Update signature help on jump placeholder
-"  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-"augroup end
-"
-"" Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
-"xmap <leader>a  <Plug>(coc-codeaction-selected)
-"nmap <leader>a  <Plug>(coc-codeaction-selected)
-"
-"" Remap for do codeAction of current line
-"nmap <leader>ac  <Plug>(coc-codeaction)
-"" Fix autofix problem of current line
-"nmap <leader>qf  <Plug>(coc-fix-current)
-"
-"" Create mappings for function text object, requires document symbols feature of languageserver.
-"xmap if <Plug>(coc-funcobj-i)
-"xmap af <Plug>(coc-funcobj-a)
-"omap if <Plug>(coc-funcobj-i)
-"omap af <Plug>(coc-funcobj-a)
-"
-"" Use <C-d> for select selections ranges, needs server support, like: coc-tsserver, coc-python
-"nmap <silent> <C-d> <Plug>(coc-range-select)
-"xmap <silent> <C-d> <Plug>(coc-range-select)
-"
-"" Use `:Format` to format current buffer
-"command! -nargs=0 Format :call CocAction('format')
-"
-"" Use `:Fold` to fold current buffer
-"command! -nargs=? Fold :call     CocAction('fold', <f-args>)
-"
-"" use `:OR` for organize import of current buffer
-"command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
-"
-"" Add status line support, for integration with other plugin, checkout `:h coc-status`
-"
-"" Using CocList
-"" Show all diagnostics
-"" nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
-"" " Manage extensions
-"" nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
-"" " Show commands
-"" nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
-"" " Find symbol of current document
-"nnoremap <silent> <leader>fo  :<C-u>CocList outline<cr>
-"" " Search workspace symbols
-"" nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
-"" " Do default action for next item.
-"" nnoremap <silent> <space>j  :<C-u>CocNext<CR>
-"" " Do default action for previous item.
-"" nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
-"" " Resume latest coc list
-"" nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
-"
-"" disable vim-go :GoDef short cut (gd)
-"" this is handled by LanguageClient [LC]
-"let g:go_def_mapping_enabled = 0
-"
-"nnoremap F :call CocAction('format')<CR>
-"nmap <leader>qf <Plug>(coc-fix-current)
-"}}}
-
 "{{{ Vista
 let g:vista#renderer#enable_icon = 0
 
@@ -618,74 +452,6 @@ set statusline+=\ %3l:%-2c\         " line + column
 set statusline+=%#Cursor#       " colour
 set statusline+=\ %3p%%\                " percentage
 """ }}}
-
-" Defx {{{
-autocmd FileType defx call s:defx_my_settings()
-function! s:defx_my_settings() abort
-    " Define mappings
-    nnoremap <silent><buffer><expr> <CR>
-                \ defx#do_action('open')
-    nnoremap <silent><buffer><expr> c
-                \ defx#do_action('copy')
-    nnoremap <silent><buffer><expr> m
-                \ defx#do_action('move')
-    nnoremap <silent><buffer><expr> p
-                \ defx#do_action('paste')
-    nnoremap <silent><buffer><expr> l
-                \ defx#do_action('open')
-    nnoremap <silent><buffer><expr> E
-                \ defx#do_action('open', 'vsplit')
-    nnoremap <silent><buffer><expr> P
-                \ defx#do_action('preview')
-    nnoremap <silent><buffer><expr> o
-                \ defx#do_action('open_tree', 'toggle')
-    nnoremap <silent><buffer><expr> K
-                \ defx#do_action('new_directory')
-    nnoremap <silent><buffer><expr> N
-                \ defx#do_action('new_file')
-    nnoremap <silent><buffer><expr> M
-                \ defx#do_action('new_multiple_files')
-    nnoremap <silent><buffer><expr> C
-                \ defx#do_action('toggle_columns',
-                \                'mark:indent:icon:filename:type:size:time')
-    nnoremap <silent><buffer><expr> S
-                \ defx#do_action('toggle_sort', 'time')
-    nnoremap <silent><buffer><expr> d
-                \ defx#do_action('remove')
-    nnoremap <silent><buffer><expr> r
-                \ defx#do_action('rename')
-    nnoremap <silent><buffer><expr> !
-                \ defx#do_action('execute_command')
-    nnoremap <silent><buffer><expr> x
-                \ defx#do_action('execute_system')
-    nnoremap <silent><buffer><expr> yy
-                \ defx#do_action('yank_path')
-    nnoremap <silent><buffer><expr> .
-                \ defx#do_action('toggle_ignored_files')
-    nnoremap <silent><buffer><expr> ;
-                \ defx#do_action('repeat')
-    nnoremap <silent><buffer><expr> h
-                \ defx#do_action('cd', ['..'])
-    nnoremap <silent><buffer><expr> ~
-                \ defx#do_action('cd')
-    nnoremap <silent><buffer><expr> q
-                \ defx#do_action('quit')
-    nnoremap <silent><buffer><expr> <Space>
-                \ defx#do_action('toggle_select') . 'j'
-    nnoremap <silent><buffer><expr> *
-                \ defx#do_action('toggle_select_all')
-    nnoremap <silent><buffer><expr> j
-                \ line('.') == line('$') ? 'gg' : 'j'
-    nnoremap <silent><buffer><expr> k
-                \ line('.') == 1 ? 'G' : 'k'
-    nnoremap <silent><buffer><expr> <C-l>
-                \ defx#do_action('redraw')
-    nnoremap <silent><buffer><expr> <C-g>
-                \ defx#do_action('print')
-    nnoremap <silent><buffer><expr> cd
-                \ defx#do_action('change_vim_cwd')
-endfunction
-" }}}
 
 " LSP {{{
 
@@ -772,7 +538,7 @@ local feedkey = function(key, mode)
 end
 
 cmp.setup({
-    experimental = { native_menu = true},
+    view = {entries = "native"},
     snippet = {
         -- REQUIRED - you must specify a snippet engine
         expand = function(args)
@@ -791,7 +557,7 @@ cmp.setup({
             i = cmp.mapping.abort(),
             c = cmp.mapping.close(),
         }),
-        ['<CR>'] = cmp.mapping.confirm({ select = true }),
+        --['<CR>'] = cmp.mapping.confirm({ select = true }),
         ["<Tab>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
                 cmp.select_next_item()
@@ -837,6 +603,36 @@ cmp.setup.cmdline(':', {
         { name = 'cmdline' }
     })
 })
+EOF
+" }}}
+
+" {{{ Treesitter
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  -- One of "all", "maintained" (parsers with maintainers), or a list of languages
+  ensure_installed = "maintained",
+
+  -- Install languages synchronously (only applied to `ensure_installed`)
+  sync_install = false,
+
+  highlight = {
+    -- `false` will disable the whole extension
+    enable = true,
+
+    -- NOTE: these are the names of the parsers and not the filetype. (for example if you want to
+    -- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
+    -- the name of the parser)
+    -- list of language that will be disabled
+
+    -- disable = { "c", "rust" },
+
+    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+    -- Using this option may slow down your editor, and you may see some duplicate highlights.
+    -- Instead of true it can also be a list of languages
+    additional_vim_regex_highlighting = false,
+  },
+}
 EOF
 " }}}
 
