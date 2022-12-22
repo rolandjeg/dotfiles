@@ -22,6 +22,8 @@ Plug 'simnalamburt/vim-mundo'
 " For vsnip users.
 Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/vim-vsnip'
+Plug 'hrsh7th/vim-vsnip-integ'
+Plug 'rafamadriz/friendly-snippets'
 "Plug 'euclidianAce/BetterLua.vim'
 
 "Plug 'Shougo/neosnippet' "TODO Kann weg?
@@ -387,9 +389,9 @@ let g:gutentags_project_root=['.root']
 """ }}}
 
 " NEOSNIPPETS {{{
-imap <C-k> <Plug>(neosnippet_expand_or_jump)
-smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-xmap <C-k>     <Plug>(neosnippet_expand_target)
+"imap <C-k> <Plug>(neosnippet_expand_or_jump)
+"smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+"xmap <C-k>     <Plug>(neosnippet_expand_target)
 " }}}
 
 " FZF {{{
@@ -548,6 +550,22 @@ lua <<EOF
       ['<C-Space>'] = cmp.mapping.complete(),
       ['<C-e>'] = cmp.mapping.abort(),
       ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+      ["<Tab>"] = cmp.mapping(function(fallback)
+          if cmp.visible() then
+              cmp.select_next_item()
+          elseif vim.fn["vsnip#available"](1) == 1 then
+              feedkey("<Plug>(vsnip-expand-or-jump)", "")
+          else
+              fallback() -- The fallback function sends a already mapped key. In this case, it's probably `<Tab>`.
+          end
+      end),
+      ["<S-Tab>"] = cmp.mapping(function()
+          if cmp.visible() then
+              cmp.select_prev_item()
+          elseif vim.fn["vsnip#jumpable"](-1) == 1 then
+              feedkey("<Plug>(vsnip-jump-prev)", "")
+          end
+      end),
     }),
     sources = cmp.config.sources({
       { name = 'nvim_lsp' },
@@ -607,14 +625,31 @@ lua <<EOF
 EOF
 " }}}
 
+" Snippets {{{
+" Jump forward or backward
+imap <expr> <C-j>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<C-j>'
+smap <expr> <C-j>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<C-j>'
+imap <expr> <C-k> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<C-k>'
+smap <expr> <C-k> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<C-k>'
+
+" Select or cut text to use as $TM_SELECTED_TEXT in the next snippet.
+" See https://github.com/hrsh7th/vim-vsnip/pull/50
+nmap        s   <Plug>(vsnip-select-text)
+xmap        s   <Plug>(vsnip-select-text)
+nmap        S   <Plug>(vsnip-cut-text)
+xmap        S   <Plug>(vsnip-cut-text)
+" }}}
+
 " {{{ Treesitter
 lua <<EOF
 require'nvim-treesitter.configs'.setup {
   -- One of "all", "maintained" (parsers with maintainers), or a list of languages
   ensure_installed = "all",
+  disable = { "bibtex"},
 
   -- Install languages synchronously (only applied to `ensure_installed`)
   sync_install = false,
+  auto_install = true,
 
   highlight = {
     -- `false` will disable the whole extension
@@ -625,7 +660,7 @@ require'nvim-treesitter.configs'.setup {
     -- the name of the parser)
     -- list of language that will be disabled
 
-    -- disable = { "c", "rust" },
+    disable = { "markdown" },
 
     -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
     -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
