@@ -134,6 +134,8 @@ Plug 'joshdick/onedark.vim'
 "Plug 'arcticicestudio/nord-vim'
 "Plug 'ayu-theme/ayu-vim'
 
+" Hex
+Plug 'RaafatTurki/hex.nvim'
 
 " Own stuff
 Plug '~/.config/nvim/rossyrg'
@@ -342,15 +344,15 @@ let g:Tex_IgnoreLevel=9
 """ }}}
 
 " Colorscheme {{{
-let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-set termguicolors
-
-let g:gruvbox_italic=1
-let g:gruvbox_bold=1
-let g:gruvbox_underline=1
-let g:gruvbox_contrast_dark='hard'
-let g:gruvbox_contrast_light='medium'
-colorscheme gruvbox
+"let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+"set termguicolors
+"
+"let g:gruvbox_italic=1
+"let g:gruvbox_bold=1
+"let g:gruvbox_underline=1
+"let g:gruvbox_contrast_dark='hard'
+"let g:gruvbox_contrast_light='medium'
+"colorscheme gruvbox
 " }}}
 
 " Spellchecking {{{
@@ -733,4 +735,14 @@ augroup FernEvents
   autocmd!
   autocmd FileType fern call FernInit()
 augroup END
+"}}}
 
+" Hex {{{
+lua <<EOF
+require 'hex'.setup()
+EOF
+" }}}
+
+lua <<EOF
+require("rossyrg")
+EOF
