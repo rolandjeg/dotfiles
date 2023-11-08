@@ -2,7 +2,7 @@
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
-vim.g.maplocalleader = '\\'
+vim.g.maplocalleader = ' '
 
 --{{{ Install package manager
 --    https://github.com/folke/lazy.nvim
@@ -48,7 +48,7 @@ require('lazy').setup({
 
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', opts = {} },
+      { 'j-hui/fidget.nvim', opts = {}, tag = 'legacy' },
 
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
@@ -135,6 +135,10 @@ require('lazy').setup({
       return vim.fn.executable 'make' == 1
     end,
   },
+  { 'ibhagwan/fzf-lua',
+  -- optional for icon support
+    dependencies = { 'nvim-tree/nvim-web-devicons' }
+  },
 
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
@@ -162,15 +166,33 @@ require('lazy').setup({
   --    to get rid of the warning telling you that there are not plugins in `lua/custom/plugins/`.
   { 'lervag/wiki.vim' },
   { 'lervag/vimtex' },
+  { 'lervag/lists.vim'},
+  { 'liuchengxu/vista.vim'},
+  { 'dhruvasagar/vim-table-mode' },
+  { 'itchyny/calendar.vim',
+    keys = {
+      { "<leader>cc", "<cmd>Calendar -position=here<cr>" },
+    },
+    init = function()
+      -- See also ftplugin/calendar.vim
+      vim.g.calendar_first_day = "monday"
+      vim.g.calendar_date_endian = "big"
+      vim.g.calendar_frame = "space"
+      vim.g.calendar_week_number = 1
+    end
+  },
   { 'vim-pandoc/vim-pandoc'},
   { 'vim-pandoc/vim-pandoc-syntax'},
   { 'vim-pandoc/vim-pandoc-after'},
-  { import = 'custom.plugins' },
+  -- { import = 'custom.plugins' },
 }, {})
 --}}}
 
 --{{{ Setting options
 -- See `:help vim.o`
+
+-- Set Cursorline
+vim.o.cursorline = true
 
 -- Set highlight on search
 vim.o.hlsearch = false
@@ -208,8 +230,13 @@ vim.o.timeoutlen = 300
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
 
+-- Spelling
+vim.o.spelllang = 'de_de'
+vim.o.spell = true
+
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
+vim.o.background = "dark"
 --}}}
 
 --{{{ Basic Keymaps
@@ -249,13 +276,28 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 
 --{{{ Configure Telescope
 -- See `:help telescope` and `:help telescope.setup()`
+--
 require('telescope').setup {
   defaults = {
     mappings = {
       i = {
         ['<C-u>'] = false,
         ['<C-d>'] = false,
+        ['<C-j>'] = require('telescope.actions').move_selection_next,
+        ['<C-k>'] = require('telescope.actions').move_selection_previous,
       },
+    },
+    path_display = {
+      shorten = 3,
+    },
+  },
+  pickers = {
+    lsp_document_symbols = {
+      symbol_width = 40,
+    },
+    lsp_workspace_symbols = {
+      symbol_width = 35,
+      fname_width = 20,
     },
   },
 }
@@ -274,11 +316,14 @@ vim.keymap.set('n', '<leader>/', function()
   })
 end, { desc = '[/] Fuzzily search in current buffer' })
 
-vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
-vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
-vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
-vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
-vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
+vim.keymap.set('n', '<leader>ff', require('telescope.builtin').find_files, { desc = '[F]ind [F]iles' })
+vim.keymap.set('n', '<leader>fh', require('telescope.builtin').help_tags, { desc = '[F]ind [H]elp' })
+vim.keymap.set('n', '<leader>fw', require('telescope.builtin').grep_string, { desc = '[F]ind current [W]ord' })
+vim.keymap.set('n', '<leader>fg', require('telescope.builtin').live_grep, { desc = '[F]ind by [G]rep' })
+vim.keymap.set('n', '<leader>fd', require('telescope.builtin').diagnostics, { desc = '[F]ind [D]iagnostics' })
+vim.keymap.set('n', '<leader>fb', require('telescope.builtin').buffers, { desc = '[F]ind existing [B]uffers' })
+vim.keymap.set('n', '<leader>fs', require('telescope.builtin').lsp_document_symbols, { desc = '[F]ind LSP [S]ymbols' })
+vim.keymap.set('n', '<leader>ft', require('telescope.builtin').lsp_workspace_symbols, { desc = '[F]ind LSP [T]ags (workspace symbols)' })
 --}}}
 
 --{{{ Configure Treesitter
@@ -500,7 +545,45 @@ vim.g.wiki_root = '~/vimwiki'
 vim.g.wiki_root = '~/vimwiki'
 vim.g.wiki_link_target_type = 'md'
 vim.g.wiki_link_extension = '.md'
-vim.g.wiki_filetypes = {'md'}
+--vim.g.wiki_filetypes = {'pandoc'}
+vim.keymap.set('n', '<leader>wd', vim.cmd.WikiJournal)
+local M = require 'rossyrg.util.ts'
+vim.keymap.set('n', '<leader>wo', M.files_wiki)
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "pandoc",
+  command = "ListsEnable"
+})
+--}}}
+
+--{{{ Light-Dark Switch
+local changeBackground = function()
+  local filename = "/home/groell/.background"
+  local file, err = io.open(filename)
+  if file == nil then
+    print(err)
+  end
+  local line = file:read()
+  file:close()
+  if line=='dark' then
+    vim.o.background = "dark"
+  else
+    vim.o.background = "light"
+  end
+end
+
+changeBackground()
+
+--vim.cmd "autocmd Signal SigUSR1 call changeBackground()"
+vim.api.nvim_create_autocmd("Signal", {
+	pattern = { "SIGUSR1" },
+	callback = changeBackground,
+})
+--}}}
+
+--{{{ Table mode
+vim.g.table_mode_corner='+'
+vim.g.table_mode_corner_corner='+'
+vim.g.table_mode_header_fillchar='='
 --}}}
 
 -- vim: ts=2 sts=2 sw=2 et
