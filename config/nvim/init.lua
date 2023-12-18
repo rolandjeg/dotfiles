@@ -111,9 +111,9 @@ require('lazy').setup({
     'lukas-reineke/indent-blankline.nvim',
     -- Enable `lukas-reineke/indent-blankline.nvim`
     -- See `:help indent_blankline.txt`
+    main = "ibl",
     opts = {
-      char = '┊',
-      show_trailing_blankline_indent = false,
+      indent = {char = '┊'},
     },
   },
 
@@ -184,6 +184,7 @@ require('lazy').setup({
   { 'vim-pandoc/vim-pandoc'},
   { 'vim-pandoc/vim-pandoc-syntax'},
   { 'vim-pandoc/vim-pandoc-after'},
+  { 'mfussenegger/nvim-dap'}
   -- { import = 'custom.plugins' },
 }, {})
 --}}}
@@ -254,11 +255,11 @@ vim.keymap.set('n', '<leader>pv', vim.cmd.Ex)
 -- Because of indent-blankline
 vim.keymap.set('n', 'zo', function ()
 	vim.cmd.foldo()
-	vim.cmd.IndentBlanklineRefresh()
+  require("ibl").refresh_all()
 end)
 vim.keymap.set('n', 'zc', function ()
 	vim.cmd.foldc()
-	vim.cmd.IndentBlanklineRefresh()
+  require("ibl").refresh_all()
 end)
 --}}}
 
@@ -471,6 +472,14 @@ require('neodev').setup()
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
+
+require'lspconfig'.gdscript.setup{
+  on_attach = on_attach,
+  flags = lsp_flags,
+  --cmd = {'nc', 'lapislazuli.local', '6005'},
+  filetypes = { "gd", "gdscript", "gdscript3" },
+}
+--vim.lsp.start({ name = 'godot', cmd = vim.lsp.rpc.connect('172.24.112.1', 6005) })
 --}}}
 
 --{{{ Setup mason so it can manage external tooling
@@ -511,8 +520,8 @@ cmp.setup {
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
     ['<C-Space>'] = cmp.mapping.complete {},
     ['<CR>'] = cmp.mapping.confirm {
-      behavior = cmp.ConfirmBehavior.Replace,
-      select = true,
+      --behavior = cmp.ConfirmBehavior.Replace,
+      select = false,
     },
     ['<Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
@@ -557,7 +566,7 @@ vim.api.nvim_create_autocmd("FileType", {
 
 --{{{ Light-Dark Switch
 local changeBackground = function()
-  local filename = "/home/groell/.background"
+  local filename = "/home/ross/.background"
   local file, err = io.open(filename)
   if file == nil then
     print(err)
@@ -584,6 +593,28 @@ vim.api.nvim_create_autocmd("Signal", {
 vim.g.table_mode_corner='+'
 vim.g.table_mode_corner_corner='+'
 vim.g.table_mode_header_fillchar='='
+--}}}
+
+--{{{dap
+local dap = require('dap')
+dap.adapters.godot = {
+  type = "server",
+  host = 'localhost',
+  port = 6006,
+}
+
+dap.configurations.gdscript = {
+  {
+    type = "godot",
+    request = "launch",
+    name = "Launch scene",
+    project = "${workspaceFolder}",
+    launch_scene = true,
+  }
+}
+
+vim.keymap.set('n', '<leader>dk', function() require'dap'.continue() end, { desc = 'Start/Continue debugging' })
+vim.keymap.set('n', '<leader>db', function() require'dap'.toggle_breakpoint() end, { desc = 'Toggle Breakpoint' })
 --}}}
 
 -- vim: ts=2 sts=2 sw=2 et
