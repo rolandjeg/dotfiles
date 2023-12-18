@@ -185,6 +185,16 @@ require('lazy').setup({
   { 'vim-pandoc/vim-pandoc-syntax'},
   { 'vim-pandoc/vim-pandoc-after'},
   -- { import = 'custom.plugins' },
+  {
+    "nvim-neo-tree/neo-tree.nvim",
+    branch = "v3.x",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
+      "MunifTanjim/nui.nvim",
+      -- "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
+    }
+}
 }, {})
 --}}}
 
@@ -240,6 +250,8 @@ vim.o.background = "dark"
 --}}}
 
 --{{{ Basic Keymaps
+--
+vim.keymap.set('n', '<leader>ne', ":Neotree current<CR>")
 
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
@@ -330,7 +342,7 @@ vim.keymap.set('n', '<leader>ft', require('telescope.builtin').lsp_workspace_sym
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'vimdoc', 'vim' },
+  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'vimdoc', 'vim', 'kdl' },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = false,
