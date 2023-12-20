@@ -1,23 +1,42 @@
--- Pull in the wezterm API
 local wezterm = require 'wezterm'
-
--- This table will hold the configuration.
-local config = {}
-
--- In newer versions of wezterm, use the config_builder which will
--- help provide clearer error messages
-if wezterm.config_builder then
-  config = wezterm.config_builder()
-end
-
--- This is where you actually apply your config choices
-
-config.font = wezterm.font 'Comic Code'
-config.enable_tab_bar = false
-
--- For example, changing the color scheme:
-config.color_scheme = 'Gruvbox dark, hard (base16)'
-
--- and finally, return the configuration to wezterm
-return config
-
+local custom = wezterm.color.get_builtin_schemes()["Catppuccin Mocha"]
+custom.ansi[1]="#1e1e2e"
+--local custom = wezterm.color.get_builtin_schemes()["Gruvbox Material (Gogh)"]
+return {
+	-- color_scheme = 'termnial.sexy',
+	--color_scheme = 'Catppuccin Mocha',
+	color_schemes = {["rosspuccin"] = custom},
+	color_scheme = "rosspuccin",
+	enable_tab_bar = false,
+	font_size = 18.0,
+	font = wezterm.font 'Comic Code',
+	-- macos_window_background_blur = 40,
+	macos_window_background_blur = 30,
+	
+	-- window_background_image = '/Users/omerhamerman/Downloads/3840x1080-Wallpaper-041.jpg',
+	-- window_background_image_hsb = {
+	-- 	brightness = 0.01,
+	-- 	hue = 1.0,
+	-- 	saturation = 0.5,
+	-- },
+	-- window_background_opacity = 0.92,
+	window_background_opacity = 1.0,
+	-- window_background_opacity = 0.78,
+	-- window_background_opacity = 0.20,
+	window_decorations = 'RESIZE',
+	keys = {
+		{
+			key = 'f',
+			mods = 'CTRL',
+			action = wezterm.action.ToggleFullScreen,
+		},
+	},
+	mouse_bindings = {
+	  -- Ctrl-click will open the link under the mouse cursor
+	  {
+	    event = { Up = { streak = 1, button = 'Left' } },
+	    mods = 'CTRL',
+	    action = wezterm.action.OpenLinkAtMouseCursor,
+	  },
+	},
+}
