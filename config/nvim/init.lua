@@ -148,8 +148,10 @@ require('lazy').setup({
     --end
   },
   { 'catppuccin/nvim',
+  },
+  { 'folke/tokyonight.nvim',
     config = function()
-      vim.cmd[[colorscheme catppuccin-mocha]]
+      vim.cmd[[colorscheme tokyonight-night]]
     end
   },
 
@@ -159,7 +161,7 @@ require('lazy').setup({
     opts = {
       options = {
         icons_enabled = false,
-        theme = 'catppuccin',
+        theme = 'tokyonight',
         component_separators = '|',
         section_separators = '',
       },
@@ -237,6 +239,28 @@ require('lazy').setup({
   { 'vim-pandoc/vim-pandoc-syntax'},
   { 'vim-pandoc/vim-pandoc-after'},
   { 'mfussenegger/nvim-dap'},
+  { 'rcarriga/nvim-dap-ui' },
+  { 'theHamsta/nvim-dap-virtual-text' },
+  { 'ldelossa/nvim-dap-projects' },
+  {
+    "nvim-neo-tree/neo-tree.nvim",
+    branch = "v3.x",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
+      "MunifTanjim/nui.nvim",
+      -- "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
+    }
+  },
+  {
+    'stevearc/aerial.nvim',
+    opts = {},
+    -- Optional dependencies
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+      "nvim-tree/nvim-web-devicons"
+    },
+  },
   { import = 'custom.plugins' },
 }, {})
 --}}}
@@ -286,7 +310,7 @@ vim.o.spell = true
 
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
-vim.o.background = "dark"
+--vim.o.background = "dark"
 --}}}
 
 --{{{ Basic Keymaps
@@ -315,6 +339,8 @@ require('which-key').register({
   ['<leader>'] = { name = 'VISUAL <leader>' },
   ['<leader>h'] = { 'Git [H]unk' },
 }, { mode = 'v' })
+vim.keymap.set("n", "<leader>te", "<cmd>Neotree toggle<CR>", { desc = '[T]oggle N[e]otree' })
+vim.keymap.set("n", "<leader>oe", "<cmd>Neotree current<CR>", { desc = '[O]pen N[e]otree' })
 --}}}
 
 --{{{ Highlight on yank
@@ -398,6 +424,7 @@ vim.api.nvim_create_user_command('LiveGrepGitRoot', live_grep_git_root, {})
 -- See `:help telescope.builtin`
 vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
 vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
+vim.keymap.set('n', '<leader>fb', require('telescope.builtin').buffers, { desc = '[F]ind existing [B]uffers' })
 vim.keymap.set('n', '<leader>/', function()
   -- You can pass additional configuration to telescope to change theme, layout, etc.
   require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
@@ -573,7 +600,9 @@ local servers = {
 }
 
 -- Setup neovim lua configuration
-require('neodev').setup()
+require('neodev').setup({
+  library = { plugins = { "nvim-dap-ui"}, types = true },
+})
 
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -702,6 +731,8 @@ vim.g.table_mode_header_fillchar='='
 --}}}
 
 --{{{dap
+
+require("nvim-dap-projects").search_project_config()
 local dap = require('dap')
 dap.adapters.godot = {
   type = "server",
@@ -719,8 +750,28 @@ dap.configurations.gdscript = {
   }
 }
 
+require('dapui').setup()
+
 vim.keymap.set('n', '<leader>dk', function() require'dap'.continue() end, { desc = 'Start/Continue debugging' })
 vim.keymap.set('n', '<leader>db', function() require'dap'.toggle_breakpoint() end, { desc = 'Toggle Breakpoint' })
+vim.keymap.set('n', '<leader>dt', function() require('dapui').toggle() end, { desc = 'Toggle DAP UI' })
+--}}}
+
+--{{{Aerial
+require("aerial").setup({
+  -- optionally use on_attach to set keymaps when aerial has attached to a buffer
+  on_attach = function(bufnr)
+    -- Jump forwards/backwards with '{' and '}'
+    vim.keymap.set("n", "{", "<cmd>AerialPrev<CR>", { buffer = bufnr })
+    vim.keymap.set("n", "}", "<cmd>AerialNext<CR>", { buffer = bufnr })
+  end,
+})
+-- You probably also want to set a keymap to toggle aerial
+vim.keymap.set("n", "<leader>ta", "<cmd>AerialToggle!<CR>", { desc = '[T]oggle [A]erial' })
+--}}}
+
+--{{{Colorscheme
+vim.cmd[[colorscheme tokyonight-night]]
 --}}}
 
 -- vim: ts=2 sts=2 sw=2 et

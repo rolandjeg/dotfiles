@@ -1,6 +1,6 @@
 local wezterm = require 'wezterm'
-local custom = wezterm.color.get_builtin_schemes()["Catppuccin Mocha"]
-custom.ansi[1]="#1e1e2e"
+local custom = wezterm.color.get_builtin_schemes()["Tokyo Night"]
+--custom.ansi[1]="#1e1e2e"
 --local custom = wezterm.color.get_builtin_schemes()["Gruvbox Material (Gogh)"]
 return {
 	-- color_scheme = 'termnial.sexy',
@@ -24,13 +24,6 @@ return {
 	-- window_background_opacity = 0.78,
 	-- window_background_opacity = 0.20,
 	window_decorations = 'RESIZE',
-	keys = {
-		{
-			key = 'f',
-			mods = 'CTRL',
-			action = wezterm.action.ToggleFullScreen,
-		},
-	},
 	mouse_bindings = {
 	  -- Ctrl-click will open the link under the mouse cursor
 	  {
