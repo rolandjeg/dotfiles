@@ -133,8 +133,8 @@ require('lazy').setup({
         end, { desc = 'git diff against last commit' })
 
         -- Toggles
-        map('n', '<leader>tb', gs.toggle_current_line_blame, { desc = 'toggle git blame line' })
-        map('n', '<leader>td', gs.toggle_deleted, { desc = 'toggle git show deleted' })
+        map('n', '<leader>nb', gs.toggle_current_line_blame, { desc = 'toggle git blame line' })
+        map('n', '<leader>nd', gs.toggle_deleted, { desc = 'toggle git show deleted' })
 
         -- Text object
         map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>', { desc = 'select git hunk' })
@@ -142,18 +142,10 @@ require('lazy').setup({
     },
   },
 
-  { 'sainnhe/gruvbox-material',
-    --config = function()
-      --vim.cmd[[colorscheme gruvbox-material]]
-    --end
-  },
-  { 'catppuccin/nvim',
-  },
-  { 'folke/tokyonight.nvim',
-    config = function()
-      vim.cmd[[colorscheme tokyonight-night]]
-    end
-  },
+  { 'sainnhe/gruvbox-material' },
+  { "ellisonleao/gruvbox.nvim" },
+  { 'catppuccin/nvim'  },
+  { 'folke/tokyonight.nvim'  },
 
   { -- Set lualine as statusline
     'nvim-lualine/lualine.nvim',
@@ -164,6 +156,23 @@ require('lazy').setup({
         theme = 'tokyonight',
         component_separators = '|',
         section_separators = '',
+      },
+      winbar = {
+        lualine_a = {},
+        lualine_b = {},
+        lualine_c = {'filename'},
+        lualine_x = {},
+        lualine_y = {},
+        lualine_z = {}
+      },
+
+      inactive_winbar = {
+        lualine_a = {},
+        lualine_b = {},
+        lualine_c = {'filename'},
+        lualine_x = {},
+        lualine_y = {},
+        lualine_z = {}
       },
     },
   },
@@ -242,6 +251,15 @@ require('lazy').setup({
   { 'rcarriga/nvim-dap-ui' },
   { 'theHamsta/nvim-dap-virtual-text' },
   { 'ldelossa/nvim-dap-projects' },
+  { 'saecki/crates.nvim',
+    ft = {"rust", "toml"},
+    config = function(_, opts)
+      local crates = require('crates')
+      crates.setup(opts)
+      crates.show()
+    end,
+  },
+  { 'glepnir/lspsaga.nvim' },
   {
     "nvim-neo-tree/neo-tree.nvim",
     branch = "v3.x",
@@ -262,6 +280,15 @@ require('lazy').setup({
     },
   },
   { import = 'custom.plugins' },
+  {
+    "nvim-neotest/neotest",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "antoinemadec/FixCursorHold.nvim",
+      "nvim-treesitter/nvim-treesitter"
+    },
+  },
+  { 'rouge8/neotest-rust'},
 }, {})
 --}}}
 
@@ -270,6 +297,7 @@ require('lazy').setup({
 
 -- Set Cursorline
 vim.o.cursorline = true
+
 
 -- Set highlight on search
 vim.o.hlsearch = false
@@ -330,7 +358,8 @@ require('which-key').register {
   ['<leader>h'] = { name = 'Git [H]unk', _ = 'which_key_ignore' },
   ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
   ['<leader>f'] = { name = '[F]ind', _ = 'which_key_ignore' },
-  ['<leader>t'] = { name = '[T]oggle', _ = 'which_key_ignore' },
+  ['<leader>n'] = { name = 'Toggle', _ = 'which_key_ignore' },
+  ['<leader>t'] = { name = '[T]ests', _ = 'which_key_ignore' },
   ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
 }
 -- register which-key VISUAL mode
@@ -339,7 +368,7 @@ require('which-key').register({
   ['<leader>'] = { name = 'VISUAL <leader>' },
   ['<leader>h'] = { 'Git [H]unk' },
 }, { mode = 'v' })
-vim.keymap.set("n", "<leader>te", "<cmd>Neotree toggle<CR>", { desc = '[T]oggle N[e]otree' })
+vim.keymap.set("n", "<leader>ne", "<cmd>Neotree toggle<CR>", { desc = 'Toggle N[e]otree' })
 vim.keymap.set("n", "<leader>oe", "<cmd>Neotree current<CR>", { desc = '[O]pen N[e]otree' })
 --}}}
 
@@ -553,7 +582,6 @@ local on_attach = function(_, bufnr)
   nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
   nmap('gI', vim.lsp.buf.implementation, '[G]oto [I]mplementation')
   nmap('<leader>D', vim.lsp.buf.type_definition, 'Type [D]efinition')
-  nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
   nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
 
   -- See `:help K` for why this keymap
@@ -601,7 +629,7 @@ local servers = {
 
 -- Setup neovim lua configuration
 require('neodev').setup({
-  library = { plugins = { "nvim-dap-ui"}, types = true },
+  library = { plugins = { "nvim-dap-ui", "neotest" }, types = true },
 })
 
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
@@ -680,6 +708,7 @@ cmp.setup {
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
     { name = 'path' },
+    { name = 'crates' },
   },
 }
 -- }}}
@@ -732,7 +761,6 @@ vim.g.table_mode_header_fillchar='='
 
 --{{{dap
 
-require("nvim-dap-projects").search_project_config()
 local dap = require('dap')
 dap.adapters.godot = {
   type = "server",
@@ -750,11 +778,76 @@ dap.configurations.gdscript = {
   }
 }
 
+dap.adapters.lldb = {
+  type = 'executable',
+  command = '/usr/bin/lldb-vscode', -- adjust as needed, must be absolute path
+  name = 'lldb'
+}
+
+dap.configurations.rust = {
+  {
+    name = 'Launch',
+    type = 'lldb',
+    request = 'launch',
+    program = function()
+      return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+    end,
+    cwd = '${workspaceFolder}',
+    stopOnEntry = false,
+    args = {},
+        initCommands = function()
+      -- Find out where to look for the pretty printer Python module
+      local rustc_sysroot = vim.fn.trim(vim.fn.system('rustc --print sysroot'))
+
+      local script_import = 'command script import "' .. rustc_sysroot .. '/lib/rustlib/etc/lldb_lookup.py"'
+      local commands_file = rustc_sysroot .. '/lib/rustlib/etc/lldb_commands'
+
+      local commands = {}
+      local file = io.open(commands_file, 'r')
+      if file then
+        for line in file:lines() do
+          table.insert(commands, line)
+        end
+        file:close()
+      end
+      table.insert(commands, 1, script_import)
+
+      return commands
+    end,
+  },
+}
+
+require("nvim-dap-projects").search_project_config()
 require('dapui').setup()
+require('nvim-dap-virtual-text').setup()
 
 vim.keymap.set('n', '<leader>dk', function() require'dap'.continue() end, { desc = 'Start/Continue debugging' })
 vim.keymap.set('n', '<leader>db', function() require'dap'.toggle_breakpoint() end, { desc = 'Toggle Breakpoint' })
 vim.keymap.set('n', '<leader>dt', function() require('dapui').toggle() end, { desc = 'Toggle DAP UI' })
+
+vim.keymap.set('n', '<leader>dn', function() require('dap').step_over() end, { desc = 'Step Over (Next)' })
+vim.keymap.set('n', '<leader>ds', function() require('dap').step_into() end, { desc = 'Step Into' })
+vim.keymap.set('n', '<leader>do', function() require('dap').step_out() end, { desc = 'Step Out' })
+vim.keymap.set('n', '<Leader>dB', function() require('dap').set_breakpoint() end, { desc = 'Set Breakpoint' })
+vim.keymap.set('n', '<Leader>dg', function() require('dap').set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end, { desc = 'Logpoint' })
+vim.keymap.set('n', '<Leader>dr', function() require('dap').repl.open() end, { desc = 'Open REPL' })
+vim.keymap.set('n', '<Leader>dl', function() require('dap').run_last() end, { desc = 'Run Last' })
+vim.keymap.set('n', '<Leader>de', function() require('dapui').eval() end, { desc = 'Show Expression' })
+
+require("neotest").setup({
+  adapters = {
+    require("neotest-rust")({
+      dap_adapter = "lldb",
+    }),
+    --require("neotest-plenary"),
+    --require("neotest-vim-test")({
+      --ignore_file_types = { "python", "vim", "lua" },
+    --}),
+  }
+})
+
+vim.keymap.set('n', '<Leader>tr', function() require('neotest').run.run() end, { desc = 'Run Test' })
+vim.keymap.set('n', '<Leader>td', function() require('neotest').run.run({strategy = "dap"}) end, { desc = 'Debug Test' })
 --}}}
 
 --{{{Aerial
@@ -767,13 +860,104 @@ require("aerial").setup({
   end,
 })
 -- You probably also want to set a keymap to toggle aerial
-vim.keymap.set("n", "<leader>ta", "<cmd>AerialToggle!<CR>", { desc = '[T]oggle [A]erial' })
+vim.keymap.set("n", "<leader>na", "<cmd>AerialToggle!<CR>", { desc = 'Toggle [A]erial' })
 --}}}
 
 --{{{Colorscheme
+require("catppuccin").setup({
+    flavour = "mocha", -- latte, frappe, macchiato, mocha
+    background = { -- :h background
+        light = "latte",
+        dark = "mocha",
+    },
+    transparent_background = true, -- disables setting the background color.
+    show_end_of_buffer = false, -- shows the '~' characters after the end of buffers
+    term_colors = false, -- sets terminal colors (e.g. `g:terminal_color_0`)
+    dim_inactive = {
+        enabled = false, -- dims the background color of inactive window
+        shade = "dark",
+        percentage = 0.15, -- percentage of the shade to apply to the inactive window
+    },
+    no_italic = false, -- Force no italic
+    no_bold = false, -- Force no bold
+    no_underline = false, -- Force no underline
+    styles = { -- Handles the styles of general hi groups (see `:h highlight-args`):
+        comments = { "italic" }, -- Change the style of comments
+        conditionals = { "italic" },
+        loops = {},
+        functions = {},
+        keywords = {},
+        strings = {},
+        variables = {},
+        numbers = {},
+        booleans = {},
+        properties = {},
+        types = {},
+        operators = {},
+    },
+    color_overrides = {},
+    custom_highlights = {},
+    integrations = {
+        cmp = true,
+        gitsigns = true,
+        nvimtree = true,
+        treesitter = true,
+        notify = false,
+        mini = {
+            enabled = true,
+            indentscope_color = "",
+        },
+        -- For more plugins integrations please scroll down (https://github.com/catppuccin/nvim#integrations)
+    },
+})
+require("tokyonight").setup({
+  -- your configuration comes here
+  -- or leave it empty to use the default settings
+  style = "night", -- The theme comes in three styles, `storm`, `moon`, a darker variant `night` and `day`
+  light_style = "day", -- The theme is used when the background is set to light
+  transparent = true, -- Enable this to disable setting the background color
+  terminal_colors = true, -- Configure the colors used when opening a `:terminal` in [Neovim](https://github.com/neovim/neovim)
+  styles = {
+    -- Style to be applied to different syntax groups
+    -- Value is any valid attr-list value for `:help nvim_set_hl`
+    comments = { italic = true },
+    keywords = { italic = true },
+    functions = {},
+    variables = {},
+    -- Background styles. Can be "dark", "transparent" or "normal"
+    sidebars = "dark", -- style for sidebars, see below
+    floats = "dark", -- style for floating windows
+  },
+  sidebars = { "qf", "help" }, -- Set a darker background on sidebar-like windows. For example: `["qf", "vista_kind", "terminal", "packer"]`
+  day_brightness = 0.3, -- Adjusts the brightness of the colors of the **Day** style. Number between 0 and 1, from dull to vibrant colors
+  hide_inactive_statusline = false, -- Enabling this option, will hide inactive statuslines and replace them with a thin border instead. Should work with the standard **StatusLine** and **LuaLine**.
+  dim_inactive = false, -- dims inactive windows
+  lualine_bold = false, -- When `true`, section headers in the lualine theme will be bold
+
+  --- You can override specific color groups to use other groups or a hex color
+  --- function will be called with a ColorScheme table
+  ---@param colors ColorScheme
+  on_colors = function(colors) end,
+
+  --- You can override specific highlights to use other groups or a hex color
+  --- function will be called with a Highlights and ColorScheme table
+  ---@param highlights Highlights
+  ---@param colors ColorScheme
+  on_highlights = function(highlights, colors) end,
+})
 vim.cmd[[colorscheme tokyonight-night]]
 --}}}
 
+--{{{Lualine
+require('lualine').setup({
+  options = {
+    disabled_filetypes = {
+      winbar = {"dap-repl"},
+    }
+  }
+})
+vim.o.laststatus = 3
+--}}}
 -- vim: ts=2 sts=2 sw=2 et
 -- vim:foldmethod=marker
 -- vim:foldlevel=0
