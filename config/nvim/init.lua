@@ -289,6 +289,7 @@ require('lazy').setup({
     },
   },
   { 'rouge8/neotest-rust'},
+  {'Elzair/ifm-vim'},
 }, {})
 --}}}
 
