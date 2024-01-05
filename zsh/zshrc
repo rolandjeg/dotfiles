@@ -197,6 +197,8 @@ export GOPATH=$HOME/go
 alias ll='ls -lh'
 alias la='ls -lah'
 alias l='ls -CF'
+alias godot='godot4 --rendering-driver opengl3'
+alias nvim-godot='nvim --listen localhost:55432'
 
 
 #alias nav=ranger-cd

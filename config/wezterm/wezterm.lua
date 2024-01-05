@@ -1,23 +1,45 @@
--- Pull in the wezterm API
 local wezterm = require 'wezterm'
+local custom = wezterm.color.get_builtin_schemes()["tokyonight_night"]
+--custom.ansi[1] = "#15161e"
+custom.ansi[2] = "#f34765"
+custom.ansi[3] = "#71ab32"
+custom.ansi[4] = "#c2862e"
+custom.ansi[5] = "#4b80f2"
+custom.ansi[6] = "#9768ee"
+custom.ansi[7] = "#4abcff"
+--custom.ansi[8] = "#a9b1d6"
 
--- This table will hold the configuration.
-local config = {}
-
--- In newer versions of wezterm, use the config_builder which will
--- help provide clearer error messages
-if wezterm.config_builder then
-  config = wezterm.config_builder()
-end
-
--- This is where you actually apply your config choices
-
-config.font = wezterm.font 'Comic Code'
-config.enable_tab_bar = false
-
--- For example, changing the color scheme:
-config.color_scheme = 'Gruvbox dark, hard (base16)'
-
--- and finally, return the configuration to wezterm
-return config
-
+custom.brights[1]="#6c7086"
+--local custom = wezterm.color.get_builtin_schemes()["Gruvbox Material (Gogh)"]
+return {
+	-- color_scheme = 'termnial.sexy',
+	--color_scheme = 'Catppuccin Mocha',
+	color_schemes = {["rosspuccin"] = custom},
+	color_scheme = "rosspuccin",
+	--color_scheme = "tokyonight_night",
+	enable_tab_bar = false,
+	font_size = 18.0,
+	font = wezterm.font 'Comic Code',
+	-- macos_window_background_blur = 40,
+	macos_window_background_blur = 30,
+	
+	--window_background_image = '~/wallpaper/cass.jpg',
+	-- window_background_image_hsb = {
+	-- 	brightness = 0.01,
+	-- 	hue = 1.0,
+	-- 	saturation = 0.5,
+	-- },
+	-- window_background_opacity = 0.92,
+	window_background_opacity = 0.85,
+	-- window_background_opacity = 0.78,
+	-- window_background_opacity = 0.20,
+	window_decorations = 'RESIZE',
+	mouse_bindings = {
+	  -- Ctrl-click will open the link under the mouse cursor
+	  {
+	    event = { Up = { streak = 1, button = 'Left' } },
+	    mods = 'CTRL',
+	    action = wezterm.action.OpenLinkAtMouseCursor,
+	  },
+	},
+}
