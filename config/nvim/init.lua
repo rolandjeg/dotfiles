@@ -30,6 +30,9 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: First, some plugins that don't require any configuration
 
+  -- IO async
+  { "nvim-neotest/nvim-nio" },
+
   -- Git related plugins
   'tpope/vim-fugitive',
   'tpope/vim-rhubarb',
@@ -209,6 +212,7 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     dependencies = {
       'nvim-treesitter/nvim-treesitter-textobjects',
+      'tree-sitter-grammars/tree-sitter-markdown',
     },
     build = ':TSUpdate',
   },
@@ -244,8 +248,14 @@ require('lazy').setup({
     end
   },
   { 'vim-pandoc/vim-pandoc'},
-  { 'vim-pandoc/vim-pandoc-syntax'},
+  --{ 'vim-pandoc/vim-pandoc-syntax'},
   { 'vim-pandoc/vim-pandoc-after'},
+  {
+    "iamcco/markdown-preview.nvim",
+    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+    ft = { "markdown", "pandoc" },
+    build = function() vim.fn["mkdp#util#install"]() end,
+  },
   { 'mfussenegger/nvim-dap'},
   { 'rcarriga/nvim-dap-ui' },
   { 'theHamsta/nvim-dap-virtual-text' },
@@ -298,6 +308,12 @@ require('lazy').setup({
 
 -- Set Cursorline
 vim.o.cursorline = true
+
+vim.o.conceallevel = 2
+vim.cmd([[
+let g:pandoc#toc#close_after_navigating = 0
+let g:pandoc#folding#fastfolds = 0
+]])
 
 
 -- Set highlight on search
@@ -490,7 +506,7 @@ vim.keymap.set('n', '<leader>fr', require('telescope.builtin').resume, { desc = 
 vim.defer_fn(function()
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'vimdoc', 'vim', 'kdl' },
+  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'vimdoc', 'vim', 'kdl', 'markdown', 'markdown_inline' },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = true,
@@ -864,6 +880,7 @@ require("aerial").setup({
 })
 -- You probably also want to set a keymap to toggle aerial
 vim.keymap.set("n", "<leader>na", "<cmd>AerialToggle!<CR>", { desc = 'Toggle [A]erial' })
+vim.keymap.set("n", "<leader>oa", "<cmd>AerialNavToggle<CR>", { desc = 'Toggle [A]erial' })
 --}}}
 
 --{{{Colorscheme
