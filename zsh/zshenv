@@ -1,4 +1,4 @@
-export PATH=~/.local/bin:$PATH:~/bin:~/.cabal/bin:~/.cargo/bin:~/.gem/ruby/2.6.0/bin:~/.gem/ruby/3.0.0/bin:~/go/bin:~/.ghcup/bin:~/opt/xPacks/qemu-arm/xpack-qemu-arm-2.8.0-12/bin:/opt/riscv/bin:${HOME}/projekte/pki/depot_tools
+export PATH=~/.local/bin:$PATH:~/bin:~/.cabal/bin:~/.cargo/bin:~/.gem/ruby/2.6.0/bin:~/.gem/ruby/3.0.0/bin:~/go/bin:~/.ghcup/bin:~/opt/xPacks/qemu-arm/xpack-qemu-arm-2.8.0-12/bin:/opt/riscv/bin:${HOME}/projekte/pki/depot_tools:~/.config/emacs/bin
 export EDITOR="nvim"
 export LANG=en_US.UTF-8
 export FZF_DEFAULT_COMMAND='rg --files --hidden --follow'

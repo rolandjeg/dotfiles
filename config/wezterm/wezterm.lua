@@ -20,6 +20,7 @@ return {
 	enable_tab_bar = false,
 	font_size = 13.0,
 	font = wezterm.font 'Comic Code',
+	-- enable_kitty_keyboard = true,
 	-- macos_window_background_blur = 40,
 	--macos_window_background_blur = 30,
 	
@@ -42,4 +43,7 @@ return {
 	    action = wezterm.action.OpenLinkAtMouseCursor,
 	  },
 	},
+	-- keys = {
+		-- {key="Enter", mods="CTRL", action=wezterm.action{SendString='\u{000A}'}},
+	-- },
 }

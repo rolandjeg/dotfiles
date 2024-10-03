@@ -69,6 +69,7 @@ require('lazy').setup({
     },
   },
 
+  { 'echasnovski/mini.nvim', version = false },
   -- Useful plugin to show you pending keybinds.
   { 'folke/which-key.nvim', opts = {} },
   { -- Adds git releated signs to the gutter, as well as utilities for managing changes
@@ -207,6 +208,15 @@ require('lazy').setup({
       },
     },
   },
+  {
+    "ibhagwan/fzf-lua",
+    -- optional for icon support
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    config = function()
+      -- calling `setup` is optional for customization
+      require("fzf-lua").setup({})
+    end
+  },
 
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
@@ -232,6 +242,38 @@ require('lazy').setup({
   --    An additional note is that if you only copied in the `init.lua`, you can just comment this line
   --    to get rid of the warning telling you that there are not plugins in `lua/custom/plugins/`.
   { 'lervag/wiki.vim' },
+  {
+    'jakewvincent/mkdnflow.nvim',
+    config = function()
+      require('mkdnflow').setup({
+        -- Config goes here; leave blank for defaults
+      })
+    end
+  },
+  {
+  'nvim-orgmode/orgmode',
+  event = 'VeryLazy',
+  ft = { 'org' },
+  config = function()
+    -- Setup orgmode
+    require('orgmode').setup({
+      org_agenda_files = '~/org/**/*',
+      org_default_notes_file = '~/org/refile.org',
+      mappings = {
+          org = {
+            org_toggle_checkbox = '<C-CR>'
+          },
+        },
+    })
+
+    -- NOTE: If you are using nvim-treesitter with ~ensure_installed = "all"~ option
+    -- add ~org~ to ignore_install
+    -- require('nvim-treesitter.configs').setup({
+    --   ensure_installed = 'all',
+    --   ignore_install = { 'org' },
+    -- })
+  end,
+},
   { 'lervag/vimtex' },
   { 'lervag/lists.vim'},
   { 'dhruvasagar/vim-table-mode' },
@@ -312,7 +354,8 @@ vim.o.cursorline = true
 vim.o.conceallevel = 2
 vim.cmd([[
 let g:pandoc#toc#close_after_navigating = 0
-let g:pandoc#folding#fastfolds = 0
+let g:pandoc#folding#fastfolds = 1
+let g:pandoc#folding#fold_yaml = 0
 ]])
 
 
@@ -370,23 +413,44 @@ vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
-require('which-key').register {
-  ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
-  ['<leader>d'] = { name = '[D]ebugging', _ = 'which_key_ignore' },
-  ['<leader>g'] = { name = '[G]it', _ = 'which_key_ignore' },
-  ['<leader>h'] = { name = 'Git [H]unk', _ = 'which_key_ignore' },
-  ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
-  ['<leader>f'] = { name = '[F]ind', _ = 'which_key_ignore' },
-  ['<leader>n'] = { name = 'Toggle', _ = 'which_key_ignore' },
-  ['<leader>t'] = { name = '[T]ests', _ = 'which_key_ignore' },
-  ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
-}
+-- require('which-key').register {
+--   ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
+--   ['<leader>d'] = { name = '[D]ebugging', _ = 'which_key_ignore' },
+--   ['<leader>g'] = { name = '[G]it', _ = 'which_key_ignore' },
+--   ['<leader>h'] = { name = 'Git [H]unk', _ = 'which_key_ignore' },
+--   ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
+--   ['<leader>f'] = { name = '[F]ind', _ = 'which_key_ignore' },
+--   ['<leader>n'] = { name = 'Toggle', _ = 'which_key_ignore' },
+--   ['<leader>t'] = { name = '[T]ests', _ = 'which_key_ignore' },
+--   ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
+-- }
+require('which-key').add(
+  {
+    { "<leader>c", group = "[C]ode" },
+    { "<leader>c_", hidden = true },
+    { "<leader>d", group = "[D]ebugging" },
+    { "<leader>d_", hidden = true },
+    { "<leader>f", group = "[F]ind" },
+    { "<leader>f_", hidden = true },
+    { "<leader>g", group = "[G]it" },
+    { "<leader>g_", hidden = true },
+    { "<leader>h", group = "Git [H]unk" },
+    { "<leader>h_", hidden = true },
+    { "<leader>n", group = "Toggle" },
+    { "<leader>n_", hidden = true },
+    { "<leader>r", group = "[R]ename" },
+    { "<leader>r_", hidden = true },
+    { "<leader>t", group = "[T]ests" },
+    { "<leader>t_", hidden = true },
+    { "<leader>w", group = "[W]orkspace" },
+    { "<leader>w_", hidden = true },
+  })
 -- register which-key VISUAL mode
 -- required for visual <leader>hs (hunk stage) to work
-require('which-key').register({
-  ['<leader>'] = { name = 'VISUAL <leader>' },
-  ['<leader>h'] = { 'Git [H]unk' },
-}, { mode = 'v' })
+require('which-key').add({
+  { "<leader>", group = "VISUAL <leader>", mode = "v" },
+  { "<leader>h", desc = "Git [H]unk", mode = "v" },
+})
 vim.keymap.set("n", "<leader>ne", "<cmd>Neotree toggle<CR>", { desc = 'Toggle N[e]otree' })
 vim.keymap.set("n", "<leader>oe", "<cmd>Neotree current<CR>", { desc = '[O]pen N[e]otree' })
 --}}}
@@ -413,6 +477,9 @@ require('telescope').setup {
         ['<C-d>'] = false,
         ['<C-k>'] = require('telescope.actions').move_selection_previous,
         ['<C-j>'] = require('telescope.actions').move_selection_next,
+      },
+      n = {
+        ['n'] = require('telescope.actions').delete_buffer,
       },
     },
     path_display = {
@@ -978,6 +1045,152 @@ require('lualine').setup({
 })
 vim.o.laststatus = 3
 --}}}
+
+--{{{Orgmode
+--}}}
+
+--{{{ MkDnFlow
+require('mkdnflow').setup({
+    modules = {
+        bib = true,
+        buffers = true,
+        conceal = true,
+        cursor = true,
+        folds = true,
+        foldtext = true,
+        links = true,
+        lists = true,
+        maps = true,
+        paths = true,
+        tables = true,
+        yaml = false,
+        cmp = false
+    },
+    filetypes = {md = true, rmd = true, markdown = true},
+    create_dirs = true,
+    perspective = {
+        priority = 'first',
+        fallback = 'current',
+        root_tell = false,
+        nvim_wd_heel = false,
+        update = false
+    },
+    wrap = false,
+    bib = {
+        default_path = nil,
+        find_in_root = true
+    },
+    silent = false,
+    cursor = {
+        jump_patterns = nil
+    },
+    links = {
+        style = 'markdown',
+        name_is_source = false,
+        conceal = false,
+        context = 0,
+        implicit_extension = nil,
+        transform_implicit = false,
+        transform_explicit = function(text)
+            text = text:gsub(" ", "-")
+            text = text:lower()
+            text = os.date('%Y-%m-%d_')..text
+            return(text)
+        end,
+        create_on_follow_failure = true
+    },
+    new_file_template = {
+        use_template = false,
+        placeholders = {
+            before = {
+                title = "link_title",
+                date = "os_date"
+            },
+            after = {}
+        },
+        template = "# {{ title }}"
+    },
+    to_do = {
+        symbols = {' ', '-', 'X'},
+        update_parents = true,
+        not_started = ' ',
+        in_progress = '-',
+        complete = 'X'
+    },
+    foldtext = {
+        object_count = true,
+        object_count_icons = 'emoji',
+        object_count_opts = function()
+            return require('mkdnflow').foldtext.default_count_opts()
+        end,
+        line_count = true,
+        line_percentage = true,
+        word_count = false,
+        title_transformer = nil,
+        separator = ' · ',
+        fill_chars = {
+            left_edge = '⢾',
+            right_edge = '⡷',
+            left_inside = ' ⣹',
+            right_inside = '⣏ ',
+            middle = '⣿',
+        },
+    },
+    tables = {
+        trim_whitespace = true,
+        format_on_move = true,
+        auto_extend_rows = false,
+        auto_extend_cols = false,
+        style = {
+            cell_padding = 1,
+            separator_padding = 1,
+            outer_pipes = true,
+            mimic_alignment = true
+        }
+    },
+    yaml = {
+        bib = { override = false }
+    },
+    mappings = {
+        MkdnFollowLink = {{'n', 'v'}, '<CR>'},
+        MkdnTab = false,
+        MkdnSTab = false,
+        MkdnNextLink = {'n', '<Tab>'},
+        MkdnPrevLink = {'n', '<S-Tab>'},
+        MkdnNextHeading = {'n', ']]'},
+        MkdnPrevHeading = {'n', '[['},
+        MkdnGoBack = {'n', '<BS>'},
+        MkdnGoForward = {'n', '<Del>'},
+        MkdnCreateLink = false, -- see MkdnEnter
+        MkdnCreateLinkFromClipboard = {{'n', 'v'}, '<leader>p'}, -- see MkdnEnter
+        --MkdnFollowLink = false, -- see MkdnEnter
+        MkdnDestroyLink = {'n', '<M-CR>'},
+        MkdnTagSpan = {'v', '<M-CR>'},
+        MkdnMoveSource = {'n', '<F2>'},
+        MkdnYankAnchorLink = {'n', 'yaa'},
+        MkdnYankFileAnchorLink = {'n', 'yfa'},
+        MkdnIncreaseHeading = {'n', '+'},
+        MkdnDecreaseHeading = {'n', '-'},
+        MkdnToggleToDo = {{'n', 'v'}, '<S-CR>'},
+        MkdnNewListItem = false,
+        MkdnNewListItemBelowInsert = {'n', 'o'},
+        MkdnNewListItemAboveInsert = {'n', 'O'},
+        MkdnExtendList = false,
+        MkdnUpdateNumbering = {'n', '<leader>nn'},
+        MkdnTableNextCell = {'i', '<Tab>'},
+        MkdnTablePrevCell = {'i', '<S-Tab>'},
+        MkdnTableNextRow = false,
+        MkdnTablePrevRow = {'i', '<M-CR>'},
+        MkdnTableNewRowBelow = {'n', '<leader>ir'},
+        MkdnTableNewRowAbove = {'n', '<leader>iR'},
+        MkdnTableNewColAfter = {'n', '<leader>ic'},
+        MkdnTableNewColBefore = {'n', '<leader>iC'},
+        MkdnFoldSection = {'n', '<leader>f'},
+        MkdnUnfoldSection = {'n', '<leader>F'}
+    }
+})
+--}}}
+
 -- vim: ts=2 sts=2 sw=2 et
 -- vim:foldmethod=marker
 -- vim:foldlevel=0
