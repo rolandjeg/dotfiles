@@ -8,17 +8,14 @@ vim.g.maplocalleader = '\\'
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info
 local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
-if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system({
-    'git',
-    'clone',
-    '--filter=blob:none',
-    'https://github.com/folke/lazy.nvim.git',
-    '--branch=stable', -- latest stable release
-    lazypath,
-  })
-end
 vim.opt.rtp:prepend(lazypath)
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+  local lazyrepo = 'https://github.com/folke/lazy.nvim.git'
+  local out = vim.fn.system { 'git', 'clone', '--filter=blob:none', '--branch=stable', lazyrepo, lazypath }
+  if vim.v.shell_error ~= 0 then
+    error('Error cloning lazy.nvim:\n' .. out)
+  end
+end ---@diagnostic disable-next-line: undefined-field
 --}}}
 
 --{{{ Plugins
@@ -34,8 +31,8 @@ require('lazy').setup({
   { "nvim-neotest/nvim-nio" },
 
   -- Git related plugins
-  'tpope/vim-fugitive',
-  'tpope/vim-rhubarb',
+  -- 'tpope/vim-fugitive',
+  -- 'tpope/vim-rhubarb',
 
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
@@ -48,15 +45,29 @@ require('lazy').setup({
       -- Automatically install LSPs to stdpath for neovim
       'williamboman/mason.nvim',
       'williamboman/mason-lspconfig.nvim',
+      'WhoIsSethDaniel/mason-tool-installer.nvim',
+      'hrsh7th/cmp-nvim-lsp',
 
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
       { 'j-hui/fidget.nvim', opts = {} },
 
       -- Additional lua configuration, makes nvim stuff amazing!
-      'folke/neodev.nvim',
     },
   },
+  {
+    -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
+    -- used for completion, annotations and signatures of Neovim apis
+    'folke/lazydev.nvim',
+    ft = 'lua',
+    opts = {
+      library = {
+        -- Load luvit types when the `vim.uv` word is found
+        { path = 'luvit-meta/library', words = { 'vim%.uv' } },
+      },
+    },
+  },
+  { 'Bilal2453/luvit-meta', lazy = true },
 
   { -- Autocompletion
     'hrsh7th/nvim-cmp',
@@ -68,10 +79,30 @@ require('lazy').setup({
       'rafamadriz/friendly-snippets',
     },
   },
+  { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
   { 'echasnovski/mini.nvim', version = false },
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim', opts = {} },
+  {
+    'folke/which-key.nvim',
+    event = "VeryLazy",
+    opts = {
+      spec = {
+        { "<leader>c", group = "[C]ode" },
+        { "<leader>d", group = "[D]ebugging" },
+        { "<leader>f", group = "[F]ind" },
+        { "<leader>g", group = "[G]it" },
+        { "<leader>h", group = "Git [H]unk" },
+        { "<leader>n", group = "Toggle" },
+        { "<leader>r", group = "[R]ename" },
+        { "<leader>t", group = "[T]ests" },
+        { "<leader>w", group = "[W]orkspace" },
+        { "gx", desc = "Open with xgd-open" },
+        { "<leader>", group = "VISUAL <leader>", mode = "v" },
+        { "<leader>h", desc = "Git [H]unk", mode = "v" },
+      },
+    },
+  },
   { -- Adds git releated signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
     opts = {
@@ -197,6 +228,8 @@ require('lazy').setup({
     version = '*',
     dependencies = {
       'nvim-lua/plenary.nvim',
+      'nvim-telescope/telescope-ui-select.nvim',
+      "nvim-tree/nvim-web-devicons",
       {
         'nvim-telescope/telescope-fzf-native.nvim',
         -- NOTE: If you are having trouble with this installation,
@@ -251,29 +284,29 @@ require('lazy').setup({
     end
   },
   {
-  'nvim-orgmode/orgmode',
-  event = 'VeryLazy',
-  ft = { 'org' },
-  config = function()
-    -- Setup orgmode
-    require('orgmode').setup({
-      org_agenda_files = '~/org/**/*',
-      org_default_notes_file = '~/org/refile.org',
-      mappings = {
+    'nvim-orgmode/orgmode',
+    event = 'VeryLazy',
+    ft = { 'org' },
+    config = function()
+      -- Setup orgmode
+      require('orgmode').setup({
+        org_agenda_files = '~/org/**/*',
+        org_default_notes_file = '~/org/refile.org',
+        mappings = {
           org = {
             org_toggle_checkbox = '<C-CR>'
           },
         },
-    })
+      })
 
-    -- NOTE: If you are using nvim-treesitter with ~ensure_installed = "all"~ option
-    -- add ~org~ to ignore_install
-    -- require('nvim-treesitter.configs').setup({
-    --   ensure_installed = 'all',
-    --   ignore_install = { 'org' },
-    -- })
-  end,
-},
+      -- NOTE: If you are using nvim-treesitter with ~ensure_installed = "all"~ option
+      -- add ~org~ to ignore_install
+      -- require('nvim-treesitter.configs').setup({
+      --   ensure_installed = 'all',
+      --   ignore_install = { 'org' },
+      -- })
+    end,
+  },
   { 'lervag/vimtex' },
   { 'lervag/lists.vim'},
   { 'dhruvasagar/vim-table-mode' },
@@ -330,7 +363,7 @@ require('lazy').setup({
       "nvim-tree/nvim-web-devicons"
     },
   },
-  { import = 'custom.plugins' },
+  --{ import = 'custom.plugins' },
   {
     "nvim-neotest/neotest",
     dependencies = {
@@ -350,6 +383,7 @@ require('lazy').setup({
 
 -- Set Cursorline
 vim.o.cursorline = true
+vim.opt.scrolloff = 5
 
 vim.o.conceallevel = 2
 vim.cmd([[
@@ -370,9 +404,12 @@ vim.wo.relativenumber = true
 vim.o.mouse = 'a'
 
 -- Sync clipboard between OS and Neovim.
+--  Schedule the setting after `UiEnter` because it can increase startup-time.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
-vim.o.clipboard = 'unnamedplus'
+vim.schedule(function()
+  vim.opt.clipboard = 'unnamedplus'
+end)
 
 -- Enable break indent
 vim.o.breakindent = true
@@ -381,6 +418,8 @@ vim.o.breakindent = true
 vim.o.undofile = true
 
 -- Case insensitive searching UNLESS /C or capital in search
+--
+vim.g.have_nerd_font = true
 vim.o.ignorecase = true
 vim.o.smartcase = true
 
@@ -392,13 +431,31 @@ vim.o.updatetime = 250
 vim.o.timeout = true
 vim.o.timeoutlen = 300
 
+-- Configure how new splits should be opened
+vim.opt.splitright = true
+vim.opt.splitbelow = true
+
+vim.opt.list = true
+vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+
 -- Spelling
 vim.o.spelllang = 'de_de'
 vim.o.spell = true
 
+-- Preview substitutions live, as you type!
+vim.opt.inccommand = 'split'
+
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
 --vim.o.background = "dark"
+--}}}
+
+--{{{ neovide
+if vim.g.neovide then
+  vim.o.guifont = "Comic Code:h10" -- text below applies for VimScript
+  vim.g.neovide_transparency = 0.8
+end
+
 --}}}
 
 --{{{ Basic Keymaps
@@ -413,57 +470,31 @@ vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
--- require('which-key').register {
---   ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
---   ['<leader>d'] = { name = '[D]ebugging', _ = 'which_key_ignore' },
---   ['<leader>g'] = { name = '[G]it', _ = 'which_key_ignore' },
---   ['<leader>h'] = { name = 'Git [H]unk', _ = 'which_key_ignore' },
---   ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
---   ['<leader>f'] = { name = '[F]ind', _ = 'which_key_ignore' },
---   ['<leader>n'] = { name = 'Toggle', _ = 'which_key_ignore' },
---   ['<leader>t'] = { name = '[T]ests', _ = 'which_key_ignore' },
---   ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
--- }
-require('which-key').add(
-  {
-    { "<leader>c", group = "[C]ode" },
-    { "<leader>c_", hidden = true },
-    { "<leader>d", group = "[D]ebugging" },
-    { "<leader>d_", hidden = true },
-    { "<leader>f", group = "[F]ind" },
-    { "<leader>f_", hidden = true },
-    { "<leader>g", group = "[G]it" },
-    { "<leader>g_", hidden = true },
-    { "<leader>h", group = "Git [H]unk" },
-    { "<leader>h_", hidden = true },
-    { "<leader>n", group = "Toggle" },
-    { "<leader>n_", hidden = true },
-    { "<leader>r", group = "[R]ename" },
-    { "<leader>r_", hidden = true },
-    { "<leader>t", group = "[T]ests" },
-    { "<leader>t_", hidden = true },
-    { "<leader>w", group = "[W]orkspace" },
-    { "<leader>w_", hidden = true },
-  })
--- register which-key VISUAL mode
--- required for visual <leader>hs (hunk stage) to work
-require('which-key').add({
-  { "<leader>", group = "VISUAL <leader>", mode = "v" },
-  { "<leader>h", desc = "Git [H]unk", mode = "v" },
-})
 vim.keymap.set("n", "<leader>ne", "<cmd>Neotree toggle<CR>", { desc = 'Toggle N[e]otree' })
 vim.keymap.set("n", "<leader>oe", "<cmd>Neotree current<CR>", { desc = '[O]pen N[e]otree' })
+
+vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
+-- Keybinds to make split navigation easier.
+--  Use CTRL+<hjkl> to switch between windows
+--
+--  See `:help wincmd` for a list of all window commands
+vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
+vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
+vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
+vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 --}}}
 
---{{{ Highlight on yank
+--{{{ Basic Autocommands
+--
+
+-- Highlight when yanking text
 -- See `:help vim.highlight.on_yank()`
-local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
 vim.api.nvim_create_autocmd('TextYankPost', {
+  desc = 'Highlight when yanking (copying) text',
+  group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
   callback = function()
     vim.highlight.on_yank()
   end,
-  group = highlight_group,
-  pattern = '*',
 })
 --}}}
 
@@ -499,70 +530,33 @@ require('telescope').setup {
 
 -- Enable telescope fzf native, if installed
 pcall(require('telescope').load_extension, 'fzf')
-
--- Telescope live_grep in git root
--- Function to find the git root directory based on the current buffer's path
-local function find_git_root()
-  -- Use the current buffer's path as the starting point for the git search
-  local current_file = vim.api.nvim_buf_get_name(0)
-  local current_dir
-  local cwd = vim.fn.getcwd()
-  -- If the buffer is not associated with a file, return nil
-  if current_file == '' then
-    current_dir = cwd
-  else
-    -- Extract the directory from the current file's path
-    current_dir = vim.fn.fnamemodify(current_file, ':h')
-  end
-
-  -- Find the Git root directory from the current file's path
-  local git_root = vim.fn.systemlist('git -C ' .. vim.fn.escape(current_dir, ' ') .. ' rev-parse --show-toplevel')[1]
-  if vim.v.shell_error ~= 0 then
-    print 'Not a git repository. Searching on current working directory'
-    return cwd
-  end
-  return git_root
-end
-
--- Custom live_grep function to search in git root
-local function live_grep_git_root()
-  local git_root = find_git_root()
-  if git_root then
-    require('telescope.builtin').live_grep {
-      search_dirs = { git_root },
-    }
-  end
-end
-
-vim.api.nvim_create_user_command('LiveGrepGitRoot', live_grep_git_root, {})
+pcall(require('telescope').load_extension, 'ui-select')
 
 -- See `:help telescope.builtin`
-vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
+vim.keymap.set('n', '<leader>f.', require('telescope.builtin').oldfiles, { desc = 'Find recently opened files ([.] for repeat)' })
 vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
-vim.keymap.set('n', '<leader>fb', require('telescope.builtin').buffers, { desc = '[F]ind existing [B]uffers' })
+
 vim.keymap.set('n', '<leader>/', function()
-  -- You can pass additional configuration to telescope to change theme, layout, etc.
   require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
     winblend = 10,
     previewer = false,
   })
 end, { desc = '[/] Fuzzily search in current buffer' })
 
-local function telescope_live_grep_open_files()
+vim.keymap.set('n', '<leader>f/', function()
   require('telescope.builtin').live_grep {
     grep_open_files = true,
-    prompt_title = 'Live Grep in Open Files',
+    promt_title = 'Live Grep in Open Files',
   }
-end
+end, { desc = '[S]earch [/] in Open Files' })
 
-vim.keymap.set('n', '<leader>f/', telescope_live_grep_open_files, { desc = '[S]earch [/] in Open Files' })
 vim.keymap.set('n', '<leader>ft', require('telescope.builtin').builtin, { desc = '[S]earch [S]elect Telescope' })
-vim.keymap.set('n', '<leader>gf', require('telescope.builtin').git_files, { desc = 'Search [G]it [F]iles' })
+vim.keymap.set('n', '<leader>fk', require('telescope.builtin').keymaps, { desc = '[F]ind [K]eymaps' })
 vim.keymap.set('n', '<leader>ff', require('telescope.builtin').find_files, { desc = '[F]ind [F]iles' })
 vim.keymap.set('n', '<leader>fh', require('telescope.builtin').help_tags, { desc = '[F]ind [H]elp' })
 vim.keymap.set('n', '<leader>fw', require('telescope.builtin').grep_string, { desc = '[F]ind current [W]ord' })
 vim.keymap.set('n', '<leader>fg', require('telescope.builtin').live_grep, { desc = '[F]ind by [G]rep' })
-vim.keymap.set('n', '<leader>gg', ':LiveGrepGitRoot<cr>', { desc = 'Find by [G]rep on [G]it Root' })
+vim.keymap.set('n', '<leader>gf', require('telescope.builtin').git_files, { desc = 'Search [G]it [F]iles' }) --TODO
 vim.keymap.set('n', '<leader>fd', require('telescope.builtin').diagnostics, { desc = '[F]ind [D]iagnostics' })
 vim.keymap.set('n', '<leader>fs', require('telescope.builtin').lsp_document_symbols, { desc = '[F]ind [S]ymbols' })
 vim.keymap.set('n', '<leader>fr', require('telescope.builtin').resume, { desc = '[F]ind [R]esume' })
@@ -571,69 +565,69 @@ vim.keymap.set('n', '<leader>fr', require('telescope.builtin').resume, { desc = 
 --{{{ Configure Treesitter
 -- See `:help nvim-treesitter`
 vim.defer_fn(function()
-require('nvim-treesitter.configs').setup {
-  -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'vimdoc', 'vim', 'kdl', 'markdown', 'markdown_inline' },
+  require('nvim-treesitter.configs').setup {
+    -- Add languages to be installed here that you want installed for treesitter
+    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'vimdoc', 'vim', 'kdl', 'markdown', 'markdown_inline' },
 
-  -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
-  auto_install = true,
+    -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
+    auto_install = true,
 
-  highlight = { enable = true },
-  indent = { enable = true, disable = { 'python' } },
-  incremental_selection = {
-    enable = true,
-    keymaps = {
-      init_selection = '<c-space>',
-      node_incremental = '<c-space>',
-      scope_incremental = '<c-s>',
-      node_decremental = '<M-space>',
-    },
-  },
-  textobjects = {
-    select = {
+    highlight = { enable = true },
+    indent = { enable = true, disable = { 'python' } },
+    incremental_selection = {
       enable = true,
-      lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
       keymaps = {
-        -- You can use the capture groups defined in textobjects.scm
-        ['aa'] = '@parameter.outer',
-        ['ia'] = '@parameter.inner',
-        ['af'] = '@function.outer',
-        ['if'] = '@function.inner',
-        ['ac'] = '@class.outer',
-        ['ic'] = '@class.inner',
+        init_selection = '<c-space>',
+        node_incremental = '<c-space>',
+        scope_incremental = '<c-s>',
+        node_decremental = '<M-space>',
       },
     },
-    move = {
-      enable = true,
-      set_jumps = true, -- whether to set jumps in the jumplist
-      goto_next_start = {
-        [']m'] = '@function.outer',
-        [']]'] = '@class.outer',
+    textobjects = {
+      select = {
+        enable = true,
+        lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
+        keymaps = {
+          -- You can use the capture groups defined in textobjects.scm
+          ['aa'] = '@parameter.outer',
+          ['ia'] = '@parameter.inner',
+          ['af'] = '@function.outer',
+          ['if'] = '@function.inner',
+          ['ac'] = '@class.outer',
+          ['ic'] = '@class.inner',
+        },
       },
-      goto_next_end = {
-        [']M'] = '@function.outer',
-        [']['] = '@class.outer',
+      move = {
+        enable = true,
+        set_jumps = true, -- whether to set jumps in the jumplist
+        goto_next_start = {
+          [']m'] = '@function.outer',
+          [']]'] = '@class.outer',
+        },
+        goto_next_end = {
+          [']M'] = '@function.outer',
+          [']['] = '@class.outer',
+        },
+        goto_previous_start = {
+          ['[m'] = '@function.outer',
+          ['[['] = '@class.outer',
+        },
+        goto_previous_end = {
+          ['[M'] = '@function.outer',
+          ['[]'] = '@class.outer',
+        },
       },
-      goto_previous_start = {
-        ['[m'] = '@function.outer',
-        ['[['] = '@class.outer',
-      },
-      goto_previous_end = {
-        ['[M'] = '@function.outer',
-        ['[]'] = '@class.outer',
+      swap = {
+        enable = true,
+        swap_next = {
+          ['<leader>a'] = '@parameter.inner',
+        },
+        swap_previous = {
+          ['<leader>A'] = '@parameter.inner',
+        },
       },
     },
-    swap = {
-      enable = true,
-      swap_next = {
-        ['<leader>a'] = '@parameter.inner',
-      },
-      swap_previous = {
-        ['<leader>A'] = '@parameter.inner',
-      },
-    },
-  },
-}
+  }
 end, 0)
 --}}}
 
@@ -641,7 +635,7 @@ end, 0)
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = "Go to previous diagnostic message" })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = "Go to next diagnostic message" })
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = "Open floating diagnostic message" })
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = "Open diagnostics list" })
+vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = "Open diagnostics [Q]ickfix list" })
 --}}}
 
 --{{{ LSP settings.
@@ -881,7 +875,7 @@ dap.configurations.rust = {
     cwd = '${workspaceFolder}',
     stopOnEntry = false,
     args = {},
-        initCommands = function()
+    initCommands = function()
       -- Find out where to look for the pretty printer Python module
       local rustc_sysroot = vim.fn.trim(vim.fn.system('rustc --print sysroot'))
 
@@ -927,7 +921,7 @@ require("neotest").setup({
     }),
     --require("neotest-plenary"),
     --require("neotest-vim-test")({
-      --ignore_file_types = { "python", "vim", "lua" },
+    --ignore_file_types = { "python", "vim", "lua" },
     --}),
   }
 })
@@ -952,50 +946,50 @@ vim.keymap.set("n", "<leader>oa", "<cmd>AerialNavToggle<CR>", { desc = 'Toggle [
 
 --{{{Colorscheme
 require("catppuccin").setup({
-    flavour = "mocha", -- latte, frappe, macchiato, mocha
-    background = { -- :h background
-        light = "latte",
-        dark = "mocha",
+  flavour = "mocha", -- latte, frappe, macchiato, mocha
+  background = { -- :h background
+    light = "latte",
+    dark = "mocha",
+  },
+  transparent_background = true, -- disables setting the background color.
+  show_end_of_buffer = false, -- shows the '~' characters after the end of buffers
+  term_colors = false, -- sets terminal colors (e.g. `g:terminal_color_0`)
+  dim_inactive = {
+    enabled = false, -- dims the background color of inactive window
+    shade = "dark",
+    percentage = 0.15, -- percentage of the shade to apply to the inactive window
+  },
+  no_italic = false, -- Force no italic
+  no_bold = false, -- Force no bold
+  no_underline = false, -- Force no underline
+  styles = { -- Handles the styles of general hi groups (see `:h highlight-args`):
+    comments = { "italic" }, -- Change the style of comments
+    conditionals = { "italic" },
+    loops = {},
+    functions = {},
+    keywords = {},
+    strings = {},
+    variables = {},
+    numbers = {},
+    booleans = {},
+    properties = {},
+    types = {},
+    operators = {},
+  },
+  color_overrides = {},
+  custom_highlights = {},
+  integrations = {
+    cmp = true,
+    gitsigns = true,
+    nvimtree = true,
+    treesitter = true,
+    notify = false,
+    mini = {
+      enabled = true,
+      indentscope_color = "",
     },
-    transparent_background = true, -- disables setting the background color.
-    show_end_of_buffer = false, -- shows the '~' characters after the end of buffers
-    term_colors = false, -- sets terminal colors (e.g. `g:terminal_color_0`)
-    dim_inactive = {
-        enabled = false, -- dims the background color of inactive window
-        shade = "dark",
-        percentage = 0.15, -- percentage of the shade to apply to the inactive window
-    },
-    no_italic = false, -- Force no italic
-    no_bold = false, -- Force no bold
-    no_underline = false, -- Force no underline
-    styles = { -- Handles the styles of general hi groups (see `:h highlight-args`):
-        comments = { "italic" }, -- Change the style of comments
-        conditionals = { "italic" },
-        loops = {},
-        functions = {},
-        keywords = {},
-        strings = {},
-        variables = {},
-        numbers = {},
-        booleans = {},
-        properties = {},
-        types = {},
-        operators = {},
-    },
-    color_overrides = {},
-    custom_highlights = {},
-    integrations = {
-        cmp = true,
-        gitsigns = true,
-        nvimtree = true,
-        treesitter = true,
-        notify = false,
-        mini = {
-            enabled = true,
-            indentscope_color = "",
-        },
-        -- For more plugins integrations please scroll down (https://github.com/catppuccin/nvim#integrations)
-    },
+    -- For more plugins integrations please scroll down (https://github.com/catppuccin/nvim#integrations)
+  },
 })
 require("tokyonight").setup({
   -- your configuration comes here
@@ -1051,143 +1045,143 @@ vim.o.laststatus = 3
 
 --{{{ MkDnFlow
 require('mkdnflow').setup({
-    modules = {
-        bib = true,
-        buffers = true,
-        conceal = true,
-        cursor = true,
-        folds = true,
-        foldtext = true,
-        links = true,
-        lists = true,
-        maps = true,
-        paths = true,
-        tables = true,
-        yaml = false,
-        cmp = false
+  modules = {
+    bib = true,
+    buffers = true,
+    conceal = true,
+    cursor = true,
+    folds = true,
+    foldtext = true,
+    links = true,
+    lists = true,
+    maps = true,
+    paths = true,
+    tables = true,
+    yaml = false,
+    cmp = false
+  },
+  filetypes = {md = true, rmd = true, markdown = true},
+  create_dirs = true,
+  perspective = {
+    priority = 'first',
+    fallback = 'current',
+    root_tell = false,
+    nvim_wd_heel = false,
+    update = false
+  },
+  wrap = false,
+  bib = {
+    default_path = nil,
+    find_in_root = true
+  },
+  silent = false,
+  cursor = {
+    jump_patterns = nil
+  },
+  links = {
+    style = 'markdown',
+    name_is_source = false,
+    conceal = false,
+    context = 0,
+    implicit_extension = nil,
+    transform_implicit = false,
+    transform_explicit = function(text)
+      text = text:gsub(" ", "-")
+      text = text:lower()
+      text = os.date('%Y-%m-%d_')..text
+      return(text)
+    end,
+    create_on_follow_failure = true
+  },
+  new_file_template = {
+    use_template = false,
+    placeholders = {
+      before = {
+        title = "link_title",
+        date = "os_date"
+      },
+      after = {}
     },
-    filetypes = {md = true, rmd = true, markdown = true},
-    create_dirs = true,
-    perspective = {
-        priority = 'first',
-        fallback = 'current',
-        root_tell = false,
-        nvim_wd_heel = false,
-        update = false
+    template = "# {{ title }}"
+  },
+  to_do = {
+    symbols = {' ', '-', 'X'},
+    update_parents = true,
+    not_started = ' ',
+    in_progress = '-',
+    complete = 'X'
+  },
+  foldtext = {
+    object_count = true,
+    object_count_icons = 'emoji',
+    object_count_opts = function()
+      return require('mkdnflow').foldtext.default_count_opts()
+    end,
+    line_count = true,
+    line_percentage = true,
+    word_count = false,
+    title_transformer = nil,
+    separator = ' · ',
+    fill_chars = {
+      left_edge = '⢾',
+      right_edge = '⡷',
+      left_inside = ' ⣹',
+      right_inside = '⣏ ',
+      middle = '⣿',
     },
-    wrap = false,
-    bib = {
-        default_path = nil,
-        find_in_root = true
-    },
-    silent = false,
-    cursor = {
-        jump_patterns = nil
-    },
-    links = {
-        style = 'markdown',
-        name_is_source = false,
-        conceal = false,
-        context = 0,
-        implicit_extension = nil,
-        transform_implicit = false,
-        transform_explicit = function(text)
-            text = text:gsub(" ", "-")
-            text = text:lower()
-            text = os.date('%Y-%m-%d_')..text
-            return(text)
-        end,
-        create_on_follow_failure = true
-    },
-    new_file_template = {
-        use_template = false,
-        placeholders = {
-            before = {
-                title = "link_title",
-                date = "os_date"
-            },
-            after = {}
-        },
-        template = "# {{ title }}"
-    },
-    to_do = {
-        symbols = {' ', '-', 'X'},
-        update_parents = true,
-        not_started = ' ',
-        in_progress = '-',
-        complete = 'X'
-    },
-    foldtext = {
-        object_count = true,
-        object_count_icons = 'emoji',
-        object_count_opts = function()
-            return require('mkdnflow').foldtext.default_count_opts()
-        end,
-        line_count = true,
-        line_percentage = true,
-        word_count = false,
-        title_transformer = nil,
-        separator = ' · ',
-        fill_chars = {
-            left_edge = '⢾',
-            right_edge = '⡷',
-            left_inside = ' ⣹',
-            right_inside = '⣏ ',
-            middle = '⣿',
-        },
-    },
-    tables = {
-        trim_whitespace = true,
-        format_on_move = true,
-        auto_extend_rows = false,
-        auto_extend_cols = false,
-        style = {
-            cell_padding = 1,
-            separator_padding = 1,
-            outer_pipes = true,
-            mimic_alignment = true
-        }
-    },
-    yaml = {
-        bib = { override = false }
-    },
-    mappings = {
-        MkdnFollowLink = {{'n', 'v'}, '<CR>'},
-        MkdnTab = false,
-        MkdnSTab = false,
-        MkdnNextLink = {'n', '<Tab>'},
-        MkdnPrevLink = {'n', '<S-Tab>'},
-        MkdnNextHeading = {'n', ']]'},
-        MkdnPrevHeading = {'n', '[['},
-        MkdnGoBack = {'n', '<BS>'},
-        MkdnGoForward = {'n', '<Del>'},
-        MkdnCreateLink = false, -- see MkdnEnter
-        MkdnCreateLinkFromClipboard = {{'n', 'v'}, '<leader>p'}, -- see MkdnEnter
-        --MkdnFollowLink = false, -- see MkdnEnter
-        MkdnDestroyLink = {'n', '<M-CR>'},
-        MkdnTagSpan = {'v', '<M-CR>'},
-        MkdnMoveSource = {'n', '<F2>'},
-        MkdnYankAnchorLink = {'n', 'yaa'},
-        MkdnYankFileAnchorLink = {'n', 'yfa'},
-        MkdnIncreaseHeading = {'n', '+'},
-        MkdnDecreaseHeading = {'n', '-'},
-        MkdnToggleToDo = {{'n', 'v'}, '<S-CR>'},
-        MkdnNewListItem = false,
-        MkdnNewListItemBelowInsert = {'n', 'o'},
-        MkdnNewListItemAboveInsert = {'n', 'O'},
-        MkdnExtendList = false,
-        MkdnUpdateNumbering = {'n', '<leader>nn'},
-        MkdnTableNextCell = {'i', '<Tab>'},
-        MkdnTablePrevCell = {'i', '<S-Tab>'},
-        MkdnTableNextRow = false,
-        MkdnTablePrevRow = {'i', '<M-CR>'},
-        MkdnTableNewRowBelow = {'n', '<leader>ir'},
-        MkdnTableNewRowAbove = {'n', '<leader>iR'},
-        MkdnTableNewColAfter = {'n', '<leader>ic'},
-        MkdnTableNewColBefore = {'n', '<leader>iC'},
-        MkdnFoldSection = {'n', '<leader>f'},
-        MkdnUnfoldSection = {'n', '<leader>F'}
+  },
+  tables = {
+    trim_whitespace = true,
+    format_on_move = true,
+    auto_extend_rows = false,
+    auto_extend_cols = false,
+    style = {
+      cell_padding = 1,
+      separator_padding = 1,
+      outer_pipes = true,
+      mimic_alignment = true
     }
+  },
+  yaml = {
+    bib = { override = false }
+  },
+  mappings = {
+    MkdnFollowLink = {{'n', 'v'}, '<CR>'},
+    MkdnTab = false,
+    MkdnSTab = false,
+    MkdnNextLink = {'n', '<Tab>'},
+    MkdnPrevLink = {'n', '<S-Tab>'},
+    MkdnNextHeading = {'n', ']]'},
+    MkdnPrevHeading = {'n', '[['},
+    MkdnGoBack = {'n', '<BS>'},
+    MkdnGoForward = {'n', '<Del>'},
+    MkdnCreateLink = false, -- see MkdnEnter
+    MkdnCreateLinkFromClipboard = {{'n', 'v'}, '<leader>p'}, -- see MkdnEnter
+    --MkdnFollowLink = false, -- see MkdnEnter
+    MkdnDestroyLink = {'n', '<M-CR>'},
+    MkdnTagSpan = {'v', '<M-CR>'},
+    MkdnMoveSource = {'n', '<F2>'},
+    MkdnYankAnchorLink = {'n', 'yaa'},
+    MkdnYankFileAnchorLink = {'n', 'yfa'},
+    MkdnIncreaseHeading = {'n', '+'},
+    MkdnDecreaseHeading = {'n', '-'},
+    MkdnToggleToDo = {{'n', 'v'}, '<S-CR>'},
+    MkdnNewListItem = false,
+    MkdnNewListItemBelowInsert = {'n', 'o'},
+    MkdnNewListItemAboveInsert = {'n', 'O'},
+    MkdnExtendList = false,
+    MkdnUpdateNumbering = {'n', '<leader>nn'},
+    MkdnTableNextCell = {'i', '<Tab>'},
+    MkdnTablePrevCell = {'i', '<S-Tab>'},
+    MkdnTableNextRow = false,
+    MkdnTablePrevRow = {'i', '<M-CR>'},
+    MkdnTableNewRowBelow = {'n', '<leader>ir'},
+    MkdnTableNewRowAbove = {'n', '<leader>iR'},
+    MkdnTableNewColAfter = {'n', '<leader>ic'},
+    MkdnTableNewColBefore = {'n', '<leader>iC'},
+    MkdnFoldSection = {'n', '<leader>f'},
+    MkdnUnfoldSection = {'n', '<leader>F'}
+  }
 })
 --}}}
 
