@@ -3,6 +3,7 @@
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = '\\'
+vim.g.markdown_folding = 1
 
 --{{{ Install package manager
 --    https://github.com/folke/lazy.nvim
@@ -25,22 +26,16 @@ end ---@diagnostic disable-next-line: undefined-field
 --  You can also configure plugins after the setup call,
 --    as they will be available in your neovim runtime.
 require('lazy').setup({
-  -- NOTE: First, some plugins that don't require any configuration
-
   -- IO async
   { "nvim-neotest/nvim-nio" },
 
-  -- Git related plugins
-  -- 'tpope/vim-fugitive',
-  -- 'tpope/vim-rhubarb',
-
   -- Detect tabstop and shiftwidth automatically
-  'tpope/vim-sleuth',
+  { 'tpope/vim-sleuth' },
 
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
-  { -- LSP Configuration & Plugins
-    'neovim/nvim-lspconfig',
+  { 'neovim/nvim-lspconfig',
+  --{{{ LSP Configuration & Plugins
     dependencies = {
       -- Automatically install LSPs to stdpath for neovim
       'williamboman/mason.nvim',
@@ -54,11 +49,11 @@ require('lazy').setup({
 
       -- Additional lua configuration, makes nvim stuff amazing!
     },
+  --}}}
   },
-  {
-    -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
+  { 'folke/lazydev.nvim',
+    --{{{ `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
     -- used for completion, annotations and signatures of Neovim apis
-    'folke/lazydev.nvim',
     ft = 'lua',
     opts = {
       library = {
@@ -66,11 +61,11 @@ require('lazy').setup({
         { path = 'luvit-meta/library', words = { 'vim%.uv' } },
       },
     },
+    --}}}
   },
   { 'Bilal2453/luvit-meta', lazy = true },
-
-  { -- Autocompletion
-    'hrsh7th/nvim-cmp',
+  { 'hrsh7th/nvim-cmp',
+  --{{{ Autocompletion
     dependencies = {
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-path',
@@ -78,13 +73,13 @@ require('lazy').setup({
       'saadparwaiz1/cmp_luasnip',
       'rafamadriz/friendly-snippets',
     },
+  --}}}
   },
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
   { 'echasnovski/mini.nvim', version = false },
-  -- Useful plugin to show you pending keybinds.
-  {
-    'folke/which-key.nvim',
+  { 'folke/which-key.nvim',
+  --{{{ Useful plugin to show you pending keybinds.
     event = "VeryLazy",
     opts = {
       spec = {
@@ -97,14 +92,16 @@ require('lazy').setup({
         { "<leader>r", group = "[R]ename" },
         { "<leader>t", group = "[T]ests" },
         { "<leader>w", group = "[W]orkspace" },
+        { "<leader>z", group = "[Z]ettelkasten" },
         { "gx", desc = "Open with xgd-open" },
         { "<leader>", group = "VISUAL <leader>", mode = "v" },
         { "<leader>h", desc = "Git [H]unk", mode = "v" },
       },
     },
+    --}}}
   },
-  { -- Adds git releated signs to the gutter, as well as utilities for managing changes
-    'lewis6991/gitsigns.nvim',
+  { 'lewis6991/gitsigns.nvim',
+    --{{{ Adds git releated signs to the gutter, as well as utilities for managing changes
     opts = {
       -- See `:help gitsigns.txt`
       signs = {
@@ -175,6 +172,7 @@ require('lazy').setup({
         map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>', { desc = 'select git hunk' })
       end
     },
+  --}}}
   },
 
   { 'sainnhe/gruvbox-material' },
@@ -182,8 +180,8 @@ require('lazy').setup({
   { 'catppuccin/nvim'  },
   { 'folke/tokyonight.nvim'  },
 
-  { -- Set lualine as statusline
-    'nvim-lualine/lualine.nvim',
+  { 'nvim-lualine/lualine.nvim',
+  --{{{ Set lualine as statusline
     -- See `:help lualine.txt`
     opts = {
       options = {
@@ -210,6 +208,7 @@ require('lazy').setup({
         lualine_z = {}
       },
     },
+  --}}}
   },
 
   { -- Add indentation guides even on blank lines
@@ -260,31 +259,56 @@ require('lazy').setup({
     build = ':TSUpdate',
   },
 
-  -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
-  --       These are some example plugins that I've included in the kickstart repository.
-  --       Uncomment any of the lines below to enable them.
-  -- require 'kickstart.plugins.autoformat',
-  -- require 'kickstart.plugins.debug',
+  --{ 'lervag/wiki.vim' },
 
-  -- NOTE: The import below automatically adds your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
-  --    You can use this folder to prevent any conflicts with this init.lua if you're interested in keeping
-  --    up-to-date with whatever is in the kickstart repo.
-  --
-  --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
-  --
-  --    An additional note is that if you only copied in the `init.lua`, you can just comment this line
-  --    to get rid of the warning telling you that there are not plugins in `lua/custom/plugins/`.
-  { 'lervag/wiki.vim' },
-  {
-    'jakewvincent/mkdnflow.nvim',
+  { 'renerocksai/telekasten.nvim',
+    --{{{ Zettelkasten
+    dependencies = {'nvim-telescope/telescope.nvim'},
+    keys = {
+      { "<leader>zw", "<cmd>Telekasten panel<cr>", desc = "Telekasten which?" },
+
+      -- Most used functions
+      { "<leader>zf", "<cmd>Telekasten find_notes<CR>", desc = "Telekasten [f]ind notes"},
+      { "<leader>zg", "<cmd>Telekasten search_notes<CR>", desc = "Telekasten [g]oto notes"},
+      { "<leader>zd", "<cmd>Telekasten goto_today<CR>", desc = "Telekasten to[d]ay" },
+      { "<leader>zz", "<cmd>Telekasten follow_link<CR>", desc = "Telekasten follow link"},
+      { "<leader>zn", "<cmd>Telekasten new_note<CR>", desc = "Telekasten [n]ew note"},
+      { "<leader>zc", "<cmd>Telekasten show_calendar<CR>", desc = "Telekasten [c]alendar" },
+      { "<leader>zb", "<cmd>Telekasten show_backlinks<CR>", desc = "Telekasten show [b]acklinks" },
+      { "<leader>zI", "<cmd>Telekasten insert_img_link<CR>", desc = "Telekasten insert [I]mage link" },
+      { "<leader>zi", "<cmd>Telekasten insert_link<CR>", desc = "Telekasten [i]nsert link" },
+      { "<leader>zt", "<cmd>Telekasten toggle_todo<CR>", desc = "Telekasten [t]odo toggle" },
+    },
     config = function()
-      require('mkdnflow').setup({
-        -- Config goes here; leave blank for defaults
+      require('telekasten').setup({
+        home = vim.fn.expand("~/zettelkasten"), -- Put the name of your notes directory here
+        dailies = vim.fn.expand("~/zettelkasten/dailies"), -- Put the name of your notes directory here
+        weeklies = vim.fn.expand("~/zettelkasten/weeklies"), -- Put the name of your notes directory here
+        auto_set_filetype = false,
+        vaults = { 
+          cryptoagility = {
+            home = vim.fn.expand("~/projekte/pki/paper/"),
+            auto_set_filetype = false,
+          },
+          promotion = {
+            home = vim.fn.expand("~/promotion/zettelkasten"),
+            auto_set_filetype = false,
+          },
+        },
       })
     end
+    --}}}
   },
-  {
-    'nvim-orgmode/orgmode',
+  -- {
+  --   'jakewvincent/mkdnflow.nvim',
+  --   config = function()
+  --     require('mkdnflow').setup({
+  --       -- Config goes here; leave blank for defaults
+  --     })
+  --   end
+  -- },
+  { 'nvim-orgmode/orgmode',
+  --{{{ Orgmode
     event = 'VeryLazy',
     ft = { 'org' },
     config = function()
@@ -294,7 +318,7 @@ require('lazy').setup({
         org_default_notes_file = '~/org/refile.org',
         mappings = {
           org = {
-            org_toggle_checkbox = '<C-CR>'
+            org_toggle_checkbox = '<C-CR>',
           },
         },
       })
@@ -306,9 +330,10 @@ require('lazy').setup({
       --   ignore_install = { 'org' },
       -- })
     end,
+    --}}}
   },
   { 'lervag/vimtex' },
-  { 'lervag/lists.vim'},
+  --{ 'lervag/lists.vim'},
   { 'dhruvasagar/vim-table-mode' },
   { 'itchyny/calendar.vim',
     keys = {
@@ -322,9 +347,9 @@ require('lazy').setup({
       vim.g.calendar_week_number = 1
     end
   },
-  { 'vim-pandoc/vim-pandoc'},
+  --{ 'vim-pandoc/vim-pandoc'},
   --{ 'vim-pandoc/vim-pandoc-syntax'},
-  { 'vim-pandoc/vim-pandoc-after'},
+  --{ 'vim-pandoc/vim-pandoc-after'},
   {
     "iamcco/markdown-preview.nvim",
     cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
@@ -387,9 +412,11 @@ vim.opt.scrolloff = 5
 
 vim.o.conceallevel = 2
 vim.cmd([[
-let g:pandoc#toc#close_after_navigating = 0
-let g:pandoc#folding#fastfolds = 1
+"let g:pandoc#toc#close_after_navigating = 0
+"let g:pandoc#folding#fastfolds = 1
 let g:pandoc#folding#fold_yaml = 0
+let g:pandoc#filetypes#handled = ["markdown"]
+let g:pandoc#filetypes#pandoc_markdown = 0
 ]])
 
 
@@ -429,7 +456,7 @@ vim.wo.signcolumn = 'yes'
 -- Decrease update time
 vim.o.updatetime = 250
 vim.o.timeout = true
-vim.o.timeoutlen = 300
+vim.o.timeoutlen = 1000
 
 -- Configure how new splits should be opened
 vim.opt.splitright = true
@@ -629,6 +656,10 @@ vim.defer_fn(function()
     },
   }
 end, 0)
+
+----local parsers = require "nvim-treesitter.parsers"
+--local parser_config = parsers.get_parser_configs()
+--parser_config.markdown.filetype = "telekasten"
 --}}}
 
 --{{{ Diagnostic keymaps
@@ -708,9 +739,9 @@ local servers = {
 }
 
 -- Setup neovim lua configuration
-require('neodev').setup({
-  library = { plugins = { "nvim-dap-ui", "neotest" }, types = true },
-})
+--require('neodev').setup({
+  --library = { plugins = { "nvim-dap-ui", "neotest" }, types = true },
+--})
 
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -794,18 +825,21 @@ cmp.setup {
 -- }}}
 
 --{{{ WIKI.VIM
-vim.g.wiki_root = '~/vimwiki'
-vim.g.wiki_root = '~/vimwiki'
-vim.g.wiki_link_target_type = 'md'
-vim.g.wiki_link_extension = '.md'
-vim.g.wiki_filetypes = {'md'}
-vim.keymap.set('n', '<leader>wd', vim.cmd.WikiJournal)
---local M = require 'rossyrg.util.ts'
---vim.keymap.set('n', '<leader>wo', M.files_wiki)
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "pandoc",
-  command = "ListsEnable"
-})
+-- vim.g.wiki_root = '~/vimwiki'
+-- vim.g.wiki_root = '~/vimwiki'
+-- vim.g.wiki_link_target_type = 'md'
+-- vim.g.wiki_link_extension = '.md'
+-- vim.g.wiki_filetypes = {'md'}
+-- vim.keymap.set('n', '<leader>zd', vim.cmd.WikiJournal)
+-- --local M = require 'rossyrg.util.ts'
+-- --vim.keymap.set('n', '<leader>wo', M.files_wiki)
+-- vim.api.nvim_create_autocmd("FileType", {
+--   pattern = "markdown",
+--   command = "ListsEnable"
+-- })
+-- vim.keymap.set('n', '<leader>wt', vim.cmd.ListsToggle, { desc = 'Toggle Todo' })
+-- vim.keymap.set('n', '<S-CR>', vim.cmd.ListsToggle, { desc = 'Toggle Todo' })
+
 --}}}
 
 --{{{ Light-Dark Switch
@@ -933,6 +967,10 @@ vim.keymap.set('n', '<Leader>td', function() require('neotest').run.run({strateg
 --{{{Aerial
 require("aerial").setup({
   -- optionally use on_attach to set keymaps when aerial has attached to a buffer
+  backends = {
+    ['_'] = {"treesitter", "lsp", "markdown", "asciidoc", "man" },
+    markdown = {"treesitter"},
+  },
   on_attach = function(bufnr)
     -- Jump forwards/backwards with '{' and '}'
     vim.keymap.set("n", "{", "<cmd>AerialPrev<CR>", { buffer = bufnr })
@@ -1040,149 +1078,146 @@ require('lualine').setup({
 vim.o.laststatus = 3
 --}}}
 
---{{{Orgmode
---}}}
-
 --{{{ MkDnFlow
-require('mkdnflow').setup({
-  modules = {
-    bib = true,
-    buffers = true,
-    conceal = true,
-    cursor = true,
-    folds = true,
-    foldtext = true,
-    links = true,
-    lists = true,
-    maps = true,
-    paths = true,
-    tables = true,
-    yaml = false,
-    cmp = false
-  },
-  filetypes = {md = true, rmd = true, markdown = true},
-  create_dirs = true,
-  perspective = {
-    priority = 'first',
-    fallback = 'current',
-    root_tell = false,
-    nvim_wd_heel = false,
-    update = false
-  },
-  wrap = false,
-  bib = {
-    default_path = nil,
-    find_in_root = true
-  },
-  silent = false,
-  cursor = {
-    jump_patterns = nil
-  },
-  links = {
-    style = 'markdown',
-    name_is_source = false,
-    conceal = false,
-    context = 0,
-    implicit_extension = nil,
-    transform_implicit = false,
-    transform_explicit = function(text)
-      text = text:gsub(" ", "-")
-      text = text:lower()
-      text = os.date('%Y-%m-%d_')..text
-      return(text)
-    end,
-    create_on_follow_failure = true
-  },
-  new_file_template = {
-    use_template = false,
-    placeholders = {
-      before = {
-        title = "link_title",
-        date = "os_date"
-      },
-      after = {}
-    },
-    template = "# {{ title }}"
-  },
-  to_do = {
-    symbols = {' ', '-', 'X'},
-    update_parents = true,
-    not_started = ' ',
-    in_progress = '-',
-    complete = 'X'
-  },
-  foldtext = {
-    object_count = true,
-    object_count_icons = 'emoji',
-    object_count_opts = function()
-      return require('mkdnflow').foldtext.default_count_opts()
-    end,
-    line_count = true,
-    line_percentage = true,
-    word_count = false,
-    title_transformer = nil,
-    separator = ' · ',
-    fill_chars = {
-      left_edge = '⢾',
-      right_edge = '⡷',
-      left_inside = ' ⣹',
-      right_inside = '⣏ ',
-      middle = '⣿',
-    },
-  },
-  tables = {
-    trim_whitespace = true,
-    format_on_move = true,
-    auto_extend_rows = false,
-    auto_extend_cols = false,
-    style = {
-      cell_padding = 1,
-      separator_padding = 1,
-      outer_pipes = true,
-      mimic_alignment = true
-    }
-  },
-  yaml = {
-    bib = { override = false }
-  },
-  mappings = {
-    MkdnFollowLink = {{'n', 'v'}, '<CR>'},
-    MkdnTab = false,
-    MkdnSTab = false,
-    MkdnNextLink = {'n', '<Tab>'},
-    MkdnPrevLink = {'n', '<S-Tab>'},
-    MkdnNextHeading = {'n', ']]'},
-    MkdnPrevHeading = {'n', '[['},
-    MkdnGoBack = {'n', '<BS>'},
-    MkdnGoForward = {'n', '<Del>'},
-    MkdnCreateLink = false, -- see MkdnEnter
-    MkdnCreateLinkFromClipboard = {{'n', 'v'}, '<leader>p'}, -- see MkdnEnter
-    --MkdnFollowLink = false, -- see MkdnEnter
-    MkdnDestroyLink = {'n', '<M-CR>'},
-    MkdnTagSpan = {'v', '<M-CR>'},
-    MkdnMoveSource = {'n', '<F2>'},
-    MkdnYankAnchorLink = {'n', 'yaa'},
-    MkdnYankFileAnchorLink = {'n', 'yfa'},
-    MkdnIncreaseHeading = {'n', '+'},
-    MkdnDecreaseHeading = {'n', '-'},
-    MkdnToggleToDo = {{'n', 'v'}, '<S-CR>'},
-    MkdnNewListItem = false,
-    MkdnNewListItemBelowInsert = {'n', 'o'},
-    MkdnNewListItemAboveInsert = {'n', 'O'},
-    MkdnExtendList = false,
-    MkdnUpdateNumbering = {'n', '<leader>nn'},
-    MkdnTableNextCell = {'i', '<Tab>'},
-    MkdnTablePrevCell = {'i', '<S-Tab>'},
-    MkdnTableNextRow = false,
-    MkdnTablePrevRow = {'i', '<M-CR>'},
-    MkdnTableNewRowBelow = {'n', '<leader>ir'},
-    MkdnTableNewRowAbove = {'n', '<leader>iR'},
-    MkdnTableNewColAfter = {'n', '<leader>ic'},
-    MkdnTableNewColBefore = {'n', '<leader>iC'},
-    MkdnFoldSection = {'n', '<leader>f'},
-    MkdnUnfoldSection = {'n', '<leader>F'}
-  }
-})
+-- require('mkdnflow').setup({
+--   modules = {
+--     bib = true,
+--     buffers = true,
+--     conceal = true,
+--     cursor = true,
+--     folds = true,
+--     foldtext = true,
+--     links = true,
+--     lists = true,
+--     maps = true,
+--     paths = true,
+--     tables = true,
+--     yaml = false,
+--     cmp = false
+--   },
+--   filetypes = {md = true, rmd = true, markdown = true},
+--   create_dirs = true,
+--   perspective = {
+--     priority = 'first',
+--     fallback = 'current',
+--     root_tell = false,
+--     nvim_wd_heel = false,
+--     update = false
+--   },
+--   wrap = false,
+--   bib = {
+--     default_path = nil,
+--     find_in_root = true
+--   },
+--   silent = false,
+--   cursor = {
+--     jump_patterns = nil
+--   },
+--   links = {
+--     style = 'markdown',
+--     name_is_source = false,
+--     conceal = false,
+--     context = 0,
+--     implicit_extension = nil,
+--     transform_implicit = false,
+--     transform_explicit = function(text)
+--       text = text:gsub(" ", "-")
+--       text = text:lower()
+--       text = os.date('%Y-%m-%d_')..text
+--       return(text)
+--     end,
+--     create_on_follow_failure = true
+--   },
+--   new_file_template = {
+--     use_template = false,
+--     placeholders = {
+--       before = {
+--         title = "link_title",
+--         date = "os_date"
+--       },
+--       after = {}
+--     },
+--     template = "# {{ title }}"
+--   },
+--   to_do = {
+--     symbols = {' ', '-', 'X'},
+--     update_parents = true,
+--     not_started = ' ',
+--     in_progress = '-',
+--     complete = 'X'
+--   },
+--   foldtext = {
+--     object_count = true,
+--     object_count_icons = 'emoji',
+--     object_count_opts = function()
+--       return require('mkdnflow').foldtext.default_count_opts()
+--     end,
+--     line_count = true,
+--     line_percentage = true,
+--     word_count = false,
+--     title_transformer = nil,
+--     separator = ' · ',
+--     fill_chars = {
+--       left_edge = '⢾',
+--       right_edge = '⡷',
+--       left_inside = ' ⣹',
+--       right_inside = '⣏ ',
+--       middle = '⣿',
+--     },
+--   },
+--   tables = {
+--     trim_whitespace = true,
+--     format_on_move = true,
+--     auto_extend_rows = false,
+--     auto_extend_cols = false,
+--     style = {
+--       cell_padding = 1,
+--       separator_padding = 1,
+--       outer_pipes = true,
+--       mimic_alignment = true
+--     }
+--   },
+--   yaml = {
+--     bib = { override = false }
+--   },
+--   mappings = {
+--     MkdnFollowLink = {{'n', 'v'}, '<CR>'},
+--     MkdnTab = false,
+--     MkdnSTab = false,
+--     MkdnNextLink = {'n', '<Tab>'},
+--     MkdnPrevLink = {'n', '<S-Tab>'},
+--     MkdnNextHeading = {'n', ']]'},
+--     MkdnPrevHeading = {'n', '[['},
+--     MkdnGoBack = {'n', '<BS>'},
+--     MkdnGoForward = {'n', '<Del>'},
+--     MkdnCreateLink = false, -- see MkdnEnter
+--     MkdnCreateLinkFromClipboard = {{'n', 'v'}, '<leader>p'}, -- see MkdnEnter
+--     --MkdnFollowLink = false, -- see MkdnEnter
+--     MkdnDestroyLink = {'n', '<M-CR>'},
+--     MkdnTagSpan = {'v', '<M-CR>'},
+--     MkdnMoveSource = {'n', '<F2>'},
+--     MkdnYankAnchorLink = {'n', 'yaa'},
+--     MkdnYankFileAnchorLink = {'n', 'yfa'},
+--     MkdnIncreaseHeading = {'n', '+'},
+--     MkdnDecreaseHeading = {'n', '-'},
+--     MkdnToggleToDo = {{'n', 'v'}, '<S-CR>'},
+--     MkdnNewListItem = false,
+--     MkdnNewListItemBelowInsert = {'n', 'o'},
+--     MkdnNewListItemAboveInsert = {'n', 'O'},
+--     MkdnExtendList = false,
+--     MkdnUpdateNumbering = {'n', '<leader>nn'},
+--     MkdnTableNextCell = {'i', '<Tab>'},
+--     MkdnTablePrevCell = {'i', '<S-Tab>'},
+--     MkdnTableNextRow = false,
+--     MkdnTablePrevRow = {'i', '<M-CR>'},
+--     MkdnTableNewRowBelow = {'n', '<leader>ir'},
+--     MkdnTableNewRowAbove = {'n', '<leader>iR'},
+--     MkdnTableNewColAfter = {'n', '<leader>ic'},
+--     MkdnTableNewColBefore = {'n', '<leader>iC'},
+--     MkdnFoldSection = {'n', '<leader>f'},
+--     MkdnUnfoldSection = {'n', '<leader>F'}
+--   }
+-- })
 --}}}
 
 -- vim: ts=2 sts=2 sw=2 et
