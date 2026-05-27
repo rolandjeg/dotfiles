@@ -111,10 +111,12 @@ alias ]="rifle "
 
 #BASE16_SHELL=$HOME/.config/base16-shell/
 #[ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
-alias tlight="tmux source-file ~/.tmux/green.tmux"
-alias tdark="tmux source-file ~/.tmux/orange.tmux"
-alias tnightfox="tmux source-file ~/.tmux/purple.tmux && kitty @ --to unix:/tmp/mykitty set_colors ~/.config/kitty/nightfox.conf"
-alias tduskfox="tmux source-file ~/.tmux/purple.tmux && kitty @ --to unix:/tmp/mykitty set_colors ~/.config/kitty/duskfox.conf"
+alias tlight="tmux set -g @tokyo-night-tmux_theme day && tmux run '~/.tmux/plugins/tpm/tpm' && echo light > ~/.background && pkill -SIGUSR1 nvim"
+alias tdark="tmux set -g @tokyo-night-tmux_theme storm && tmux run '~/.tmux/plugins/tpm/tpm' && echo dark > ~/.background && pkill -SIGUSR1 nvim"
+#alias tnightfox="tmux source-file ~/.tmux/purple.tmux && kitty @ --to unix:/tmp/mykitty set_colors ~/.config/kitty/nightfox.conf"
+#alias tduskfox="tmux source-file ~/.tmux/purple.tmux && kitty @ --to unix:/tmp/mykitty set_colors ~/.config/kitty/duskfox.conf"
+alias tlight="tmux set -g @ukiyo-theme "kanagawa/lotus" && tmux run '~/.tmux/plugins/tpm/tpm' && echo light > ~/.background && pkill -SIGUSR1 nvim"
+alias tdark="tmux set -g @ukiyo-theme "kanagawa/lotus" && tmux run '~/.tmux/plugins/tpm/tpm' && echo dark > ~/.background && pkill -SIGUSR1 nvim"
 
 source ~/.fzf/shell/completion.zsh
 source ~/.fzf/shell/key-bindings.zsh

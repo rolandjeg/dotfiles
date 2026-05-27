@@ -190,7 +190,7 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
-bindsym $mod+o exec xscreensaver-command -lock
+bindsym $mod+o exec i3lock
 
 bindsym $mod+Tab workspace next
 bindsym $mod+Control+Tab workspace previous
