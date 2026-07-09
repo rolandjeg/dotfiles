@@ -9,7 +9,7 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 --vim.g.markdown_folding = 1
 vim.opt.foldmethod = "expr"
-vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+vim.opt.foldexpr = "v:lua.vim.lsp.foldexpr()"
 -- Set Cursorline
 vim.o.cursorline = true
 vim.opt.scrolloff = 5
@@ -377,8 +377,10 @@ require("lazy").setup({
   },
   {
     'SCJangra/table-nvim',
+    -- {{{
     ft = 'markdown',
     opts = {},
+    -- }}}
   },
   {
     "stevearc/conform.nvim", -- Autoformat
@@ -481,7 +483,17 @@ require("lazy").setup({
         -- <c-k>: Toggle signature help
         --
         -- See :h blink-cmp-config-keymap for defining your own keymap
-        preset = "default",
+        preset = "enter",
+        ["<Tab>"] = {
+          "select_next",
+          "snippet_forward",
+          "fallback",
+        },
+        ["<S-Tab>"] = {
+          "select_prev",
+          "snippet_backward",
+          "fallback",
+        },
 
         -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
         --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
@@ -540,7 +552,7 @@ require("lazy").setup({
     -- {{{
     event = "VimEnter",
     dependencies = { "nvim-lua/plenary.nvim" },
-    opts = { signs = false },
+    opts = {},
     -- }}}
   },
   {
@@ -1058,109 +1070,17 @@ require("lazy").setup({
     end,
     --}}}
   },
-  {
-    "ibhagwan/fzf-lua",
-    -- {{{
-    -- optional for icon support
-    dependencies = { "nvim-tree/nvim-web-devicons" },
-    config = function()
-      -- calling `setup` is optional for customization
-      require("fzf-lua").setup({})
-    end,
-    -- }}}
-  },
-  {
-    "nvim-treesitter/nvim-treesitter", -- Highlight, edit, and navigate code
-    -- {{{
-    build = ":TSUpdate",
-    main = "nvim-treesitter.configs", -- Sets main module to use for opts
-    -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
-    opts = {
-      ensure_installed = {
-        "bash",
-        "c",
-        "diff",
-        "html",
-        "lua",
-        "luadoc",
-        "markdown",
-        "markdown_inline",
-        "query",
-        "vim",
-        "vimdoc",
-      },
-      -- Autoinstall languages that are not installed
-      auto_install = true,
-      highlight = {
-        enable = true,
-        -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
-        --  If you are experiencing weird indenting issues, add the language to
-        --  the list of additional_vim_regex_highlighting and disabled languages for indent.
-        additional_vim_regex_highlighting = { "ruby" },
-      },
-      indent = { enable = true, disable = { "ruby" } },
-      incremental_selection = {
-        enable = true,
-        keymaps = {
-          init_selection = "<c-space>",
-          node_incremental = "<c-space>",
-          scope_incremental = "<c-s>",
-          node_decremental = "<M-space>",
-        },
-      },
-      textobjects = {
-        select = {
-          enable = true,
-          lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
-          keymaps = {
-            -- You can use the capture groups defined in textobjects.scm
-            ["aa"] = "@parameter.outer",
-            ["ia"] = "@parameter.inner",
-            ["af"] = "@function.outer",
-            ["if"] = "@function.inner",
-            ["ac"] = "@class.outer",
-            ["ic"] = "@class.inner",
-          },
-        },
-        move = {
-          enable = true,
-          set_jumps = true, -- whether to set jumps in the jumplist
-          goto_next_start = {
-            ["]m"] = "@function.outer",
-            ["]]"] = "@class.outer",
-          },
-          goto_next_end = {
-            ["]M"] = "@function.outer",
-            ["]["] = "@class.outer",
-          },
-          goto_previous_start = {
-            ["[m"] = "@function.outer",
-            ["[["] = "@class.outer",
-          },
-          goto_previous_end = {
-            ["[M"] = "@function.outer",
-            ["[]"] = "@class.outer",
-          },
-        },
-        swap = {
-          enable = true,
-          swap_next = {
-            ["<leader>a"] = "@parameter.inner",
-          },
-          swap_previous = {
-            ["<leader>A"] = "@parameter.inner",
-          },
-        },
-      },
-    },
-    -- There are additional nvim-treesitter modules that you can use to interact
-    -- with nvim-treesitter. You should go explore a few and see what interests you:
-    --
-    --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
-    --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
-    --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
-    -- }}}
-  },
+  -- {
+  --   "ibhagwan/fzf-lua",
+  --   -- {{{
+  --   -- optional for icon support
+  --   dependencies = { "nvim-tree/nvim-web-devicons" },
+  --   config = function()
+  --     -- calling `setup` is optional for customization
+  --     require("fzf-lua").setup({})
+  --   end,
+  --   -- }}}
+  -- },
   {
     "renerocksai/telekasten.nvim",
     --{{{ Zettelkasten
@@ -1277,16 +1197,16 @@ require("lazy").setup({
     },
     --}}}
   },
-  {
-    "dhruvasagar/vim-table-mode",
-    --{{{
-    config = function()
-      vim.g.table_mode_corner = "+"
-      vim.g.table_mode_corner_corner = "+"
-      vim.g.table_mode_header_fillchar = "="
-    end
-    --}}}
-  },
+  --{
+  --"dhruvasagar/vim-table-mode",
+  --{{{
+  --config = function()
+  --vim.g.table_mode_corner = "+"
+  --vim.g.table_mode_corner_corner = "+"
+  --vim.g.table_mode_header_fillchar = "="
+  --end
+  --}}}
+  --},
   {
     "itchyny/calendar.vim",
     --{{{
@@ -1369,12 +1289,19 @@ require("lazy").setup({
     --}}}
   },
   {
+    "romus204/tree-sitter-manager.nvim",
+    dependencies = {}, -- tree-sitter CLI must be installed system-wide
+    config = function()
+      require("tree-sitter-manager").setup()
+    end,
+  },
+  {
     "stevearc/aerial.nvim",
     --{{{
     opts = {},
     -- Optional dependencies
     dependencies = {
-      "nvim-treesitter/nvim-treesitter",
+      --"nvim-treesitter/nvim-treesitter",
       "nvim-tree/nvim-web-devicons",
     },
     --}}}
@@ -1385,7 +1312,7 @@ require("lazy").setup({
     dependencies = {
       "nvim-lua/plenary.nvim",
       "antoinemadec/FixCursorHold.nvim",
-      "nvim-treesitter/nvim-treesitter",
+      --"nvim-treesitter/nvim-treesitter",
     },
     --}}}
   },
@@ -1636,149 +1563,6 @@ require("lualine").setup({
 })
 vim.o.laststatus = 3
 changeBackground()
---}}}
-
---{{{ MkDnFlow
--- TODO: schauen ob sich das gut mit telekasten verträgt
--- require('mkdnflow').setup({
---   modules = {
---     bib = true,
---     buffers = true,
---     conceal = true,
---     cursor = true,
---     folds = true,
---     foldtext = true,
---     links = true,
---     lists = true,
---     maps = true,
---     paths = true,
---     tables = true,
---     yaml = false,
---     cmp = false
---   },
---   filetypes = {md = true, rmd = true, markdown = true},
---   create_dirs = true,
---   perspective = {
---     priority = 'first',
---     fallback = 'current',
---     root_tell = false,
---     nvim_wd_heel = false,
---     update = false
---   },
---   wrap = false,
---   bib = {
---     default_path = nil,
---     find_in_root = true
---   },
---   silent = false,
---   cursor = {
---     jump_patterns = nil
---   },
---   links = {
---     style = 'markdown',
---     name_is_source = false,
---     conceal = false,
---     context = 0,
---     implicit_extension = nil,
---     transform_implicit = false,
---     transform_explicit = function(text)
---       text = text:gsub(" ", "-")
---       text = text:lower()
---       text = os.date('%Y-%m-%d_')..text
---       return(text)
---     end,
---     create_on_follow_failure = true
---   },
---   new_file_template = {
---     use_template = false,
---     placeholders = {
---       before = {
---         title = "link_title",
---         date = "os_date"
---       },
---       after = {}
---     },
---     template = "# {{ title }}"
---   },
---   to_do = {
---     symbols = {' ', '-', 'X'},
---     update_parents = true,
---     not_started = ' ',
---     in_progress = '-',
---     complete = 'X'
---   },
---   foldtext = {
---     object_count = true,
---     object_count_icons = 'emoji',
---     object_count_opts = function()
---       return require('mkdnflow').foldtext.default_count_opts()
---     end,
---     line_count = true,
---     line_percentage = true,
---     word_count = false,
---     title_transformer = nil,
---     separator = ' · ',
---     fill_chars = {
---       left_edge = '⢾',
---       right_edge = '⡷',
---       left_inside = ' ⣹',
---       right_inside = '⣏ ',
---       middle = '⣿',
---     },
---   },
---   tables = {
---     trim_whitespace = true,
---     format_on_move = true,
---     auto_extend_rows = false,
---     auto_extend_cols = false,
---     style = {
---       cell_padding = 1,
---       separator_padding = 1,
---       outer_pipes = true,
---       mimic_alignment = true
---     }
---   },
---   yaml = {
---     bib = { override = false }
---   },
---   mappings = {
---     MkdnFollowLink = {{'n', 'v'}, '<CR>'},
---     MkdnTab = false,
---     MkdnSTab = false,
---     MkdnNextLink = {'n', '<Tab>'},
---     MkdnPrevLink = {'n', '<S-Tab>'},
---     MkdnNextHeading = {'n', ']]'},
---     MkdnPrevHeading = {'n', '[['},
---     MkdnGoBack = {'n', '<BS>'},
---     MkdnGoForward = {'n', '<Del>'},
---     MkdnCreateLink = false, -- see MkdnEnter
---     MkdnCreateLinkFromClipboard = {{'n', 'v'}, '<leader>p'}, -- see MkdnEnter
---     --MkdnFollowLink = false, -- see MkdnEnter
---     MkdnDestroyLink = {'n', '<M-CR>'},
---     MkdnTagSpan = {'v', '<M-CR>'},
---     MkdnMoveSource = {'n', '<F2>'},
---     MkdnYankAnchorLink = {'n', 'yaa'},
---     MkdnYankFileAnchorLink = {'n', 'yfa'},
---     MkdnIncreaseHeading = {'n', '+'},
---     MkdnDecreaseHeading = {'n', '-'},
---     MkdnToggleToDo = {{'n', 'v'}, '<S-CR>'},
---     MkdnNewListItem = false,
---     MkdnNewListItemBelowInsert = {'n', 'o'},
---     MkdnNewListItemAboveInsert = {'n', 'O'},
---     MkdnExtendList = false,
---     MkdnUpdateNumbering = {'n', '<leader>nn'},
---     MkdnTableNextCell = {'i', '<Tab>'},
---     MkdnTablePrevCell = {'i', '<S-Tab>'},
---     MkdnTableNextRow = false,
---     MkdnTablePrevRow = {'i', '<M-CR>'},
---     MkdnTableNewRowBelow = {'n', '<leader>ir'},
---     MkdnTableNewRowAbove = {'n', '<leader>iR'},
---     MkdnTableNewColAfter = {'n', '<leader>ic'},
---     MkdnTableNewColBefore = {'n', '<leader>iC'},
---     MkdnFoldSection = {'n', '<leader>f'},
---     MkdnUnfoldSection = {'n', '<leader>F'}
---   }
--- })
 --}}}
 
 changeBackground()

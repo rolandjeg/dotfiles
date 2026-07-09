@@ -15,6 +15,7 @@ custom.ansi[8] = "#a9b1d6"
 local kanagawa = wezterm.plugin.require("https://github.com/sravioli/kanagawa.wz")
 kanagawa.register(config)
 config.color_scheme = "Kanagawa Wave"
+--config.color_scheme = "tokyonight_night"
 
 wezterm.on("toggle-colorscheme", function(window, pane)
 	local overrides = window:get_config_overrides() or {}
