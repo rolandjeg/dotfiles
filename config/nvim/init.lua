@@ -129,18 +129,20 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-vim.opt.rtp:prepend(lazypath)
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = "https://github.com/folke/lazy.nvim.git"
   local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
   if vim.v.shell_error ~= 0 then
-    error("Error cloning lazy.nvim:\n" .. out)
+    vim.api.nvim_echo({
+      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+      { out,                            "WarningMsg" },
+      { "\nPress any key to exit..." },
+    }, true, {})
+    vim.fn.getchar()
+    os.exit(1)
   end
-end ---@diagnostic disable-next-line: undefined-field
-
----@type vim.Option
-local rtp = vim.opt.rtp
-rtp:prepend(lazypath)
+end
+vim.opt.rtp:prepend(lazypath)
 --}}}
 
 --{{{ Plugins
@@ -427,39 +429,16 @@ require("lazy").setup({
   {
     "saghen/blink.cmp", -- Autocompletion
     -- {{{
-    event = "VimEnter",
-    version = "1.*",
     dependencies = {
-      -- Snippet Engine
-      {
-        "L3MON4D3/LuaSnip",
-        version = "2.*",
-        build = (function()
-          -- Build Step is needed for regex support in snippets.
-          -- This step is not supported in many windows environments.
-          -- Remove the below condition to re-enable on windows.
-          if vim.fn.has("win32") == 1 or vim.fn.executable("make") == 0 then
-            return
-          end
-          return "make install_jsregexp"
-        end)(),
-        dependencies = {
-          -- `friendly-snippets` contains a variety of premade snippets.
-          --    See the README about individual language/framework/plugin snippets:
-          --    https://github.com/rafamadriz/friendly-snippets
-          -- {
-          --   'rafamadriz/friendly-snippets',
-          --   config = function()
-          --     require('luasnip.loaders.from_vscode').lazy_load()
-          --   end,
-          -- },
-        },
-        opts = {},
-      },
-      "folke/lazydev.nvim",
+      "saghen/blink.lib",
+      "rafamadriz/friendly-snippets",
     },
-    --- @module 'blink.cmp'
-    --- @type blink.cmp.Config
+    -- build = function()
+    -- require('blink.cmp').build():pwait()
+    -- end,
+
+    ---@module 'blink.cmp'
+    ---@type blink.cmp.Config
     opts = {
       keymap = {
         -- 'default' (recommended) for mappings similar to built-in completions
@@ -484,6 +463,26 @@ require("lazy").setup({
         --
         -- See :h blink-cmp-config-keymap for defining your own keymap
         preset = "enter",
+        ["<C-s>"] = {
+          "show_signature",
+          "fallback",
+        },
+        ["<C-h>"] = {
+          "snippet_backward",
+          "fallback",
+        },
+        ["<C-l>"] = {
+          "snippet_forward",
+          "fallback",
+        },
+        ["<C-j>"] = {
+          "select_next",
+          "fallback",
+        },
+        ["<C-k>"] = {
+          "select_prev",
+          "fallback",
+        },
         ["<Tab>"] = {
           "select_next",
           "snippet_forward",
@@ -494,7 +493,6 @@ require("lazy").setup({
           "snippet_backward",
           "fallback",
         },
-
         -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
         --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
       },
@@ -508,17 +506,15 @@ require("lazy").setup({
       completion = {
         -- By default, you may press `<c-space>` to show the documentation.
         -- Optionally, set `auto_show = true` to show the documentation after a delay.
-        documentation = { auto_show = false, auto_show_delay_ms = 500 },
+        documentation = { auto_show = false },
       },
 
       sources = {
-        default = { "lsp", "path", "snippets", "lazydev" },
-        providers = {
-          lazydev = { module = "lazydev.integrations.blink", score_offset = 100 },
-        },
+        default = { "lsp", "path", "snippets", "buffer" },
+        --providers = {
+        --lazydev = { module = "lazydev.integrations.blink", score_offset = 100 },
+        --},
       },
-
-      snippets = { preset = "luasnip" },
 
       -- Blink.cmp includes an optional, recommended rust fuzzy matcher,
       -- which automatically downloads a prebuilt binary when enabled.
@@ -1085,22 +1081,22 @@ require("lazy").setup({
     "renerocksai/telekasten.nvim",
     --{{{ Zettelkasten
     dependencies = { "nvim-telescope/telescope.nvim" },
-    keys = {
-      { "<leader>zw", "<cmd>Telekasten panel<cr>",           desc = "Telekasten which?" },
+    --keys = {
+    --  { "<leader>zw", "<cmd>Telekasten panel<cr>",           desc = "Telekasten which?" },
 
-      -- Most used functions
-      { "<leader>zf", "<cmd>Telekasten find_notes<CR>",      desc = "Telekasten [f]ind notes" },
-      { "<leader>zg", "<cmd>Telekasten search_notes<CR>",    desc = "Telekasten [g]oto notes" },
-      { "<leader>zd", "<cmd>Telekasten goto_today<CR>",      desc = "Telekasten to[d]ay" },
-      { "<leader>zz", "<cmd>Telekasten follow_link<CR>",     desc = "Telekasten follow link" },
-      { "<leader>zn", "<cmd>Telekasten new_note<CR>",        desc = "Telekasten [n]ew note" },
-      { "<leader>zc", "<cmd>Telekasten show_calendar<CR>",   desc = "Telekasten [c]alendar" },
-      { "<leader>zb", "<cmd>Telekasten show_backlinks<CR>",  desc = "Telekasten show [b]acklinks" },
-      { "<leader>zI", "<cmd>Telekasten insert_img_link<CR>", desc = "Telekasten insert [I]mage link" },
-      { "<leader>zi", "<cmd>Telekasten insert_link<CR>",     desc = "Telekasten [i]nsert link" },
-      { "<leader>zt", "<cmd>Telekasten toggle_todo<CR>",     desc = "Telekasten [t]odo toggle" },
-      { "<leader>zv", "<cmd>Telekasten switch_vault<CR>",    desc = "Telekasten switch [v]ault" },
-    },
+    --  -- Most used functions
+    --  { "<leader>zf", "<cmd>Telekasten find_notes<CR>",      desc = "Telekasten [f]ind notes" },
+    --  { "<leader>zg", "<cmd>Telekasten search_notes<CR>",    desc = "Telekasten [g]oto notes" },
+    --  { "<leader>zd", "<cmd>Telekasten goto_today<CR>",      desc = "Telekasten to[d]ay" },
+    --  { "<leader>zz", "<cmd>Telekasten follow_link<CR>",     desc = "Telekasten follow link" },
+    --  { "<leader>zn", "<cmd>Telekasten new_note<CR>",        desc = "Telekasten [n]ew note" },
+    --  { "<leader>zc", "<cmd>Telekasten show_calendar<CR>",   desc = "Telekasten [c]alendar" },
+    --  { "<leader>zb", "<cmd>Telekasten show_backlinks<CR>",  desc = "Telekasten show [b]acklinks" },
+    --  { "<leader>zI", "<cmd>Telekasten insert_img_link<CR>", desc = "Telekasten insert [I]mage link" },
+    --  { "<leader>zi", "<cmd>Telekasten insert_link<CR>",     desc = "Telekasten [i]nsert link" },
+    --  { "<leader>zt", "<cmd>Telekasten toggle_todo<CR>",     desc = "Telekasten [t]odo toggle" },
+    --  { "<leader>zv", "<cmd>Telekasten switch_vault<CR>",    desc = "Telekasten switch [v]ault" },
+    --},
     config = function()
       require("telekasten").setup({
         home = vim.fn.expand("~/zk/default"),
@@ -1113,27 +1109,27 @@ require("lazy").setup({
         auto_set_filetype = false,
         filename_small_case = true,
         vaults = {
-          cryptoagility = {
-            home = vim.fn.expand("~/zk/cryptoagility"),
-            template_new_note = vim.fn.expand("~/zk/templates/new_note.md"),
+          personal = {
+            home = vim.fn.expand("~/zk/personal"),
+            template_new_note = vim.fn.expand("~/zk/templates/new_note_personal.md"),
+            auto_set_filetype = false,
+          },
+          work = {
+            home = vim.fn.expand("~/zk/work"),
+            template_new_note = vim.fn.expand("~/zk/templates/new_note_work.md"),
             auto_set_filetype = false,
           },
           promotion = {
-            home = vim.fn.expand("~/zk/promotion"),
-            template_new_note = vim.fn.expand("~/zk/templates/new_note.md"),
-            auto_set_filetype = false,
-          },
-          uniform = {
-            home = vim.fn.expand("~/projekte/uniform/zettelkasten"),
-            template_new_note = vim.fn.expand("~/zk/templates/new_note.md"),
+            home = vim.fn.expand("~/zk/work"),
+            template_new_note = vim.fn.expand("~/zk/templates/new_note_promotion.md"),
             auto_set_filetype = false,
           },
           atruvia = {
-            home = vim.fn.expand("~/zk/atruvia"),
-            dailies = vim.fn.expand("~/zk/atruvia/dailies"),
-            weeklies = vim.fn.expand("~/zk/atruvia/weeklies"),
-            template_new_note = vim.fn.expand("~/zk/templates/new_note.md"),
-            img_subdir = vim.fn.expand("~/zk/atruvia/img"),
+            home = vim.fn.expand("~/zk/work"),
+            dailies = vim.fn.expand("~/zk/work/dailies"),
+            weeklies = vim.fn.expand("~/zk/work/weeklies"),
+            template_new_note = vim.fn.expand("~/zk/templates/new_note_atruvia.md"),
+            img_subdir = vim.fn.expand("~/zk/work/img"),
 
             new_note_filename = "title",
             auto_set_filetype = false,
@@ -1142,6 +1138,92 @@ require("lazy").setup({
       })
     end,
     --}}}
+  },
+  {
+    "obsidian-nvim/obsidian.nvim",
+    version = "*", -- use latest release, remove to use latest commit
+    ---@module 'obsidian'
+    ---@type obsidian.config
+    opts = {
+      legacy_commands = false, -- this will be removed in 4.0.0
+      --note_id_func = require("obsidian.builtin").title_id,
+      workspaces = {
+        {
+          name = "personal",
+          path = "~/vaults/personal",
+        },
+        {
+          name = "work",
+          path = "~/vaults/work",
+        },
+      },
+    },
+    keys = {
+      { "<leader>zw", "<cmd>Obsidian<cr>",                 desc = "Obsidian which?" },
+
+      -- Most used functions
+      { "<leader>zf", "<cmd>Obsidian quick_switch<CR>",    desc = "Obsidian [f]ind notes" },
+      { "<leader>zg", "<cmd>Telekasten search_notes<CR>",  desc = "Telekasten [g]oto notes" },
+      { "<leader>zd", "<cmd>Obsidian today<CR>",           desc = "Obsidian to[d]ay" },
+      --{ "<leader>zz", "<cmd>Telekasten follow_link<CR>",     desc = "Telekasten follow link" },
+      { "<leader>zn", "<cmd>Obsidian new<CR>",             desc = "Obsidian [n]ew note" },
+      --{ "<leader>zc", "<cmd>Telekasten show_calendar<CR>",   desc = "Telekasten [c]alendar" },
+      { "<leader>zb", "<cmd>Obsidian backlinks<CR>",       desc = "Obsidian show [b]acklinks" },
+      { "<leader>zI", "<cmd>Obsidian paste_image<CR>",     desc = "Obsidian insert [I]mage link" },
+      { "<leader>zi", "<cmd>Obsidian linl<CR>",            desc = "Obsidian [i]nsert link" },
+      { "<leader>zt", "<cmd>Obsidian toggle_checkbox<CR>", desc = "Obsidian [t]odo toggle" },
+      { "<leader>zv", "<cmd>Obsidian workspace<CR>",       desc = "Obsidian switch [v]ault" },
+    },
+    config = function()
+      require("obsidian").setup {
+        note_id_func = require("obsidian.builtin").title_id,
+        legacy_commands = false, -- this will be removed in 4.0.0
+        --note_id_func = require("obsidian.builtin").title_id,
+        --note = {
+        --template = "~/vaults/templates/new_note.md",
+        --},
+        workspaces = {
+          {
+            name = "personal",
+            path = "~/vaults/personal",
+          },
+          {
+            name = "work",
+            path = "~/vaults/work",
+            overrides = {
+              note = {
+                template = "~/vaults/templates/new_note.md",
+              },
+            },
+          },
+          {
+            name = "atruvia",
+            path = "~/vaults/work",
+            overrides = {
+              note = {
+                template = "~/vaults/templates/new_note_atruvia.md",
+              },
+            },
+          },
+        },
+        checkbox = {
+          enabled = true,
+          create_new = true,
+          order = { " ", ">", "x" },
+        },
+        ui = {
+          enable = true,
+          hl_groups = {
+            ObsidianBullet = { bold = true, fg = "#f103d2" },
+            ObsidianDone = { bold = true, fg = "#f103d2" },
+            ObsidianTag = { italic = true, fg = "#f103d2" },
+            ObsidianBlockID = { italic = true, fg = "#f103d2" },
+            ObsidianRefText = { fg = "#f103d2" },
+
+          },
+        },
+      }
+    end,
   },
   {
     "zk-org/zk-nvim",
@@ -1305,8 +1387,9 @@ require("lazy").setup({
       "nvim-tree/nvim-web-devicons",
     },
     --}}}
-  },
-  {
+    --},
+    --"nvim-treesitter/nvim-treesitter",
+    --{
     "nvim-neotest/neotest",
     --{{{
     dependencies = {
@@ -1565,6 +1648,17 @@ vim.o.laststatus = 3
 changeBackground()
 --}}}
 
+vim.cmd("hi! link ObsidianTodo DiagnosticError")
+vim.cmd("hi! link ObsidianDone DiagnosticOk")
+vim.cmd("hi! link ObsidianRightArrow SpecialChar")
+vim.cmd("hi! link ObsidianTilde DiagnosticFloatingHint")
+vim.cmd("hi! link ObsidianImportant DiagnosticError")
+vim.cmd("hi! link ObsidianBullet SpecialChar")
+vim.cmd("hi! link ObsidianRefText Tag")
+vim.cmd("hi! link ObsidianExtLinkIcon Tag")
+vim.cmd("hi! link ObsidianTag Tag")
+vim.cmd("hi! link ObsidianBlockID Tag")
+vim.cmd("hi! link ObsidianHighlightText Search")
 changeBackground()
 -- vim: ts=2 sts=2 sw=2 et
 -- vim:foldmethod=marker

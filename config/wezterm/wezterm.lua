@@ -2,18 +2,33 @@ local wezterm = require("wezterm")
 
 local config = wezterm.config_builder()
 
-local custom = wezterm.color.get_builtin_schemes()["tokyonight_night"]
-custom.ansi[1] = "#15161e"
-custom.ansi[2] = "#f34765"
-custom.ansi[3] = "#71ab32"
-custom.ansi[4] = "#c2862e"
-custom.ansi[5] = "#4b80f2"
-custom.ansi[6] = "#9768ee"
-custom.ansi[7] = "#4abcff"
-custom.ansi[8] = "#a9b1d6"
-
 local kanagawa = wezterm.plugin.require("https://github.com/sravioli/kanagawa.wz")
-kanagawa.register(config)
+kanagawa.register(config, {
+	scheme_overrides = {
+		wave = {
+			ansi = {
+				"#15161e",
+				"#f34765",
+				"#71ab32",
+				"#c2862e",
+				"#4b80f2",
+				"#9768ee",
+				"#4abcff",
+				"#a9b1d6",
+			},
+			brights = {
+				"#727169",
+				"#E82424",
+				"#98BB6C",
+				"#E6C384",
+				"#7FB4CA",
+				"#938AA9",
+				"#7AA89F",
+				"#DCD7BA",
+			},
+		},
+	},
+})
 config.color_scheme = "Kanagawa Wave"
 --config.color_scheme = "tokyonight_night"
 
