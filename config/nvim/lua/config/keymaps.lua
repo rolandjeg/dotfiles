@@ -5,5 +5,8 @@
 local map = vim.keymap.set
 
 -- Remap for dealing with word wrap
-map("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
-map("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+--map("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
+--map("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+
+map("i", "<C-j>", "<C-n>", {})
+map("i", "<C-k>", "<C-p>", {})
